@@ -130,8 +130,7 @@ function mastodon_feed_init_styles() {
     .mastodon-feed.dark .card a {
       color: #fff;
     }
-    .mastodon-feed .card a:hover,
-    .mastodon-feed.dark .card a:hover {
+    .mastodon-feed .card a:hover {
       text-decoration: none;
       background: var(--mastodon-feed-accent-color);
       color: var(--mastodon-feed-accent-font-color);
