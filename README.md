@@ -8,6 +8,9 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
 * [Usage](#usage)
   * [Supported shortcode attributes](#supported-shortcode-attributes)
   * [Additional customization](#additional-customizations)
+* [Installation](#installation)
+  * [Installation via ZIP file](#installation-via-zip-file)
+  * [Installation via git checkout](#installation-via-git-checkout)
 * [FAQ](#faq)
   * [How do I find my account ID?](#how-do-i-find-my-account-id)
   * [Can I modify the plugin?](#can-i-modify-the-plugin)
@@ -34,6 +37,29 @@ Place the following shortcode right into the page. Either as shortcode block or 
 You can create a file config.local.php to overrwrite select settings
 
 See [config.local-example.php](config.local-example.php) for a full list of supported settings
+
+## Installation
+
+The plugin is not yet listed in the official Wordpress plugin directory
+
+### Installation via ZIP file
+
+1. Click on the `<>Code` in the top right of this page
+2. Select `Download ZIP`
+3. Create a `mastodon-feed` folder in your Wordpress plugins directory
+4. Unpack all the files from the ZIP there (files only, no sub-directory)
+5. Enable plugin in Wordpress
+6. Use shortcode
+
+### Installation via git checkout
+
+If you are familiar with Github you can clone the repository right into your Wordpress plugins folder
+
+1. SSH into your webserver
+2. `cd /path/to/wordpress/wp-content/plugins`
+3. `git clone https://github.com/wolfgang101/mastodon-feed.git`
+4. Enable plugin in Wordpress
+5. Use shortcode
 
 ## FAQ
 
