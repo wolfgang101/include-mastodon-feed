@@ -31,3 +31,6 @@
 
     // general border radius on elements
     define('MASTODON_FEED_STYLE_BORDER_RADIUS', '0.25rem',);
+
+
+    

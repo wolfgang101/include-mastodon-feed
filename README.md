@@ -1,6 +1,8 @@
 # mastodon-feed Wordpress plugin
 
-Plugin that provides `[mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages
+Plugin that provides a `[mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages.
+
+The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
 
 ## Table of contents
 * [Usage](#usage)
@@ -18,12 +20,12 @@ Place the following shortcode right into the page. Either as shortcode block or 
 
 ### Supported shortcode attributes
 
- | Attribute*   | Default value                 | Description                       |
-| ------------- | ----------------------------- | --------------------------------- |
-| **account**   |                               | your account ID (a long number)   |
-| instance      | "mastodon.social"             | domain name of the instance       |
-| loading       | "Loading mastodon feed..."    | loading text                      |
-| darkmode      | false                         | enable dark mode                  |
+ | Attribute*   | Default value                 | Description                                                       |
+| ------------- | ----------------------------- | ----------------------------------------------------------------- |
+| **account**   |                               | your account ID ([a long number](#how-do-i-find-my-account-id))   |
+| instance      | "mastodon.social"             | domain name of the instance                                       |
+| loading       | "Loading mastodon feed..."    | loading text                                                      |
+| darkmode      | false                         | enable dark mode                                                  |
 
 \* Attributes marked **bold** are required
 
