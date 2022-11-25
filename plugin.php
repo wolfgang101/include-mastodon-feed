@@ -39,9 +39,6 @@ function mastodon_feed_init_styles() {
       padding: 0.5rem;
       background: var(--mastodon-feed-bg-light);
     }
-    .mastodon-feed img {
-      display: inline;
-    }
     .mastodon-feed .status a {
       color: var(--mastodon-feed-accent-color);
       text-decoration: none;
