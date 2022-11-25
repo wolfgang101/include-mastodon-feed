@@ -9,7 +9,7 @@
 */
 
 // load user config if available
-$userConfigPath = __DIR__ . DIRECTORY_SEPARATOR . 'config.local.php';
+$userConfigPath = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
 if(file_exists($userConfigPath) && is_readable($userConfigPath)) {
   require_once($userConfigPath);
 }
