@@ -443,7 +443,7 @@ function mastodon_feed_display_feed($atts) {
       mastodonFeedLoad("<?php echo $apiUrl; ?>", "<?php echo $elemId; ?>");
     });
   </script>
-  <div class="mastodon-feed<?php echo ('true' == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo $elemId; ?>"><?php echo (null === $atts['loading'] ? 'loading mastodon feed...' : $atts['loading']); ?></div>
+  <div class="mastodon-feed<?php echo ('true' == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo $elemId; ?>"><?php echo (null === $atts['loading'] ? 'Loading mastodon feed...' : $atts['loading']); ?></div>
 <?php
   return ob_get_clean();
 }
