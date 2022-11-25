@@ -127,6 +127,9 @@ function mastodon_feed_init_styles() {
       text-decoration: none;
       color: #000;
     }
+    .mastodon-feed.dark .card a {
+      color: #fff;
+    }
     .mastodon-feed .card a:hover {
       text-decoration: none;
       background: var(--mastodon-feed-accent-color);
@@ -154,9 +157,6 @@ function mastodon_feed_init_styles() {
     .mastodon-feed.dark .contentWrapper.boosted,
     .mastodon-feed.dark .card {
       background: var(--mastodon-feed-bg-dark);
-    }
-    .mastodon-feed.dark .card a {
-      color: #fff;
     }
   </style>
 <?php
