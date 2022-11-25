@@ -317,10 +317,6 @@ function mastodon_feed_init_scripts() {
         contentElem.innerHTML += showStatus.content;
 
         // handle media attachments
-        // remove the first media attachment if we have a preview card
-        if(showStatus.card != null) {
-          showStatus.media_attachments.shift();
-        }
         if(showStatus.media_attachments.length > 0) {
           let mediaWrapperElem = mastodonFeedCreateElement('div', 'media');
           for(let mediaIndex = 0; mediaIndex < showStatus.media_attachments.length; mediaIndex++) {
