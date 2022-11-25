@@ -27,7 +27,7 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | ------------- | ----------------------------- | ----------------------------------------------------------------- |
 | **account**   |                               | your account ID ([a long number](#how-do-i-find-my-account-id))   |
 | instance      | "mastodon.social"             | domain name of the instance                                       |
-| loading       | "Loading mastodon feed..."    | loading text                                                      |
+| loading       | "Loading Mastodon feed..."    | loading text                                                      |
 | darkmode      | false                         | enable dark mode                                                  |
 
 \* Attributes marked **bold** are required
