@@ -11,6 +11,8 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
 * [Installation](#installation)
   * [Installation via ZIP file](#installation-via-zip-file)
   * [Installation via git checkout](#installation-via-git-checkout)
+* [Known issues](#known-issues)
+  * [TODO](#todo)
 * [FAQ](#faq)
   * [How do I find my account ID?](#how-do-i-find-my-account-id)
   * [Can I modify the plugin?](#can-i-modify-the-plugin)
@@ -60,6 +62,14 @@ If you are familiar with Github you can clone the repository right into your Wor
 3. `git clone https://github.com/wolfgang101/mastodon-feed.git`
 4. Enable plugin in Wordpress
 5. Use shortcode
+
+## Known issues
+
+### TODO
+
+* support custom emojis in account names
+* support custom emojis in post content
+* support additional media attachment types (currently only images supported)
 
 ## FAQ
 
