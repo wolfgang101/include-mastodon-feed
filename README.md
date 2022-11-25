@@ -34,9 +34,9 @@ Place the following shortcode right into the page. Either as shortcode block or 
 
 ### Additional customizations
 
-You can create a file config.local.php to overrwrite select settings
+You can create a file config.php to overrwrite select settings
 
-See [config.local-example.php](config.local-example.php) for a full list of supported settings
+See [config-example.php](config-example.php) for a full list of supported settings
 
 ## Installation
 
