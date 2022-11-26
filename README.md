@@ -67,8 +67,6 @@ If you are familiar with Github you can clone the repository right into your Wor
 
 ### TODO
 
-* support custom emojis in account names
-* support custom emojis in post content
 * support additional media attachment types (currently only images supported)
 
 ## FAQ

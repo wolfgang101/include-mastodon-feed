@@ -127,6 +127,9 @@ function mastodon_feed_init_styles() {
     .mastodon-feed .contentWarning .title {
       font-weight: bold;
     }
+    .mastodon-feed.content .emoji {
+      height: 1rem;
+    }
     .mastodon-feed .media {
       display: flex;
       justify-content: space-around;
@@ -220,7 +223,14 @@ function mastodon_feed_init_scripts() {
       accountImageElem.src = account.avatar;
 
       accountLinkElem.appendChild(accountImageElem);
-      accountLinkElem.appendChild(document.createTextNode(' ' + account.display_name));
+      // inject emojis
+      let displayName = account.display_name;
+      if(account.emojis.length > 0) {
+        account.emojis.forEach(function(emoji) {
+          displayName = mastodonFeedInjectEmoji(displayName, emoji);
+        });
+      }
+      accountLinkElem.innerHTML += displayName;
       return accountLinkElem;
     }
 
@@ -307,6 +317,10 @@ function mastodon_feed_init_scripts() {
       return createdInfo;
     }
 
+    const mastodonFeedInjectEmoji = function(string, emoji) {
+      return string.replace(':' + emoji.shortcode + ':', '<img class="emoji" src="' + emoji.url + '" title="' + emoji.shortcode + '" />');
+    }
+
     const mastodonFeedRenderStatuses = function(statuses, rootElem) {
       for(let i = 0; i < statuses.length; i++) {
         let status = statuses[i];
@@ -347,7 +361,6 @@ function mastodon_feed_init_scripts() {
           let boostElem = mastodonFeedCreateElement('div', 'account');
           boostElem.appendChild(permalinkElem);
           let boostAccountLink = mastodonFeedCreateElementAccountLink(showStatus.account);
-          // boostAccountLink.className = 'account';
           boostElem.appendChild(boostAccountLink);
           boostElem.appendChild(mastodonFeedCreateTimeinfo(showStatus));
 
@@ -381,7 +394,14 @@ function mastodon_feed_init_scripts() {
         }
 
         // add regular content
-        contentElem.innerHTML += showStatus.content;
+        let renderContent = showStatus.content;
+        // inject emojis
+        if(showStatus.emojis.length > 0) {
+          showStatus.emojis.forEach(function(emoji) {
+            renderContent = mastodonFeedInjectEmoji(renderContent, emoji);
+          });
+        }
+        contentElem.innerHTML += renderContent;
 
         // handle media attachments
         if(showStatus.media_attachments.length > 0) {
