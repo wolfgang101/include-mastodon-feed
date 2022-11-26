@@ -230,7 +230,7 @@ function mastodon_feed_init_scripts() {
           displayName = mastodonFeedInjectEmoji(displayName, emoji);
         });
       }
-      accountLinkElem.innerHTML += displayName;
+      accountLinkElem.innerHTML += ' ' + displayName;
       return accountLinkElem;
     }
 
