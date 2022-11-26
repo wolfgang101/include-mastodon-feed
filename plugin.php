@@ -212,7 +212,7 @@ function mastodon_feed_init_scripts() {
       return element;
     }
 
-    const mastodonFeedCreateAccountLink = function(account) {
+    const mastodonFeedCreateElementAccountLink = function(account) {
       let accountLinkElem = mastodonFeedCreateElement('a');
       accountLinkElem.href = account.url;
 
@@ -224,6 +224,80 @@ function mastodon_feed_init_scripts() {
       return accountLinkElem;
     }
 
+    const mastodonFeedCreateElementPermalink = function(status) {
+      let linkElem = mastodonFeedCreateElement('a');
+      linkElem.href = status.url;
+      linkElem.appendChild(document.createTextNode('view on instance'));
+      return linkElem;
+    }
+
+    const mastodonFeedCreateElementMediaAttachments = function(attachments) {
+      let mediaWrapperElem = mastodonFeedCreateElement('div', 'media');
+      for(let mediaIndex = 0; mediaIndex < attachments.length; mediaIndex++) {
+        let media = attachments[mediaIndex];
+        let mediaElem = mastodonFeedCreateElement('div', 'image');
+        if('image' == media.type) {
+          let mediaElemImg = mastodonFeedCreateElement('img');
+          if(null === media.remote_url) {
+            mediaElemImg.src = media.preview_url;
+          }
+          else {
+            mediaElemImg.src = media.remote_url;
+          }
+          if(null !== media.description) {
+            mediaElemImg.title = media.description;
+          }
+          mediaElem.appendChild(mediaElemImg);
+        }
+        else {
+          // TODO implement support for other media types
+          //      currently only image support implemented
+          mediaElem.innerHTML = 'Stripped ' + media.type + ' - only available on instance<br />';
+          mediaElem.appendChild(permalinkElem);
+        }
+        mediaWrapperElem.appendChild(mediaElem);
+      }
+      return mediaWrapperElem;
+    }
+
+    const mastodonFeedCreateElementPreviewCard = function(card)  {
+      let cardElem = mastodonFeedCreateElement('div', 'card');
+          
+      if(null === card.html || card.html.length < 1) {
+        let cardElemMeta = mastodonFeedCreateElement('div', 'meta');
+
+        if(null !== card.image) {
+          let cardElemImageWrapper = mastodonFeedCreateElement('div', 'image');
+          let cardElemImage = mastodonFeedCreateElement('img');
+          cardElemImage.src = card.image;
+          cardElemImageWrapper.appendChild(cardElemImage);
+          cardElemMeta.appendChild(cardElemImageWrapper);
+        }
+
+        let cardElemTitle = mastodonFeedCreateElement('div', 'title');
+        cardElemTitle.innerHTML = card.title;
+        cardElemMeta.appendChild(cardElemTitle);
+
+        let cardElemDescription = mastodonFeedCreateElement('div', 'description');
+        cardElemDescription.innerHTML = card.description;
+        cardElemMeta.appendChild(cardElemDescription);
+        
+        if(card.url === null) {
+          cardElem.appendChild(cardElemMeta);
+        }
+        else {
+          let cardElemLink = mastodonFeedCreateElement('a');
+          cardElemLink.href = card.url;
+          cardElemLink.appendChild(cardElemMeta);
+          cardElem.appendChild(cardElemLink);
+        }
+      }
+      else {
+        cardElem.innerHTML = card.html;
+      }
+      return cardElem;
+    }
+
     const mastodonFeedCreateTimeinfo = function(status) {
       let createdInfo = document.createTextNode(' on ' + new Date(status.created_at).toLocaleDateString('en-US'));
       createdInfo.textContent += ' ' + new Date(status.created_at).toLocaleTimeString('en-US');
@@ -231,13 +305,6 @@ function mastodon_feed_init_scripts() {
         createdInfo.textContent += ' (edited)';
       }
       return createdInfo;
-    }
-
-    const mastodonFeedCreatePermalink = function(status) {
-      let linkElem = mastodonFeedCreateElement('a');
-      linkElem.href = status.url;
-      linkElem.appendChild(document.createTextNode('view on instance'));
-      return linkElem;
     }
 
     const mastodonFeedRenderStatuses = function(statuses, rootElem) {
@@ -258,10 +325,10 @@ function mastodon_feed_init_scripts() {
         }
         else {
           let origPermalinkElem = mastodonFeedCreateElement('span', 'permalink');
-          origPermalinkElem.appendChild(mastodonFeedCreatePermalink(status));
+          origPermalinkElem.appendChild(mastodonFeedCreateElementPermalink(status));
           accountElem.appendChild(origPermalinkElem);
         }
-        accountElem.appendChild(mastodonFeedCreateAccountLink(status.account));
+        accountElem.appendChild(mastodonFeedCreateElementAccountLink(status.account));
         accountElem.appendChild(mastodonFeedCreateTimeinfo(status));
         
         statusElem.appendChild(accountElem);
@@ -273,13 +340,13 @@ function mastodon_feed_init_scripts() {
         }
         let contentWrapperElem = mastodonFeedCreateElement('div', 'contentWrapper' + (isReblog ? ' boosted' : ''));
         let permalinkElem = mastodonFeedCreateElement('span', 'permalink');
-        permalinkElem.appendChild(mastodonFeedCreatePermalink(showStatus));
+        permalinkElem.appendChild(mastodonFeedCreateElementPermalink(showStatus));
 
         // add boosted post meta info
         if(isReblog) {
           let boostElem = mastodonFeedCreateElement('div', 'account');
           boostElem.appendChild(permalinkElem);
-          let boostAccountLink = mastodonFeedCreateAccountLink(showStatus.account);
+          let boostAccountLink = mastodonFeedCreateElementAccountLink(showStatus.account);
           // boostAccountLink.className = 'account';
           boostElem.appendChild(boostAccountLink);
           boostElem.appendChild(mastodonFeedCreateTimeinfo(showStatus));
@@ -318,71 +385,13 @@ function mastodon_feed_init_scripts() {
 
         // handle media attachments
         if(showStatus.media_attachments.length > 0) {
-          let mediaWrapperElem = mastodonFeedCreateElement('div', 'media');
-          for(let mediaIndex = 0; mediaIndex < showStatus.media_attachments.length; mediaIndex++) {
-            let media = showStatus.media_attachments[mediaIndex];
-            let mediaElem = mastodonFeedCreateElement('div', 'image');
-            if('image' == media.type) {
-              let mediaElemImg = mastodonFeedCreateElement('img');
-              if(null === media.remote_url) {
-                mediaElemImg.src = media.preview_url;
-              }
-              else {
-                mediaElemImg.src = media.remote_url;
-              }
-              if(null !== media.description) {
-                mediaElemImg.title = media.description;
-              }
-              mediaElem.appendChild(mediaElemImg);
-            }
-            else {
-              // TODO implement support for other media types
-              //      currently only image support implemented
-              mediaElem.innerHTML = 'Stripped ' + media.type + ' - only available on instance<br />';
-              mediaElem.appendChild(permalinkElem);
-            }
-            mediaWrapperElem.appendChild(mediaElem);
-          }
-          contentElem.appendChild(mediaWrapperElem);
+          let mediaAttachmentsElem = mastodonFeedCreateElementMediaAttachments(showStatus.media_attachments);
+          contentElem.appendChild(mediaAttachmentsElem);
         }
 
         // handle preview card
         if(showStatus.card != null) {
-          let cardElem = mastodonFeedCreateElement('div', 'card');
-          
-          if(null === showStatus.card.html || showStatus.card.html.length < 1) {
-            let cardElemMeta = mastodonFeedCreateElement('div', 'meta');
-
-            if(null !== showStatus.card.image) {
-              let cardElemImageWrapper = mastodonFeedCreateElement('div', 'image');
-              let cardElemImage = mastodonFeedCreateElement('img');
-              cardElemImage.src = showStatus.card.image;
-              cardElemImageWrapper.appendChild(cardElemImage);
-              cardElemMeta.appendChild(cardElemImageWrapper);
-            }
-
-            let cardElemTitle = mastodonFeedCreateElement('div', 'title');
-            cardElemTitle.innerHTML = showStatus.card.title;
-            cardElemMeta.appendChild(cardElemTitle);
-
-            let cardElemDescription = mastodonFeedCreateElement('div', 'description');
-            cardElemDescription.innerHTML = showStatus.card.description;
-            cardElemMeta.appendChild(cardElemDescription);
-            
-            if(showStatus.card.url === null) {
-              cardElem.appendChild(cardElemMeta);
-            }
-            else {
-              let cardElemLink = mastodonFeedCreateElement('a');
-              cardElemLink.href = showStatus.card.url;
-              cardElemLink.appendChild(cardElemMeta);
-              cardElem.appendChild(cardElemLink);
-            }
-          }
-          else {
-            cardElem.innerHTML = showStatus.card.html;
-          }
-
+          let cardElem = mastodonFeedCreateElementPreviewCard(showStatus.card);
           contentElem.appendChild(cardElem);
         }
 
