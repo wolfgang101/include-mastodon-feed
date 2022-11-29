@@ -1,6 +1,6 @@
-# mastodon-feed Wordpress plugin
+# Include Mastodon Feed Wordpress plugin
 
-Plugin that provides a `[mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages.
+Plugin that provides a `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages.
 
 The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
 
@@ -21,14 +21,14 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
 
 Place the following shortcode right into the page. Either as shortcode block or just copy and paste right within a text block:
 
-```[mastodon-feed account="YOUR-ACCOUNT-ID"]```
+```[include-mastodon-feed account="YOUR-ACCOUNT-ID"]```
 
 ### Supported shortcode attributes
 
  | Attribute*   | Default value                 | Description                                                       |
 | ------------- | ----------------------------- | ----------------------------------------------------------------- |
 | **account**   |                               | your account ID ([a long number](#how-do-i-find-my-account-id))   |
-| instance      | "mastodon.social"             | domain name of the instance                                       |
+| **instance**  |                               | domain name of the instance (e.g. example.org)                    |
 | loading       | "Loading Mastodon feed..."    | loading text                                                      |
 | darkmode      | false                         | enable dark mode                                                  |
 
@@ -48,7 +48,7 @@ The plugin is not yet listed in the official Wordpress plugin directory
 
 1. Click on the `<>Code` in the top right of this page
 2. Select `Download ZIP`
-3. Create a `mastodon-feed` folder in your Wordpress plugins directory
+3. Create a `include-mastodon-feed` folder in your Wordpress plugins directory
 4. Unpack all the files from the ZIP there (files only, no sub-directory)
 5. Enable plugin in Wordpress
 6. Use shortcode
@@ -59,7 +59,7 @@ If you are familiar with Github you can clone the repository right into your Wor
 
 1. SSH into your webserver
 2. `cd /path/to/wordpress/wp-content/plugins`
-3. `git clone https://github.com/wolfgang101/mastodon-feed.git`
+3. `git clone https://github.com/wolfgang101/include-mastodon-feed.git`
 4. Enable plugin in Wordpress
 5. Use shortcode
 
@@ -76,13 +76,13 @@ As an instance admin you can easily read your user ID in the admin backend. As r
 
 Use the following URL to get your ID:
 
-```https://instance.tld/api/v2/search?q=username@instance.tld&resolve=true&limit=5```
+```https://example.org/api/v2/search?q=username@example.org&resolve=true&limit=5```
 
-* Change `instance.tld` to your instance
+* Change `example.org` to your instance
 * Replace `username` with your handle.
 * Open the URL in your webbrowser
 
 **Note:** You must be logged in to do that
 
 ### Can I modify the plugin?
-The plugin is released unter the [MIT License](LICENSE) which is very permissive. Knock youself out!
+The plugin is released unter the [Expat License](LICENSE) which is very permissive. Knock youself out!

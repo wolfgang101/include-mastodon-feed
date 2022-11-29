@@ -1,8 +1,8 @@
 <?php
 /*
-  Plugin Name: Mastodon Feed
-	Plugin URI: https://www.wolfgang.lol/code/mastodon-feed-wordpress-plugin
-	Description: Plugin providing [mastodon-feed] shortcode
+  Plugin Name: Include Mastodon Feed
+	Plugin URI: https://www.wolfgang.lol/code/include-include-mastodon-feed-wordpress-plugin
+	Description: Plugin providing [include-mastodon-feed] shortcode
 	Version: 1.0
 	Author: wolfgang.lol
 	Author URI: https://www.wolfgang.lol
@@ -16,31 +16,31 @@ if(file_exists($userConfigPath) && is_readable($userConfigPath)) {
 // set defaults
 $constants = [
   [
-      'key' => 'MASTODON_FEED_DEBUG',
+      'key' => 'INCLUDE_MASTODON_FEED_DEBUG',
       'value' => false,
   ],
   [
-      'key' => 'MASTODON_FEED_DEFAULT_INSTANCE',
-      'value' => 'mastodon.social',
+    'key' => 'INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE',
+    'value' => false,
   ],
   [
-      'key' => 'MASTODON_FEED_STYLE_BG_LIGHT_COLOR',
+      'key' => 'INCLUDE_MASTODON_FEED_STYLE_BG_LIGHT_COLOR',
       'value' => 'rgba(100, 100, 100, 0.15)',
   ],
   [
-      'key' => 'MASTODON_FEED_STYLE_BG_DARK_COLOR',
+      'key' => 'INCLUDE_MASTODON_FEED_STYLE_BG_DARK_COLOR',
       'value' => 'rgba(155, 155, 155, 0.15)',
   ],
   [
-      'key' => 'MASTODON_FEED_STYLE_ACCENT_COLOR',
+      'key' => 'INCLUDE_MASTODON_FEED_STYLE_ACCENT_COLOR',
       'value' => 'rgb(99, 100, 255)',
   ],
   [
-      'key' => 'MASTODON_FEED_STYLE_ACCENT_FONT_COLOR',
+      'key' => 'INCLUDE_MASTODON_FEED_STYLE_ACCENT_FONT_COLOR',
       'value' => 'rgb(255, 255, 255)',
   ],
   [
-      'key' => 'MASTODON_FEED_STYLE_BORDER_RADIUS',
+      'key' => 'INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS',
       'value' => '0.25rem',
   ],
 ];
@@ -51,86 +51,86 @@ foreach($constants as $constant) {
 }
 unset($constants);
 
-function mastodon_feed_error($msg) {
-  return '[mastodon-feed] ' . $msg;
+function include_mastodon_feed_error($msg) {
+  return '[include-mastodon-feed] ' . $msg;
 }
 
 
-function mastodon_feed_init_styles() {
+function include_mastodon_feed_init_styles() {
   ob_start();
 ?>
   <style>
     :root {
-      --mastodon-feed-bg-light: <?php echo MASTODON_FEED_STYLE_BG_LIGHT_COLOR; ?>;
-      --mastodon-feed-bg-dark: <?php echo MASTODON_FEED_STYLE_BG_DARK_COLOR; ?>;
-      --mastodon-feed-accent-color: <?php echo MASTODON_FEED_STYLE_ACCENT_COLOR; ?>;
-      --mastodon-feed-accent-font-color: <?php echo MASTODON_FEED_STYLE_ACCENT_FONT_COLOR; ?>;
-      --mastodon-feed-border-radius: <?php echo MASTODON_FEED_STYLE_BORDER_RADIUS; ?>;
+      --include-mastodon-feed-bg-light: <?php echo INCLUDE_MASTODON_FEED_STYLE_BG_LIGHT_COLOR; ?>;
+      --include-mastodon-feed-bg-dark: <?php echo INCLUDE_MASTODON_FEED_STYLE_BG_DARK_COLOR; ?>;
+      --include-mastodon-feed-accent-color: <?php echo INCLUDE_MASTODON_FEED_STYLE_ACCENT_COLOR; ?>;
+      --include-mastodon-feed-accent-font-color: <?php echo INCLUDE_MASTODON_FEED_STYLE_ACCENT_FONT_COLOR; ?>;
+      --include-mastodon-feed-border-radius: <?php echo INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS; ?>;
     }
 
-    .mastodon-feed .status {
+    .include-mastodon-feed .status {
       margin: 0.5rem 0 1.5rem;
-      border-radius: var(--mastodon-feed-border-radius);
+      border-radius: var(--include-mastodon-feed-border-radius);
       padding: 0.5rem;
-      background: var(--mastodon-feed-bg-light);
+      background: var(--include-mastodon-feed-bg-light);
     }
-    .mastodon-feed .status a {
-      color: var(--mastodon-feed-accent-color);
+    .include-mastodon-feed .status a {
+      color: var(--include-mastodon-feed-accent-color);
       text-decoration: none;
     }
-    .mastodon-feed .status a:hover {
+    .include-mastodon-feed .status a:hover {
       text-decoration: underline;
     }
-    .mastodon-feed .account .permalink {
+    .include-mastodon-feed .account .permalink {
       float: right;
     }
-    .mastodon-feed .avatar {
+    .include-mastodon-feed .avatar {
       height: 1.25rem;
-      border-radius: var(--mastodon-feed-border-radius);
+      border-radius: var(--include-mastodon-feed-border-radius);
       vertical-align: top;
     }
-    .mastodon-feed .account {
+    .include-mastodon-feed .account {
       font-size: 0.8rem;
     }
-    .mastodon-feed .account a {
+    .include-mastodon-feed .account a {
       display: inline-block;
     }
-    .mastodon-feed .account .booster {
+    .include-mastodon-feed .account .booster {
       float: right;
       font-style: italic;
     }
-    .mastodon-feed .boosted .account a:nth-child(2),
-    .mastodon-feed .contentWarning a {
-      border-radius: var(--mastodon-feed-border-radius);
+    .include-mastodon-feed .boosted .account a:nth-child(2),
+    .include-mastodon-feed .contentWarning a {
+      border-radius: var(--include-mastodon-feed-border-radius);
       padding: 0.15rem 0.5rem;
-      background: var(--mastodon-feed-accent-color);
-      color: var(--mastodon-feed-accent-font-color);
+      background: var(--include-mastodon-feed-accent-color);
+      color: var(--include-mastodon-feed-accent-font-color);
     }
-    .mastodon-feed .boosted .account a:nth-child(2):hover,
-    .mastodon-feed .contentWarning a:hover {
-      border-radius: var(--mastodon-feed-border-radius);
+    .include-mastodon-feed .boosted .account a:nth-child(2):hover,
+    .include-mastodon-feed .contentWarning a:hover {
+      border-radius: var(--include-mastodon-feed-border-radius);
       padding: 0.15rem 0.5rem;
-      background: var(--mastodon-feed-accent-font-color);
-      color: var(--mastodon-feed-accent-color);
+      background: var(--include-mastodon-feed-accent-font-color);
+      color: var(--include-mastodon-feed-accent-color);
       text-decoration: none;
     }
-    .mastodon-feed .contentWrapper.boosted {
+    .include-mastodon-feed .contentWrapper.boosted {
       margin: 0.5rem 0;
       padding: 0.5rem;
-      background: var(--mastodon-feed-bg-light);
+      background: var(--include-mastodon-feed-bg-light);
     }
-    .mastodon-feed .contentWarning {
+    .include-mastodon-feed .contentWarning {
       text-align: center;
       margin: 1rem;
       padding: 1rem;
     }
-    .mastodon-feed .contentWarning .title {
+    .include-mastodon-feed .contentWarning .title {
       font-weight: bold;
     }
-    .mastodon-feed.content .emoji {
+    .include-mastodon-feed.content .emoji {
       height: 1rem;
     }
-    .mastodon-feed .media {
+    .include-mastodon-feed .media {
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -138,71 +138,71 @@ function mastodon_feed_init_styles() {
       gap: 0.5rem;
       margin: 1rem;
     }
-    .mastodon-feed .media .image {
+    .include-mastodon-feed .media .image {
       font-size: 0.8rem;
       font-weight: bold;
       text-align: center;
       flex-basis: calc(50% - 0.5rem);
       flex-grow: 1;
     }
-    .mastodon-feed .media .image img {
-      border-radius: var(--mastodon-feed-border-radius);
+    .include-mastodon-feed .media .image img {
+      border-radius: var(--include-mastodon-feed-border-radius);
       max-width: 100%;
     }
-    .mastodon-feed .card {
-      border-radius: var(--mastodon-feed-border-radius);
+    .include-mastodon-feed .card {
+      border-radius: var(--include-mastodon-feed-border-radius);
       margin: 1rem 0.5rem;
     }
-    .mastodon-feed .card iframe {
-      border-radius: var(--mastodon-feed-border-radius);
+    .include-mastodon-feed .card iframe {
+      border-radius: var(--include-mastodon-feed-border-radius);
       width: 100%;
       height: 100%;
       aspect-ratio: 2 / 1.25;
     }
-    .mastodon-feed .card a {
-      border-radius: var(--mastodon-feed-border-radius);
+    .include-mastodon-feed .card a {
+      border-radius: var(--include-mastodon-feed-border-radius);
       display: block;
       text-decoration: none;
       color: #000;
     }
-    .mastodon-feed.dark .card a {
+    .include-mastodon-feed.dark .card a {
       color: #fff;
     }
-    .mastodon-feed .card a:hover {
+    .include-mastodon-feed .card a:hover {
       text-decoration: none;
-      background: var(--mastodon-feed-accent-color);
-      color: var(--mastodon-feed-accent-font-color);
+      background: var(--include-mastodon-feed-accent-color);
+      color: var(--include-mastodon-feed-accent-font-color);
     }
-    .mastodon-feed .card .meta {
-      background: var(--mastodon-feed-bg-light);
+    .include-mastodon-feed .card .meta {
+      background: var(--include-mastodon-feed-bg-light);
       font-size: 0.8rem;
       padding: 1rem;
     }
-    .mastodon-feed .card .image {
+    .include-mastodon-feed .card .image {
       margin-bottom: 0.5rem;
       text-align: center;
     }
-    .mastodon-feed .card .image img {
+    .include-mastodon-feed .card .image img {
       max-width: 75%;
     }
-    .mastodon-feed .card .title {
+    .include-mastodon-feed .card .title {
       font-weight: bold;
     }
   
 
 
-    .mastodon-feed.dark .status,
-    .mastodon-feed.dark .contentWrapper.boosted,
-    .mastodon-feed.dark .card {
-      background: var(--mastodon-feed-bg-dark);
+    .include-mastodon-feed.dark .status,
+    .include-mastodon-feed.dark .contentWrapper.boosted,
+    .include-mastodon-feed.dark .card {
+      background: var(--include-mastodon-feed-bg-dark);
     }
   </style>
 <?php
   echo ob_get_clean();
 }
-add_action('wp_head', 'mastodon_feed_init_styles', 7);
+add_action('wp_head', 'include_mastodon_feed_init_styles', 7);
 
-function mastodon_feed_init_scripts() {
+function include_mastodon_feed_init_scripts() {
   ob_start();
 ?>
   <script>
@@ -430,13 +430,13 @@ function mastodon_feed_init_scripts() {
         const rootElem = document.getElementById(elementId);
         rootElem.innerHTML = '';
         if (xhr.status === 200) {
-          <?php if(true === MASTODON_FEED_DEBUG) : ?>
+          <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
             console.log(xhr.response);
           <?php endif; ?>
           mastodonFeedRenderStatuses(statuses, rootElem);
         }
         else {
-          <?php if(true === MASTODON_FEED_DEBUG) : ?>
+          <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
             console.log(xhr);
           <?php endif; ?>
           rootElem.appendChild(document.createTextNode(xhr.response.error));
@@ -448,23 +448,26 @@ function mastodon_feed_init_scripts() {
 <?php
   echo ob_get_clean();
 }
-add_action('wp_footer', 'mastodon_feed_init_scripts');
+add_action('wp_footer', 'include_mastodon_feed_init_scripts');
 
-function mastodon_feed_display_feed($atts) {
+function include_mastodon_feed_display_feed($atts) {
   $atts = shortcode_atts(
       array(
-          'instance' => MASTODON_FEED_DEFAULT_INSTANCE,
+          'instance' => false,
 					'account' => false,
           'loading' => null,
           'darkmode' => false,
       ), $atts
   );
+  if(false === $atts['instance']) {
+    return include_mastodon_feed_error('missing configuration: instance');
+  }
   if(false === $atts['account']) {
-    return mastodon_feed_error('missing account id');
+    return include_mastodon_feed_error('missing configuration: account id');
   }
 
   $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/accounts/'.urlencode($atts['account']).'/statuses';
-  $elemId = uniqid('mastodon-feed-');
+  $elemId = uniqid('include-mastodon-feed-');
   ob_start();
 ?>
   <script>
@@ -472,8 +475,8 @@ function mastodon_feed_display_feed($atts) {
       mastodonFeedLoad("<?php echo $apiUrl; ?>", "<?php echo $elemId; ?>");
     });
   </script>
-  <div class="mastodon-feed<?php echo ('true' == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo $elemId; ?>"><?php echo (null === $atts['loading'] ? 'Loading Mastodon feed...' : $atts['loading']); ?></div>
+  <div class="include-mastodon-feed<?php echo ('true' == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo $elemId; ?>"><?php echo (null === $atts['loading'] ? 'Loading Mastodon feed...' : $atts['loading']); ?></div>
 <?php
   return ob_get_clean();
 }
-add_shortcode('mastodon-feed', 'mastodon_feed_display_feed');
+add_shortcode('include-mastodon-feed', 'include_mastodon_feed_display_feed');

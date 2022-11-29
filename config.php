@@ -1,4 +1,4 @@
 <?php
 
-    define('MASTODON_FEED_DEBUG', true);
+    define('INCLUDE_MASTODON_FEED_DEBUG', true);
     
