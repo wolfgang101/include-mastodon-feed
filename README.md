@@ -21,7 +21,7 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
 
 Place the following shortcode right into the page. Either as shortcode block or just copy and paste right within a text block:
 
-```[include-mastodon-feed account="YOUR-ACCOUNT-ID"]```
+```[include-mastodon-feed instance="YOUR-INSTANCE" account="YOUR-ACCOUNT-ID"]```
 
 ### Supported shortcode attributes
 
