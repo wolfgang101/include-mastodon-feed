@@ -1,6 +1,6 @@
-# Include Mastodon Feed Wordpress plugin
+# Include Mastodon Feed Wordpress Plugin
 
-Plugin that provides a `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages.
+Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages.
 
 The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
 
