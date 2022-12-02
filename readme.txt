@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -69,6 +69,11 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.0.1 =
+* escaped options when echoing them
+* secured local file inclusion
+* changed versioning to semantic versioning - now including patch number
 
 = 1.0 =
 * Initial release

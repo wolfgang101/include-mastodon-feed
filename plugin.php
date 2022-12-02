@@ -3,15 +3,14 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://www.wolfgang.lol/code/include-include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.0
+	Version: 1.0.1
 	Author: wolfgang.lol
 	Author URI: https://www.wolfgang.lol
 */
 
 // load user config if available
-$userConfigPath = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
-if(file_exists($userConfigPath) && is_readable($userConfigPath)) {
-  require_once($userConfigPath);
+if(file_exists( plugin_dir_path( __FILE__ ) . DIRECTORY_SEPARATOR . 'config.php' )) {
+  require_once( plugin_dir_path( __FILE__ ) . DIRECTORY_SEPARATOR . 'config.php' );
 }
 // set defaults
 $constants = [
@@ -61,11 +60,11 @@ function include_mastodon_feed_init_styles() {
 ?>
   <style>
     :root {
-      --include-mastodon-feed-bg-light: <?php echo INCLUDE_MASTODON_FEED_STYLE_BG_LIGHT_COLOR; ?>;
-      --include-mastodon-feed-bg-dark: <?php echo INCLUDE_MASTODON_FEED_STYLE_BG_DARK_COLOR; ?>;
-      --include-mastodon-feed-accent-color: <?php echo INCLUDE_MASTODON_FEED_STYLE_ACCENT_COLOR; ?>;
-      --include-mastodon-feed-accent-font-color: <?php echo INCLUDE_MASTODON_FEED_STYLE_ACCENT_FONT_COLOR; ?>;
-      --include-mastodon-feed-border-radius: <?php echo INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS; ?>;
+      --include-mastodon-feed-bg-light: <?php echo esc_attr( INCLUDE_MASTODON_FEED_STYLE_BG_LIGHT_COLOR ); ?>;
+      --include-mastodon-feed-bg-dark: <?php echo esc_attr( INCLUDE_MASTODON_FEED_STYLE_BG_DARK_COLOR ); ?>;
+      --include-mastodon-feed-accent-color: <?php echo esc_attr( INCLUDE_MASTODON_FEED_STYLE_ACCENT_COLOR ); ?>;
+      --include-mastodon-feed-accent-font-color: <?php echo esc_attr( INCLUDE_MASTODON_FEED_STYLE_ACCENT_FONT_COLOR ); ?>;
+      --include-mastodon-feed-border-radius: <?php echo esc_attr( INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS ); ?>;
     }
 
     .include-mastodon-feed .status {
@@ -472,10 +471,10 @@ function include_mastodon_feed_display_feed($atts) {
 ?>
   <script>
     window.addEventListener("load", () => {
-      mastodonFeedLoad("<?php echo $apiUrl; ?>", "<?php echo $elemId; ?>");
+      mastodonFeedLoad("<?php echo esc_url( $apiUrl ); ?>", "<?php echo esc_js( $elemId ); ?>");
     });
   </script>
-  <div class="include-mastodon-feed<?php echo ('true' == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo $elemId; ?>"><?php echo (null === $atts['loading'] ? 'Loading Mastodon feed...' : $atts['loading']); ?></div>
+  <div class="include-mastodon-feed<?php echo ('true' == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo esc_attr( $elemId ); ?>"><?php echo (null === $atts['loading'] ? 'Loading Mastodon feed...' : esc_html( $atts['loading']) ); ?></div>
 <?php
   return ob_get_clean();
 }
