@@ -79,8 +79,8 @@ Use the following URL to get your ID:
 == Changelog ==
 
 = 1.1.0 =
+* added support for more custom text overrides (loading, boosted, view on instnace)
 * switched to showing static avatars, animated avatars only on hover
-* added configuration for custom text overrides
 
 = 1.0.1 =
 * escaped options when echoing them
@@ -89,3 +89,8 @@ Use the following URL to get your ID:
 
 = 1.0 =
 * Initial release
+
+== Upgrade Notice ==
+
+= 1.1.0 =
+* "loading" shortcode attribute was renamed to "text-loading"
