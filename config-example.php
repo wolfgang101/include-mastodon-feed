@@ -1,10 +1,16 @@
 <?php
 
     /*
+     * NOTE
+     * 
      * None, any, or all constants can be defined in the
      * config.local.php file to override default settings
      * 
      * default settings apply if file does not exist
+     */
+
+    /*
+     *  DEFAULT SETTINGS
      */
 
     // enable/discable JavaScript console debug output
@@ -14,6 +20,10 @@
     // can still be overriden in shortcode
     // plugin will show a warning if no default is set and instance is omitted in shortcode
     //define('INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE', 'example.org');
+
+    /*
+     *  DEFAULT STYLES
+     */
 
     // define background color in light mode
     // (light mode default)
@@ -34,4 +44,18 @@
     define('INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS', '0.25rem',);
 
 
-    
+    /*
+     *  DEFAULT TEXTS
+     */
+
+    // default loading text
+    // can be overridden in shortcode
+    define('INCLUDE_MASTODON_FEED_TEXT_LOADING', 'Loading Mastodon feed...',);
+
+    // default "boosted" indicator
+    // can be overridden in shortcode
+    define('INCLUDE_MASTODON_FEED_TEXT_BOOSTED', 'boosted 🚀',);
+
+    // default view status on instance link text
+    // can be overridden in shortcode
+    define('INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE', 'view on instance',);

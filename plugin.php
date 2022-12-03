@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.0.1
+	Version: 1.1.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -22,6 +22,7 @@ $constants = [
     'key' => 'INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE',
     'value' => false,
   ],
+  // set styles
   [
       'key' => 'INCLUDE_MASTODON_FEED_STYLE_BG_LIGHT_COLOR',
       'value' => 'rgba(100, 100, 100, 0.15)',
@@ -41,6 +42,19 @@ $constants = [
   [
       'key' => 'INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS',
       'value' => '0.25rem',
+  ],
+  // set texts
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_TEXT_LOADING',
+    'value' => 'Loading Mastodon feed...',
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_TEXT_BOOSTED',
+    'value' => 'boosted 🚀',
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE',
+    'value' => 'view on instance',
   ],
 ];
 foreach($constants as $constant) {
@@ -240,10 +254,10 @@ function include_mastodon_feed_init_scripts() {
       return accountLinkElem;
     }
 
-    const mastodonFeedCreateElementPermalink = function(status) {
+    const mastodonFeedCreateElementPermalink = function(status, label) {
       let linkElem = mastodonFeedCreateElement('a');
       linkElem.href = status.url;
-      linkElem.appendChild(document.createTextNode('view on instance'));
+      linkElem.appendChild(document.createTextNode(label));
       return linkElem;
     }
 
@@ -327,7 +341,7 @@ function include_mastodon_feed_init_scripts() {
       return string.replace(':' + emoji.shortcode + ':', '<img class="emoji" src="' + emoji.url + '" title="' + emoji.shortcode + '" />');
     }
 
-    const mastodonFeedRenderStatuses = function(statuses, rootElem) {
+    const mastodonFeedRenderStatuses = function(statuses, rootElem, options) {
       for(let i = 0; i < statuses.length; i++) {
         let status = statuses[i];
         let isEdited = (null === status.edited_at ? true : false);
@@ -340,12 +354,12 @@ function include_mastodon_feed_init_scripts() {
 
         if(isReblog) {
           let boosterElem = mastodonFeedCreateElement('span', 'booster');
-          boosterElem.appendChild(document.createTextNode('boosted 🚀'));
+          boosterElem.appendChild(document.createTextNode( options.text.boosted ));
           accountElem.appendChild(boosterElem);
         }
         else {
           let origPermalinkElem = mastodonFeedCreateElement('span', 'permalink');
-          origPermalinkElem.appendChild(mastodonFeedCreateElementPermalink(status));
+          origPermalinkElem.appendChild(mastodonFeedCreateElementPermalink(status, options.text.viewOnInstance));
           accountElem.appendChild(origPermalinkElem);
         }
         accountElem.appendChild(mastodonFeedCreateElementAccountLink(status.account));
@@ -427,7 +441,7 @@ function include_mastodon_feed_init_scripts() {
       }
     }
 
-    const mastodonFeedLoad = function(url, elementId) {
+    const mastodonFeedLoad = function(url, elementId, options) {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
       xhr.responseType = 'json';
@@ -439,7 +453,7 @@ function include_mastodon_feed_init_scripts() {
           <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
             console.log(xhr.response);
           <?php endif; ?>
-          mastodonFeedRenderStatuses(statuses, rootElem);
+          mastodonFeedRenderStatuses(statuses, rootElem, options);
         }
         else {
           <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
@@ -459,9 +473,11 @@ add_action('wp_footer', 'include_mastodon_feed_init_scripts');
 function include_mastodon_feed_display_feed($atts) {
   $atts = shortcode_atts(
       array(
-          'instance' => false,
+          'instance' => ( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE === false ? false : esc_attr(INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE) ),
 					'account' => false,
-          'loading' => null,
+          'text-loading' => esc_html(INCLUDE_MASTODON_FEED_TEXT_LOADING),
+          'text-boosted' => esc_html(INCLUDE_MASTODON_FEED_TEXT_BOOSTED),
+          'text-viewOnInstance' => esc_html(INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE),
           'darkmode' => false,
       ), $atts
   );
@@ -478,10 +494,19 @@ function include_mastodon_feed_display_feed($atts) {
 ?>
   <script>
     window.addEventListener("load", () => {
-      mastodonFeedLoad("<?php echo esc_url( $apiUrl ); ?>", "<?php echo esc_js( $elemId ); ?>");
+      mastodonFeedLoad(
+        "<?php echo esc_url( $apiUrl ); ?>",
+        "<?php echo esc_js( $elemId ); ?>",
+        {
+          text: {
+            boosted: "<?php echo esc_html( $atts['text-boosted'] ); ?>",
+            viewOnInstance: "<?php echo esc_html( $atts['text-viewOnInstance'] ); ?>",
+          }
+        }
+      );
     });
   </script>
-  <div class="include-mastodon-feed<?php echo ('true' == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo esc_attr( $elemId ); ?>"><?php echo (null === $atts['loading'] ? 'Loading Mastodon feed...' : esc_html( $atts['loading']) ); ?></div>
+  <div class="include-mastodon-feed<?php echo ('true' == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo esc_attr( $elemId ); ?>"><?php echo esc_html( $atts['text-loading'] ); ?></div>
 <?php
   return ob_get_clean();
 }

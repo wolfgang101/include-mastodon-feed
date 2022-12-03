@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -32,11 +32,17 @@ The account ID (a long number - see FAQ on how to get it)
 * **instance** (required)
 Domain name of the instance (e.g. example.org)
 
-* **loading**
- Loading text (Default: Loading Mastodon feed...)
-
 * **darkmode**
 Enable dark mode (Default: false)
+
+* **text-loading**
+Loading text (Default: Loading Mastodon feed...)
+
+* **text-boosted**
+Text indicating boosted statuses (Default: boosted 🚀)
+
+* **text-viewOnInstance**
+View status on instance link text (Default: view on instance)
 
 = Additional customizations =
 
@@ -61,14 +67,20 @@ Use the following URL to get your ID:
 
 `https://example.org/api/v2/search?q=username@example.org&resolve=true&limit=5`
 
-= Known Issues =
-* TODO: support additional media attachment types (currently only images supported)
+= Known Issues / Todo =
+* support option for excluding replies
+* support option for custom date format
+* support additional media attachment types (currently only images supported)
 
 == Screenshots ==
 
 * No screenshots
 
 == Changelog ==
+
+= 1.1.0 =
+* switched to showing static avatars, animated avatars only on hover
+* added configuration for custom text overrides
 
 = 1.0.1 =
 * escaped options when echoing them

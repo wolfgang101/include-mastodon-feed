@@ -12,7 +12,7 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
   * [Installation via ZIP file](#installation-via-zip-file)
   * [Installation via git checkout](#installation-via-git-checkout)
 * [Known issues](#known-issues)
-  * [TODO](#todo)
+  * [Todo](#todo)
 * [FAQ](#faq)
   * [How do I find my account ID?](#how-do-i-find-my-account-id)
   * [Can I modify the plugin?](#can-i-modify-the-plugin)
@@ -25,12 +25,15 @@ Place the following shortcode right into the page. Either as shortcode block or 
 
 ### Supported shortcode attributes
 
- | Attribute*   | Default value                 | Description                                                       |
-| ------------- | ----------------------------- | ----------------------------------------------------------------- |
-| **account**   |                               | your account ID ([a long number](#how-do-i-find-my-account-id))   |
-| **instance**  |                               | domain name of the instance (e.g. example.org)                    |
-| loading       | "Loading Mastodon feed..."    | loading text                                                      |
-| darkmode      | false                         | enable dark mode                                                  |
+ | Attribute*         | Default value                 | Description                                                       |
+| ------------------- | ----------------------------- | ----------------------------------------------------------------- |
+| **account**         |                               | your account ID ([a long number](#how-do-i-find-my-account-id))   |
+| **instance**        |                               | domain name of the instance (e.g. example.org)                    |
+| darkmode            | false                         | enable dark mode                                                  |
+| text-loading        | "Loading Mastodon feed..."    | loading text                                                      |
+| text-boosted        | "boosted 🚀"                  | boosted status indicator text                                     |
+| text-viewOnInstance | "view on instance"            | view status on instance link text                                 |
+
 
 \* Attributes marked **bold** are required
 
@@ -65,8 +68,10 @@ If you are familiar with Github you can clone the repository right into your Wor
 
 ## Known issues
 
-### TODO
+### Todo
 
+* support option for excluding replies
+* support option for custom date format
 * support additional media attachment types (currently only images supported)
 
 ## FAQ
