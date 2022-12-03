@@ -1,11 +1,11 @@
 <?php
 /*
   Plugin Name: Include Mastodon Feed
-	Plugin URI: https://www.wolfgang.lol/code/include-include-mastodon-feed-wordpress-plugin
+	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
 	Version: 1.0.1
 	Author: wolfgang.lol
-	Author URI: https://www.wolfgang.lol
+	Author URI: https://wolfgang.lol
 */
 
 // load user config if available
@@ -219,7 +219,14 @@ function include_mastodon_feed_init_scripts() {
       accountLinkElem.href = account.url;
 
       let accountImageElem = mastodonFeedCreateElement('img', 'avatar');
-      accountImageElem.src = account.avatar;
+      accountImageElem.src = account.avatar_static;
+
+      accountLinkElem.addEventListener('mouseover', (event) => {
+        accountLinkElem.querySelector('.avatar').src = account.avatar;
+      });
+      accountLinkElem.addEventListener('mouseout', (event) => {
+        accountLinkElem.querySelector('.avatar').src = account.avatar_static;
+      });
 
       accountLinkElem.appendChild(accountImageElem);
       // inject emojis
