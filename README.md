@@ -29,11 +29,12 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | ------------------- | ----------------------------- | ----------------------------------------------------------------- |
 | **account**         |                               | your account ID ([a long number](#how-do-i-find-my-account-id))   |
 | **instance**        |                               | domain name of the instance (e.g. example.org)                    |
+| excludeBoosts       | false                         | exclude boosted statuses                                          |
 | darkmode            | false                         | enable dark mode                                                  |
 | text-loading        | "Loading Mastodon feed..."    | loading text                                                      |
 | text-boosted        | "boosted 🚀"                  | boosted status indicator text                                     |
 | text-viewOnInstance | "view on instance"            | view status on instance link text                                 |
-| text-showContent    | "Show content"                | text for content warning buttons                                 |
+| text-showContent    | "Show content"                | text for content warning buttons                                  |
 
 \* Attributes marked **bold** are required
 
@@ -70,7 +71,6 @@ If you are familiar with Github you can clone the repository right into your Wor
 
 ### Todo
 
-* support option for excluding replies
 * support option for custom date format
 * support additional media attachment types (currently only images and gifv supported)
 

@@ -32,6 +32,9 @@ The account ID (a long number - see FAQ on how to get it)
 * **instance** (required)
 Domain name of the instance (e.g. example.org)
 
+* **excludeBoosts**
+Exclude boosted statuses (Default: false)
+
 * **darkmode**
 Enable dark mode (Default: false)
 
@@ -71,7 +74,6 @@ Use the following URL to get your ID:
 `https://example.org/api/v2/search?q=username@example.org&resolve=true&limit=5`
 
 = Known Issues / Todo =
-* support option for excluding replies
 * support option for custom date format
 * support additional media attachment types (currently only images and gifv supported)
 
@@ -85,6 +87,7 @@ Use the following URL to get your ID:
 * fixed broken if post included media attachments other than images
 * fixed custom "view on instance" option
 * added option for custom content warning button text
+* added option to exclude boosted statuses
 * added support for gifv media attachments
 
 = 1.1.0 =

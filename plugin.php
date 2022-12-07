@@ -518,7 +518,8 @@ function include_mastodon_feed_display_feed($atts) {
           'text-boosted' => esc_html(INCLUDE_MASTODON_FEED_TEXT_BOOSTED),
           'text-viewoninstance' => esc_html(INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE),
           'text-showcontent' => esc_html(INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT),
-          'darkmode' => false,
+          'darkmode' => "false",
+          'excludeboosts' => "false",
       ), $atts
   );
   if(false === $atts['instance']) {
@@ -529,6 +530,9 @@ function include_mastodon_feed_display_feed($atts) {
   }
 
   $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/accounts/'.urlencode($atts['account']).'/statuses';
+  if("false" !== $atts['excludeboosts']) {
+    $apiUrl .= '?exclude_reblogs=true';
+  }
   $elemId = uniqid('include-mastodon-feed-');
   ob_start();
 ?>
