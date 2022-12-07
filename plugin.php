@@ -3,15 +3,11 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.3.0
+	Version: 1.3.1
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
 
-// load user config if available
-if(file_exists( plugin_dir_path( __FILE__ ) . DIRECTORY_SEPARATOR . 'config.php' )) {
-  require_once( plugin_dir_path( __FILE__ ) . DIRECTORY_SEPARATOR . 'config.php' );
-}
 // set defaults
 $constants = [
   [

@@ -43,9 +43,13 @@ Place the following shortcode right into the page. Either as shortcode block or 
 
 ### Additional customizations
 
-You can create a file config.php to overrwrite select settings
+You can define several plugin constants to set custom default options that will be applied site-wide.
 
-See [config-example.php](config-example.php) for a full list of supported settings
+1. Open your `wp-config.php` file
+2. Search for the line `/* Add any custom values between this line and the "stop editing" line. */`
+3. Define the options you want to override between this line and `/* That's all, stop editing! Happy publishing. */`
+
+See [config-example.php](config-example.php) for a full list of supported settings.
 
 ## Installation
 

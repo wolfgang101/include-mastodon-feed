@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -61,9 +61,13 @@ Text for content warning buttons (Default: Show content)
 
 = Additional customizations =
 
-You can create a file `config.php` to overrwrite select settings
+You can define several plugin constants to set custom default options that will be applied site-wide.
 
-See the included `config-example.php` file for a full list of supported settings
+1. Open your `wp-config.php` file
+2. Search for the line `/* Add any custom values between this line and the "stop editing" line. */`
+3. Define the options you want to override between the line from step #2 and `/* That's all, stop editing! Happy publishing. */`
+
+See the included `config-example.php` file for a full list of supported settings.
 
 
 == Frequently Asked Questions ==
@@ -92,6 +96,10 @@ Use the following URL to get your ID:
 
 == Changelog ==
 
+= 1.3.1 =
+* updated documentation that plugin constants for setting custom default options have to be defined in `wp-config.php`, as the previous config.php file gets removed with every automatic plugin update
+* removed `config.php` support
+
 = 1.3.0 =
 * added new feed options: excludeReplies, onlyPinned, onlyMedia
 
@@ -115,6 +123,9 @@ Use the following URL to get your ID:
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+* plugin constants for setting custom default options have to be defined in `wp-config.php`, as the previous config.php file gets removed with every automatic plugin update
 
 = 1.1.0 =
 * "loading" shortcode attribute was renamed to "text-loading"
