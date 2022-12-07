@@ -59,3 +59,7 @@
     // default view status on instance link text
     // can be overridden in shortcode
     define('INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE', 'view on instance',);
+
+    // default text for content warning buttons
+    define('INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT', 'Show content');
+    

@@ -44,6 +44,9 @@ Text indicating boosted statuses (Default: boosted 🚀)
 * **text-viewOnInstance**
 View status on instance link text (Default: view on instance)
 
+* **text-showContent**
+Text for content warning buttons (Default: Show content)
+
 = Additional customizations =
 
 You can create a file `config.php` to overrwrite select settings
@@ -80,6 +83,8 @@ Use the following URL to get your ID:
 
 = 1.2.0 =
 * fixed broken if post included media attachments other than images
+* fixed custom "view on instance" option
+* added option for custom content warning button text
 * added support for gifv media attachments
 
 = 1.1.0 =

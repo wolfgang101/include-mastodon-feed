@@ -56,6 +56,10 @@ $constants = [
     'key' => 'INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE',
     'value' => 'view on instance',
   ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT',
+    'value' => 'Show content',
+  ],
 ];
 foreach($constants as $constant) {
   if(!defined($constant['key'])) {
@@ -441,7 +445,7 @@ function include_mastodon_feed_init_scripts() {
             this.parentElement.nextSibling.style = 'display: block;';
             return false;
           }
-          cwLinkElem.innerHTML = 'Show content';
+          cwLinkElem.innerHTML = options.text.showContent;
           cwElem.appendChild(cwLinkElem);
 
           contentWrapperElem.appendChild(cwElem);
@@ -512,7 +516,8 @@ function include_mastodon_feed_display_feed($atts) {
 					'account' => false,
           'text-loading' => esc_html(INCLUDE_MASTODON_FEED_TEXT_LOADING),
           'text-boosted' => esc_html(INCLUDE_MASTODON_FEED_TEXT_BOOSTED),
-          'text-viewOnInstance' => esc_html(INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE),
+          'text-viewoninstance' => esc_html(INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE),
+          'text-showcontent' => esc_html(INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT),
           'darkmode' => false,
       ), $atts
   );
@@ -535,7 +540,8 @@ function include_mastodon_feed_display_feed($atts) {
         {
           text: {
             boosted: "<?php echo esc_html( $atts['text-boosted'] ); ?>",
-            viewOnInstance: "<?php echo esc_html( $atts['text-viewOnInstance'] ); ?>",
+            viewOnInstance: "<?php echo esc_html( $atts['text-viewoninstance'] ); ?>",
+            showContent: "<?php echo esc_html( $atts['text-showcontent'] ); ?>",
           }
         }
       );

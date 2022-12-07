@@ -33,7 +33,7 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | text-loading        | "Loading Mastodon feed..."    | loading text                                                      |
 | text-boosted        | "boosted 🚀"                  | boosted status indicator text                                     |
 | text-viewOnInstance | "view on instance"            | view status on instance link text                                 |
-
+| text-showContent    | "Show content"                | text for content warning buttons                                 |
 
 \* Attributes marked **bold** are required
 
