@@ -29,7 +29,10 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | ------------------- | ----------------------------- | ----------------------------------------------------------------- |
 | **account**         |                               | your account ID ([a long number](#how-do-i-find-my-account-id))   |
 | **instance**        |                               | domain name of the instance (e.g. example.org)                    |
+| excludeReplies      | false                         | exclude replies to other accounts                                 |
 | excludeBoosts       | false                         | exclude boosted statuses                                          |
+| onlyPinned          | false                         | Show only pinned statuses                                         |
+| onlyMedia           | false                         | Show only statuses containing media                               |
 | darkmode            | false                         | enable dark mode                                                  |
 | text-loading        | "Loading Mastodon feed..."    | loading text                                                      |
 | text-boosted        | "boosted 🚀"                  | boosted status indicator text                                     |

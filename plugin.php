@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.2.0
+	Version: 1.3.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -22,26 +22,46 @@ $constants = [
     'key' => 'INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE',
     'value' => false,
   ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS',
+    'value' => false,
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES',
+    'value' => false,
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_ONLY_PINNED',
+    'value' => false,
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_ONLY_MEDIA',
+    'value' => false,
+  ],
   // set styles
   [
-      'key' => 'INCLUDE_MASTODON_FEED_STYLE_BG_LIGHT_COLOR',
-      'value' => 'rgba(100, 100, 100, 0.15)',
+    'key' => 'INCLUDE_MASTODON_FEED_DARKMODE',
+    'value' => false,
   ],
   [
-      'key' => 'INCLUDE_MASTODON_FEED_STYLE_BG_DARK_COLOR',
-      'value' => 'rgba(155, 155, 155, 0.15)',
+    'key' => 'INCLUDE_MASTODON_FEED_STYLE_BG_LIGHT_COLOR',
+    'value' => 'rgba(100, 100, 100, 0.15)',
   ],
   [
-      'key' => 'INCLUDE_MASTODON_FEED_STYLE_ACCENT_COLOR',
-      'value' => 'rgb(99, 100, 255)',
+    'key' => 'INCLUDE_MASTODON_FEED_STYLE_BG_DARK_COLOR',
+    'value' => 'rgba(155, 155, 155, 0.15)',
   ],
   [
-      'key' => 'INCLUDE_MASTODON_FEED_STYLE_ACCENT_FONT_COLOR',
-      'value' => 'rgb(255, 255, 255)',
+    'key' => 'INCLUDE_MASTODON_FEED_STYLE_ACCENT_COLOR',
+    'value' => 'rgb(99, 100, 255)',
   ],
   [
-      'key' => 'INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS',
-      'value' => '0.25rem',
+    'key' => 'INCLUDE_MASTODON_FEED_STYLE_ACCENT_FONT_COLOR',
+    'value' => 'rgb(255, 255, 255)',
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS',
+    'value' => '0.25rem',
   ],
   // set texts
   [
@@ -318,7 +338,7 @@ function include_mastodon_feed_init_scripts() {
         }
         else {
           // TODO implement support for other media types
-          //      currently only image and video support implemented
+          //      currently only image and gifv support implemented
           mediaElem.innerHTML = 'Stripped ' + media.type + ' - only available on instance<br />';
           let permalinkElem = mastodonFeedCreateElement('span', 'permalink');
           permalinkElem.appendChild(mastodonFeedCreateElementPermalink(status, options.text.viewOnInstance));
@@ -488,6 +508,9 @@ function include_mastodon_feed_init_scripts() {
         const statuses = xhr.response;
         const rootElem = document.getElementById(elementId);
         rootElem.innerHTML = '';
+        <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
+          console.log(url);
+        <?php endif; ?>
         if (xhr.status === 200) {
           <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
             console.log(xhr.response);
@@ -518,20 +541,36 @@ function include_mastodon_feed_display_feed($atts) {
           'text-boosted' => esc_html(INCLUDE_MASTODON_FEED_TEXT_BOOSTED),
           'text-viewoninstance' => esc_html(INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE),
           'text-showcontent' => esc_html(INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT),
-          'darkmode' => "false",
-          'excludeboosts' => "false",
+          'darkmode' => filter_var(esc_html(INCLUDE_MASTODON_FEED_DARKMODE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+          'excludeboosts' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+          'excludereplies' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+          'onlypinned' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_PINNED), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+          'onlymedia' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_MEDIA), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
       ), $atts
   );
-  if(false === $atts['instance']) {
+  if(false == $atts['instance']) {
     return include_mastodon_feed_error('missing configuration: instance');
   }
-  if(false === $atts['account']) {
+  if(false == $atts['account']) {
     return include_mastodon_feed_error('missing configuration: account id');
   }
 
-  $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/accounts/'.urlencode($atts['account']).'/statuses';
-  if("false" !== $atts['excludeboosts']) {
-    $apiUrl .= '?exclude_reblogs=true';
+  $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/accounts/'.$atts['account'].'/statuses';
+  $getParams = [];
+  if(false != $atts['excludeboosts']) {
+    $getParams[] = 'exclude_reblogs=true';
+  }
+  if(false != $atts['excludereplies']) {
+    $getParams[] = 'exclude_replies=true';
+  }
+  if(true == $atts['onlypinned']) {
+    $getParams[] = 'pinned=true';
+  }
+  if(true == $atts['onlymedia']) {
+    $getParams[] = 'only_media=true';
+  }
+  if(sizeof($getParams) > 0) {
+    $apiUrl .= '?' . implode('&', $getParams);
   }
   $elemId = uniqid('include-mastodon-feed-');
   ob_start();
@@ -539,7 +578,7 @@ function include_mastodon_feed_display_feed($atts) {
   <script>
     window.addEventListener("load", () => {
       mastodonFeedLoad(
-        "<?php echo esc_url( $apiUrl ); ?>",
+        "<?php echo sanitize_url( $apiUrl, ['https'] ); ?>",
         "<?php echo esc_js( $elemId ); ?>",
         {
           text: {
@@ -551,7 +590,7 @@ function include_mastodon_feed_display_feed($atts) {
       );
     });
   </script>
-  <div class="include-mastodon-feed<?php echo ('true' == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo esc_attr( $elemId ); ?>"><?php echo esc_html( $atts['text-loading'] ); ?></div>
+  <div class="include-mastodon-feed<?php echo (true == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo esc_attr( $elemId ); ?>"><?php echo esc_html( $atts['text-loading'] ); ?></div>
 <?php
   return ob_get_clean();
 }

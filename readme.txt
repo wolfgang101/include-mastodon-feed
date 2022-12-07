@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -32,8 +32,17 @@ The account ID (a long number - see FAQ on how to get it)
 * **instance** (required)
 Domain name of the instance (e.g. example.org)
 
+* **excludeReplies**
+Exclude replies to other accounts (Default: false)
+
 * **excludeBoosts**
 Exclude boosted statuses (Default: false)
+
+* **onlyPinned**
+Show only pinned statuses (Default: false)
+
+* **onlyMedia**
+Show only statuses containing media (Default: false)
 
 * **darkmode**
 Enable dark mode (Default: false)
@@ -82,6 +91,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.3.0 =
+* added new feed options: excludeReplies, onlyPinned, onlyMedia
 
 = 1.2.0 =
 * fixed broken if post included media attachments other than images

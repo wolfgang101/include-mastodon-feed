@@ -21,6 +21,21 @@
     // plugin will show a warning if no default is set and instance is omitted in shortcode
     //define('INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE', 'example.org');
 
+    // enable dark mode
+    define('INCLUDE_MASTODON_FEED_DARKMODE', false);
+
+    // exclude boosts from statuses
+    define('INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS', false);
+
+    // exclude replies to other accounts from statuses
+    define('INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES', false);
+
+    // show only pinned statuses
+    define('INCLUDE_MASTODON_FEED_ONLY_PINNED', false);
+
+    // show only statuses containing media
+    define('INCLUDE_MASTODON_FEED_ONLY_MEDIA', false);
+
     /*
      *  DEFAULT STYLES
      */
