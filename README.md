@@ -72,7 +72,7 @@ If you are familiar with Github you can clone the repository right into your Wor
 
 * support option for excluding replies
 * support option for custom date format
-* support additional media attachment types (currently only images supported)
+* support additional media attachment types (currently only images and gifv supported)
 
 ## FAQ
 

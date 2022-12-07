@@ -261,7 +261,8 @@ function include_mastodon_feed_init_scripts() {
       return linkElem;
     }
 
-    const mastodonFeedCreateElementMediaAttachments = function(attachments) {
+    const mastodonFeedCreateElementMediaAttachments = function(status, options) {
+      let attachments = status.media_attachments;
       let mediaWrapperElem = mastodonFeedCreateElement('div', 'media');
       for(let mediaIndex = 0; mediaIndex < attachments.length; mediaIndex++) {
         let media = attachments[mediaIndex];
@@ -279,10 +280,44 @@ function include_mastodon_feed_init_scripts() {
           }
           mediaElem.appendChild(mediaElemImg);
         }
+        else if('gifv' == media.type) {
+          let mediaElemGifv = mastodonFeedCreateElement('video');
+          if(null === media.remote_url) {
+            mediaElemGifv.src = media.preview_url;
+          }
+          else {
+            mediaElemGifv.src = media.remote_url;
+            mediaElemGifv.loop = true;
+
+            "click mouseover".split(" ").forEach(function(e){
+              mediaElemGifv.addEventListener(e, (event) => {
+                let promise = document.querySelector('video').play();
+                if (promise !== undefined) {
+                    promise.then(_ => {
+                      mediaElemGifv.play();
+                      mediaElemGifv.style.cursor = 'auto';
+                    }).catch(error => {
+                        mediaElemGifv.style.cursor = 'pointer';
+                    });
+                }
+              });
+            });
+            mediaElemGifv.addEventListener('mouseout', (event) => {
+              mediaElemGifv.pause();
+              mediaElemGifv.currentTime = 0;
+            });
+          }
+          if(null !== media.description) {
+            mediaElemGifv.title = media.description;
+          }
+          mediaElem.appendChild(mediaElemGifv);
+        }
         else {
           // TODO implement support for other media types
-          //      currently only image support implemented
+          //      currently only image and video support implemented
           mediaElem.innerHTML = 'Stripped ' + media.type + ' - only available on instance<br />';
+          let permalinkElem = mastodonFeedCreateElement('span', 'permalink');
+          permalinkElem.appendChild(mastodonFeedCreateElementPermalink(status, options.text.viewOnInstance));
           mediaElem.appendChild(permalinkElem);
         }
         mediaWrapperElem.appendChild(mediaElem);
@@ -374,7 +409,7 @@ function include_mastodon_feed_init_scripts() {
         }
         let contentWrapperElem = mastodonFeedCreateElement('div', 'contentWrapper' + (isReblog ? ' boosted' : ''));
         let permalinkElem = mastodonFeedCreateElement('span', 'permalink');
-        permalinkElem.appendChild(mastodonFeedCreateElementPermalink(showStatus));
+        permalinkElem.appendChild(mastodonFeedCreateElementPermalink(showStatus, options.text.viewOnInstance));
 
         // add boosted post meta info
         if(isReblog) {
@@ -425,7 +460,7 @@ function include_mastodon_feed_init_scripts() {
 
         // handle media attachments
         if(showStatus.media_attachments.length > 0) {
-          let mediaAttachmentsElem = mastodonFeedCreateElementMediaAttachments(showStatus.media_attachments);
+          let mediaAttachmentsElem = mastodonFeedCreateElementMediaAttachments(showStatus, options);
           contentElem.appendChild(mediaAttachmentsElem);
         }
 
