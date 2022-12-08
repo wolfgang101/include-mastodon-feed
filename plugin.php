@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.3.1
+	Version: 1.4.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -59,7 +59,7 @@ $constants = [
     'key' => 'INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS',
     'value' => '0.25rem',
   ],
-  // set texts
+  // set texts and localization
   [
     'key' => 'INCLUDE_MASTODON_FEED_TEXT_LOADING',
     'value' => 'Loading Mastodon feed...',
@@ -75,6 +75,14 @@ $constants = [
   [
     'key' => 'INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT',
     'value' => 'Show content',
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_DATE_LOCALE',
+    'value' => 'en-US',
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_DATE_OPTIONS',
+    'value' => "{}",
   ],
 ];
 foreach($constants as $constant) {
@@ -94,11 +102,11 @@ function include_mastodon_feed_init_styles() {
 ?>
   <style>
     :root {
-      --include-mastodon-feed-bg-light: <?php echo esc_attr( INCLUDE_MASTODON_FEED_STYLE_BG_LIGHT_COLOR ); ?>;
-      --include-mastodon-feed-bg-dark: <?php echo esc_attr( INCLUDE_MASTODON_FEED_STYLE_BG_DARK_COLOR ); ?>;
-      --include-mastodon-feed-accent-color: <?php echo esc_attr( INCLUDE_MASTODON_FEED_STYLE_ACCENT_COLOR ); ?>;
-      --include-mastodon-feed-accent-font-color: <?php echo esc_attr( INCLUDE_MASTODON_FEED_STYLE_ACCENT_FONT_COLOR ); ?>;
-      --include-mastodon-feed-border-radius: <?php echo esc_attr( INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS ); ?>;
+      --include-mastodon-feed-bg-light: <?php echo filter_var( INCLUDE_MASTODON_FEED_STYLE_BG_LIGHT_COLOR, FILTER_UNSAFE_RAW ); ?>;
+      --include-mastodon-feed-bg-dark: <?php echo filter_var( INCLUDE_MASTODON_FEED_STYLE_BG_DARK_COLOR, FILTER_UNSAFE_RAW ); ?>;
+      --include-mastodon-feed-accent-color: <?php echo filter_var( INCLUDE_MASTODON_FEED_STYLE_ACCENT_COLOR, FILTER_UNSAFE_RAW ); ?>;
+      --include-mastodon-feed-accent-font-color: <?php echo filter_var( INCLUDE_MASTODON_FEED_STYLE_ACCENT_FONT_COLOR, FILTER_UNSAFE_RAW ); ?>;
+      --include-mastodon-feed-border-radius: <?php echo filter_var( INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS, FILTER_UNSAFE_RAW ); ?>;
     }
 
     .include-mastodon-feed .status {
@@ -113,9 +121,6 @@ function include_mastodon_feed_init_styles() {
     }
     .include-mastodon-feed .status a:hover {
       text-decoration: underline;
-    }
-    .include-mastodon-feed .account .permalink {
-      float: right;
     }
     .include-mastodon-feed .avatar {
       height: 1.25rem;
@@ -160,8 +165,11 @@ function include_mastodon_feed_init_styles() {
     .include-mastodon-feed .contentWarning .title {
       font-weight: bold;
     }
-    .include-mastodon-feed.content .emoji {
+    .include-mastodon-feed .content .emoji {
       height: 1rem;
+    }
+    .include-mastodon-feed .content .invisible {
+      display: none;
     }
     .include-mastodon-feed .media {
       display: flex;
@@ -301,36 +309,36 @@ function include_mastodon_feed_init_scripts() {
           mediaElem.appendChild(mediaElemImg);
         }
         else if('gifv' == media.type) {
-          let mediaElemGifv = mastodonFeedCreateElement('video');
+          let mediaElemGifv = mastodonFeedCreateElement('video', 'requiresInteraction');
           if(null === media.remote_url) {
-            mediaElemGifv.src = media.preview_url;
+            mediaElemGifv.src = media.url;
           }
           else {
             mediaElemGifv.src = media.remote_url;
-            mediaElemGifv.loop = true;
-
-            "click mouseover".split(" ").forEach(function(e){
-              mediaElemGifv.addEventListener(e, (event) => {
-                let promise = document.querySelector('video').play();
-                if (promise !== undefined) {
-                    promise.then(_ => {
-                      mediaElemGifv.play();
-                      mediaElemGifv.style.cursor = 'auto';
-                    }).catch(error => {
-                        mediaElemGifv.style.cursor = 'pointer';
-                    });
-                }
-              });
-            });
-            mediaElemGifv.addEventListener('mouseout', (event) => {
-              mediaElemGifv.pause();
-              mediaElemGifv.currentTime = 0;
-            });
           }
+          mediaElemGifv.loop = true;
           if(null !== media.description) {
             mediaElemGifv.title = media.description;
           }
           mediaElem.appendChild(mediaElemGifv);
+
+          "click mouseover".split(" ").forEach(function(e){
+            mediaElemGifv.addEventListener(e, (event) => {
+              let promise = document.querySelector('.include-mastodon-feed .requiresInteraction').play();
+              if (promise !== undefined) {
+                  promise.then(_ => {
+                    mediaElemGifv.play();
+                    mediaElemGifv.style.cursor = 'auto';
+                  }).catch(error => {
+                      mediaElemGifv.style.cursor = 'pointer';
+                  });
+              }
+            });
+          });
+          mediaElemGifv.addEventListener('mouseout', (event) => {
+            mediaElemGifv.pause();
+            mediaElemGifv.currentTime = 0;
+          });
         }
         else {
           // TODO implement support for other media types
@@ -383,11 +391,17 @@ function include_mastodon_feed_init_scripts() {
       return cardElem;
     }
 
-    const mastodonFeedCreateTimeinfo = function(status) {
-      let createdInfo = document.createTextNode(' on ' + new Date(status.created_at).toLocaleDateString('en-US'));
-      createdInfo.textContent += ' ' + new Date(status.created_at).toLocaleTimeString('en-US');
+    const mastodonFeedCreateElementTimeinfo = function(status, options, url = false) {
+      let createdInfo = mastodonFeedCreateElement('span', 'permalink');
+      createdInfo.innerHTML = ' on ';
+      if(false === url) {
+        createdInfo.innerHTML += new Date(status.created_at).toLocaleString(options.localization.date.locale, options.localization.date.options);
+      }
+      else {
+        createdInfo.appendChild(mastodonFeedCreateElementPermalink(status, new Date(status.created_at).toLocaleString(options.localization.date.locale, options.localization.date.options)));
+      }
       if(null !== status.edited_at) {
-        createdInfo.textContent += ' (edited)';
+        createdInfo.innerHTML += ' (edited)';
       }
       return createdInfo;
     }
@@ -412,13 +426,8 @@ function include_mastodon_feed_init_scripts() {
           boosterElem.appendChild(document.createTextNode( options.text.boosted ));
           accountElem.appendChild(boosterElem);
         }
-        else {
-          let origPermalinkElem = mastodonFeedCreateElement('span', 'permalink');
-          origPermalinkElem.appendChild(mastodonFeedCreateElementPermalink(status, options.text.viewOnInstance));
-          accountElem.appendChild(origPermalinkElem);
-        }
         accountElem.appendChild(mastodonFeedCreateElementAccountLink(status.account));
-        accountElem.appendChild(mastodonFeedCreateTimeinfo(status));
+        accountElem.appendChild(mastodonFeedCreateElementTimeinfo(status, options, (isReblog ? false : status.url)));
         
         statusElem.appendChild(accountElem);
 
@@ -428,16 +437,13 @@ function include_mastodon_feed_init_scripts() {
           showStatus = status.reblog;
         }
         let contentWrapperElem = mastodonFeedCreateElement('div', 'contentWrapper' + (isReblog ? ' boosted' : ''));
-        let permalinkElem = mastodonFeedCreateElement('span', 'permalink');
-        permalinkElem.appendChild(mastodonFeedCreateElementPermalink(showStatus, options.text.viewOnInstance));
 
         // add boosted post meta info
         if(isReblog) {
           let boostElem = mastodonFeedCreateElement('div', 'account');
-          boostElem.appendChild(permalinkElem);
           let boostAccountLink = mastodonFeedCreateElementAccountLink(showStatus.account);
           boostElem.appendChild(boostAccountLink);
-          boostElem.appendChild(mastodonFeedCreateTimeinfo(showStatus));
+          boostElem.appendChild(mastodonFeedCreateElementTimeinfo(showStatus, options, showStatus.url));
 
           contentWrapperElem.appendChild(boostElem);
         }
@@ -531,12 +537,14 @@ add_action('wp_footer', 'include_mastodon_feed_init_scripts');
 function include_mastodon_feed_display_feed($atts) {
   $atts = shortcode_atts(
       array(
-          'instance' => ( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE === false ? false : esc_attr(INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE) ),
+          'instance' => ( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE === false ? false : filter_var( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE, FILTER_UNSAFE_RAW ) ),
 					'account' => false,
-          'text-loading' => esc_html(INCLUDE_MASTODON_FEED_TEXT_LOADING),
-          'text-boosted' => esc_html(INCLUDE_MASTODON_FEED_TEXT_BOOSTED),
-          'text-viewoninstance' => esc_html(INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE),
-          'text-showcontent' => esc_html(INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT),
+          'text-loading' => INCLUDE_MASTODON_FEED_TEXT_LOADING,
+          'text-boosted' => INCLUDE_MASTODON_FEED_TEXT_BOOSTED,
+          'text-viewoninstance' => INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE,
+          'text-showcontent' => INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT,
+          'date-locale' => INCLUDE_MASTODON_FEED_DATE_LOCALE,
+          'date-options' => INCLUDE_MASTODON_FEED_DATE_OPTIONS,
           'darkmode' => filter_var(esc_html(INCLUDE_MASTODON_FEED_DARKMODE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'excludeboosts' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'excludereplies' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
@@ -575,12 +583,18 @@ function include_mastodon_feed_display_feed($atts) {
     window.addEventListener("load", () => {
       mastodonFeedLoad(
         "<?php echo sanitize_url( $apiUrl, ['https'] ); ?>",
-        "<?php echo esc_js( $elemId ); ?>",
+        "<?php echo filter_var( $elemId, FILTER_UNSAFE_RAW ); ?>",
         {
           text: {
-            boosted: "<?php echo esc_html( $atts['text-boosted'] ); ?>",
-            viewOnInstance: "<?php echo esc_html( $atts['text-viewoninstance'] ); ?>",
-            showContent: "<?php echo esc_html( $atts['text-showcontent'] ); ?>",
+            boosted: "<?php echo esc_js( $atts['text-boosted'] ); ?>",
+            viewOnInstance: "<?php echo esc_js( $atts['text-viewoninstance'] ); ?>",
+            showContent: "<?php echo esc_js( $atts['text-showcontent'] ); ?>",
+          },
+          localization: {
+            date: {
+              locale: "<?php echo filter_var( $atts['date-locale'], FILTER_UNSAFE_RAW ); ?>",
+              options: <?php echo filter_var( $atts['date-options'], FILTER_UNSAFE_RAW ); ?>,
+            }
           }
         }
       );

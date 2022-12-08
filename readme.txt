@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -59,6 +59,12 @@ View status on instance link text (Default: view on instance)
 * **text-showContent**
 Text for content warning buttons (Default: Show content)
 
+* **date-locale**
+Locale for date string, used in toLocaleString() (Default: en-US)
+
+* **date-options**
+Format options directly fed into toLocaleString() (Default: {})
+
 = Additional customizations =
 
 You can define several plugin constants to set custom default options that will be applied site-wide.
@@ -87,14 +93,20 @@ Use the following URL to get your ID:
 `https://example.org/api/v2/search?q=username@example.org&resolve=true&limit=5`
 
 = Known Issues / Todo =
-* support option for custom date format
-* support additional media attachment types (currently only images and gifv supported)
+* improve support for video and audio media attachment types
 
 == Screenshots ==
 
 * No screenshots
 
 == Changelog ==
+
+= 1.4.0 =
+* removed "view on instance" link and made date info clickable instead
+* added custom date locale and format option
+* fixed emoji and inline link styling issues in content blocks
+* fixed an issue with gifv media attachments
+* refactored option sanitizing and filtering
 
 = 1.3.1 =
 * updated documentation that plugin constants for setting custom default options have to be defined in `wp-config.php`, as the previous config.php file gets removed with every automatic plugin update
@@ -104,7 +116,7 @@ Use the following URL to get your ID:
 * added new feed options: excludeReplies, onlyPinned, onlyMedia
 
 = 1.2.0 =
-* fixed broken if post included media attachments other than images
+* fixed broken JavaScript if post included media attachments other than images
 * fixed custom "view on instance" option
 * added option for custom content warning button text
 * added option to exclude boosted statuses

@@ -60,7 +60,7 @@
 
 
     /*
-     *  DEFAULT TEXTS
+     *  DEFAULT TEXTS AND LOCALIZATION
      */
 
     // default loading text
@@ -78,3 +78,10 @@
     // default text for content warning buttons
     define('INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT', 'Show content');
     
+    // locale for date string, used in toLocaleString()
+    // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+    define('INCLUDE_MASTODON_FEED_DATE_LOCALE', 'en-US');
+
+    // format options directly fed into toLocaleString()
+    // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+    define('INCLUDE_MASTODON_FEED_DATE_OPTIONS', '{}');

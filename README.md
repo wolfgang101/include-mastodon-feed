@@ -38,6 +38,8 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | text-boosted        | "boosted 🚀"                  | boosted status indicator text                                     |
 | text-viewOnInstance | "view on instance"            | view status on instance link text                                 |
 | text-showContent    | "Show content"                | text for content warning buttons                                  |
+| date-locale         | "en-US"                       | locale for date string, used in toLocaleString()                  |
+| date-options        | "{}"                          | format options directly fed into toLocaleString()                 |
 
 \* Attributes marked **bold** are required
 
@@ -78,8 +80,7 @@ If you are familiar with Github you can clone the repository right into your Wor
 
 ### Todo
 
-* support option for custom date format
-* support additional media attachment types (currently only images and gifv supported)
+* improve support for video and audio media attachment types
 
 ## FAQ
 
