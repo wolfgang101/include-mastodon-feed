@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.4.1
+	Version: 1.4.2
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -165,7 +165,7 @@ function include_mastodon_feed_init_styles() {
     .include-mastodon-feed .contentWarning .title {
       font-weight: bold;
     }
-    .include-mastodon-feed .content .emoji {
+    .include-mastodon-feed img.emoji {
       height: 1rem;
     }
     .include-mastodon-feed .content .invisible {
