@@ -27,21 +27,22 @@ Place the following shortcode right into the page. Either as shortcode block or 
 
  | Attribute          | Default value                 | Example                   | Description                                                       |
 | ------------------- | ----------------------------- | ------------------------- | ----------------------------------------------------------------- |
-| **account**         |                               | id="012345678910"         | (required attribute) your account ID ([a long number](#how-do-i-find-my-account-id))   |
-| **instance**        |                               | instance="example.org"    | (required attribute) domain name of the instance                                       |
-| excludeReplies      | false                         | excludeReplies="true"     | exclude replies to other accounts                                 |
-| excludeBoosts       | false                         | excludeBoosts="true"      | exclude boosted statuses                                          |
+| **account**         |                               | id="012345678910"         | (required attribute) Your account ID ([a long number](#how-do-i-find-my-account-id))   |
+| **instance**        |                               | instance="example.org"    | (required attribute) Domain name of the instance                                       |
+| limit               | 20                            | limit="10"                | Maximum number of statuses                                        |
+| excludeReplies      | false                         | excludeReplies="true"     | Exclude replies to other accounts                                 |
+| excludeBoosts       | false                         | excludeBoosts="true"      | Exclude boosted statuses                                          |
 | onlyPinned          | false                         | onlyPinned="true"         | Show only pinned statuses                                         |
 | onlyMedia           | false                         | onlyMedia="true"          | Show only statuses containing media                               |
 | tagged              | false                         | tagged="tagname"          | Show only statuses that are tagged with given tag name (no #!)    |
 | linkTarget          | "_self"                       | linkTarget="_blank"       | Target for all links                                              |
-| darkmode            | false                         | darkmode="true"           | enable dark mode                                                  |
-| text-loading        | "Loading Mastodon feed..."    | text-loading="Loading ⏳" | loading text                                                      |
-| text-boosted        | "boosted 🚀"                  | text-boosted="🚀"         | boosted status indicator text                                     |
-| text-viewOnInstance | "view on instance"            | text-viewOnInstance="🔗"  | view status on instance link text                                 |
-| text-showContent    | "Show content"                | text-showContent="👀"     | text for content warning buttons                                  |
-| date-locale         | "en-US"                       | date-locale="de-DE"       | locale for date string, used in toLocaleString()                  |
-| date-options        | "{}"                          | date-options="{dateStyle: 'short', timeStyle: 'long'}" | format options directly fed into toLocaleString()                 |
+| darkmode            | false                         | darkmode="true"           | Enable dark mode                                                  |
+| text-loading        | "Loading Mastodon feed..."    | text-loading="Loading ⏳" | Loading text                                                      |
+| text-boosted        | "boosted 🚀"                  | text-boosted="🚀"         | Boosted status indicator text                                     |
+| text-viewOnInstance | "view on instance"            | text-viewOnInstance="🔗"  | View status on instance link text                                 |
+| text-showContent    | "Show content"                | text-showContent="👀"     | Text for content warning buttons                                  |
+| date-locale         | "en-US"                       | date-locale="de-DE"       | Locale for date string, used in toLocaleString()                  |
+| date-options        | "{}"                          | date-options="{dateStyle: 'short', timeStyle: 'long'}" | Format options directly fed into toLocaleString()                 |
 
 ### Additional customizations
 

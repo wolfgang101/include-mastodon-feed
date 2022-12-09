@@ -21,8 +21,8 @@
     // plugin will show a warning if no default is set and instance is omitted in shortcode
     //define('INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE', 'example.org');
 
-    // enable dark mode
-    define('INCLUDE_MASTODON_FEED_DARKMODE', false);
+    // Maximum number of statuses
+    define('INCLUDE_MASTODON_FEED_LIMIT', 20);
 
     // exclude boosts from statuses
     define('INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS', false);
@@ -46,6 +46,9 @@
     /*
      *  DEFAULT STYLES
      */
+
+    // enable dark mode
+    define('INCLUDE_MASTODON_FEED_DARKMODE', false);
 
     // define background color in light mode
     // (light mode default)

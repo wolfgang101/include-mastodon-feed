@@ -32,6 +32,9 @@ The account ID (a long number - see FAQ on how to get it)
 * **instance** (required)
 Domain name of the instance (e.g. example.org)
 
+* **limit**
+Maximum number of statuses (Default: 20)
+
 * **excludeReplies**
 Exclude replies to other accounts (Default: false)
 
@@ -111,6 +114,7 @@ Use the following URL to get your ID:
 = 1.5.0 =
 * added option to show only statuses with specific tag
 * added option to set link target to make links open in new tab
+* added option to set maximum number of statuses
 
 = 1.4.2 =
 * fixed styling issue with emojis in account display name

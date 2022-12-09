@@ -19,6 +19,10 @@ $constants = [
     'value' => false,
   ],
   [
+    'key' => 'INCLUDE_MASTODON_FEED_LIMIT',
+    'value' => 20,
+  ],
+  [
     'key' => 'INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS',
     'value' => false,
   ],
@@ -552,19 +556,22 @@ function include_mastodon_feed_display_feed($atts) {
       array(
           'instance' => ( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE === false ? false : filter_var( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE, FILTER_UNSAFE_RAW ) ),
 					'account' => false,
-          'text-loading' => INCLUDE_MASTODON_FEED_TEXT_LOADING,
-          'text-boosted' => INCLUDE_MASTODON_FEED_TEXT_BOOSTED,
-          'text-viewoninstance' => INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE,
-          'text-showcontent' => INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT,
-          'date-locale' => INCLUDE_MASTODON_FEED_DATE_LOCALE,
-          'date-options' => INCLUDE_MASTODON_FEED_DATE_OPTIONS,
-          'darkmode' => filter_var(esc_html(INCLUDE_MASTODON_FEED_DARKMODE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+          'limit' => INCLUDE_MASTODON_FEED_LIMIT,
           'excludeboosts' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'excludereplies' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'onlypinned' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_PINNED), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'onlymedia' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_MEDIA), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'tagged' => INCLUDE_MASTODON_FEED_TAGGED,
           'linktarget' => INCLUDE_MASTODON_FEED_LINKTARGET,
+
+          'text-loading' => INCLUDE_MASTODON_FEED_TEXT_LOADING,
+          'text-boosted' => INCLUDE_MASTODON_FEED_TEXT_BOOSTED,
+          'text-viewoninstance' => INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE,
+          'text-showcontent' => INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT,
+          'date-locale' => INCLUDE_MASTODON_FEED_DATE_LOCALE,
+          'date-options' => INCLUDE_MASTODON_FEED_DATE_OPTIONS,
+
+          'darkmode' => filter_var(esc_html(INCLUDE_MASTODON_FEED_DARKMODE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
       ), $atts
   );
   if(false == $atts['instance']) {
@@ -576,6 +583,9 @@ function include_mastodon_feed_display_feed($atts) {
 
   $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/accounts/'.$atts['account'].'/statuses';
   $getParams = [];
+  if($atts['limit'] != 20 && $atts['limit'] > 0) {
+    $getParams[] = 'limit=' . filter_var( $atts['limit'], FILTER_SANITIZE_NUMBER_INT );
+  }
   if(false != $atts['excludeboosts']) {
     $getParams[] = 'exclude_reblogs=true';
   }
