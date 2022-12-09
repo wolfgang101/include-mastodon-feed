@@ -36,6 +36,10 @@
     // show only statuses containing media
     define('INCLUDE_MASTODON_FEED_ONLY_MEDIA', false);
 
+    // only tagged statuses
+    // tag name without leading #, case insensitive
+    define('INCLUDE_MASTODON_FEED_TAGGED', 'tagname');
+
     /*
      *  DEFAULT STYLES
      */

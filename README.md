@@ -25,23 +25,22 @@ Place the following shortcode right into the page. Either as shortcode block or 
 
 ### Supported shortcode attributes
 
- | Attribute*         | Default value                 | Description                                                       |
-| ------------------- | ----------------------------- | ----------------------------------------------------------------- |
-| **account**         |                               | your account ID ([a long number](#how-do-i-find-my-account-id))   |
-| **instance**        |                               | domain name of the instance (e.g. example.org)                    |
-| excludeReplies      | false                         | exclude replies to other accounts                                 |
-| excludeBoosts       | false                         | exclude boosted statuses                                          |
-| onlyPinned          | false                         | Show only pinned statuses                                         |
-| onlyMedia           | false                         | Show only statuses containing media                               |
-| darkmode            | false                         | enable dark mode                                                  |
-| text-loading        | "Loading Mastodon feed..."    | loading text                                                      |
-| text-boosted        | "boosted 🚀"                  | boosted status indicator text                                     |
-| text-viewOnInstance | "view on instance"            | view status on instance link text                                 |
-| text-showContent    | "Show content"                | text for content warning buttons                                  |
-| date-locale         | "en-US"                       | locale for date string, used in toLocaleString()                  |
-| date-options        | "{}"                          | format options directly fed into toLocaleString()                 |
-
-\* Attributes marked **bold** are required
+ | Attribute          | Default value                 | Example                   | Description                                                       |
+| ------------------- | ----------------------------- | ------------------------- | ----------------------------------------------------------------- |
+| **account**         |                               | id="012345678910"         | (required attribute) your account ID ([a long number](#how-do-i-find-my-account-id))   |
+| **instance**        |                               | instance="example.org"    | (required attribute) domain name of the instance                                       |
+| excludeReplies      | false                         | excludeReplies="true"     | exclude replies to other accounts                                 |
+| excludeBoosts       | false                         | excludeBoosts="true"      | exclude boosted statuses                                          |
+| onlyPinned          | false                         | onlyPinned="true"         | Show only pinned statuses                                         |
+| onlyMedia           | false                         | onlyMedia="true"          | Show only statuses containing media                               |
+| tagged              | false                         | tagged="tagname"          | Show only statuses that are tagged with given tag name (no #!)    |
+| darkmode            | false                         | darkmode="true"           | enable dark mode                                                  |
+| text-loading        | "Loading Mastodon feed..."    | text-loading="Loading ⏳" | loading text                                                      |
+| text-boosted        | "boosted 🚀"                  | text-boosted="🚀"         | boosted status indicator text                                     |
+| text-viewOnInstance | "view on instance"            | text-viewOnInstance="🔗"  | view status on instance link text                                 |
+| text-showContent    | "Show content"                | text-showContent="👀"     | text for content warning buttons                                  |
+| date-locale         | "en-US"                       | date-locale="de-DE"       | locale for date string, used in toLocaleString()                  |
+| date-options        | "{}"                          | date-options="{dateStyle: 'short', timeStyle: 'long'}" | format options directly fed into toLocaleString()                 |
 
 ### Additional customizations
 

@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 1.4.2
+Stable tag: 1.5.0
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -43,6 +43,10 @@ Show only pinned statuses (Default: false)
 
 * **onlyMedia**
 Show only statuses containing media (Default: false)
+
+* **tagged**
+Show only statuses that are tagged with given tag name (Default: false)
+No leading #, case insensitive, e.g.: tagged="tagname"
 
 * **darkmode**
 Enable dark mode (Default: false)
@@ -100,6 +104,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.5.0 =
+* added option to show only statuses with specific tag
 
 = 1.4.2 =
 * fixed styling issue with emojis in account display name

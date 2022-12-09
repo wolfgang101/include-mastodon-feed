@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.4.2
+	Version: 1.5.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -32,6 +32,10 @@ $constants = [
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_ONLY_MEDIA',
+    'value' => false,
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_TAGGED',
     'value' => false,
   ],
   // set styles
@@ -550,6 +554,7 @@ function include_mastodon_feed_display_feed($atts) {
           'excludereplies' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'onlypinned' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_PINNED), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'onlymedia' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_MEDIA), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+          'tagged' => INCLUDE_MASTODON_FEED_TAGGED,
       ), $atts
   );
   if(false == $atts['instance']) {
@@ -572,6 +577,9 @@ function include_mastodon_feed_display_feed($atts) {
   }
   if(true == $atts['onlymedia']) {
     $getParams[] = 'only_media=true';
+  }
+  if(false != $atts['tagged']) {
+    $getParams[] = 'tagged=' . filter_var( $atts['tagged'], FILTER_UNSAFE_RAW );
   }
   if(sizeof($getParams) > 0) {
     $apiUrl .= '?' . implode('&', $getParams);
