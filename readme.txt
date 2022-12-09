@@ -48,6 +48,9 @@ Show only statuses containing media (Default: false)
 Show only statuses that are tagged with given tag name (Default: false)
 No leading #, case insensitive, e.g.: tagged="tagname"
 
+* **linkTarget**
+Target for all links e.g. new tab would be "_blank" (Default: _self)
+
 * **darkmode**
 Enable dark mode (Default: false)
 
@@ -107,6 +110,7 @@ Use the following URL to get your ID:
 
 = 1.5.0 =
 * added option to show only statuses with specific tag
+* added option to set link target to make links open in new tab
 
 = 1.4.2 =
 * fixed styling issue with emojis in account display name

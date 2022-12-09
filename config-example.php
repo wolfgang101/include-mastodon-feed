@@ -40,6 +40,9 @@
     // tag name without leading #, case insensitive
     define('INCLUDE_MASTODON_FEED_TAGGED', 'tagname');
 
+    // target for all links (e.g. new tab "_blank")
+    define('INCLUDE_MASTODON_FEED_TAGGED', '_self');
+
     /*
      *  DEFAULT STYLES
      */

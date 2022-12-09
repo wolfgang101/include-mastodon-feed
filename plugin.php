@@ -11,8 +11,8 @@
 // set defaults
 $constants = [
   [
-      'key' => 'INCLUDE_MASTODON_FEED_DEBUG',
-      'value' => false,
+    'key' => 'INCLUDE_MASTODON_FEED_DEBUG',
+    'value' => false,
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE',
@@ -37,6 +37,10 @@ $constants = [
   [
     'key' => 'INCLUDE_MASTODON_FEED_TAGGED',
     'value' => false,
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_LINKTARGET',
+    'value' => '_self',
   ],
   // set styles
   [
@@ -504,6 +508,11 @@ function include_mastodon_feed_init_scripts() {
         statusElem.appendChild(contentWrapperElem);
         rootElem.appendChild(statusElem);
       }
+      if('_self' != options.linkTarget) {
+        rootElem.querySelectorAll('a').forEach(function(e) {
+          e.target = options.linkTarget;
+        });
+      }
     }
 
     const mastodonFeedLoad = function(url, elementId, options) {
@@ -555,6 +564,7 @@ function include_mastodon_feed_display_feed($atts) {
           'onlypinned' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_PINNED), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'onlymedia' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_MEDIA), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'tagged' => INCLUDE_MASTODON_FEED_TAGGED,
+          'linktarget' => INCLUDE_MASTODON_FEED_LINKTARGET,
       ), $atts
   );
   if(false == $atts['instance']) {
@@ -593,6 +603,7 @@ function include_mastodon_feed_display_feed($atts) {
         "<?php echo sanitize_url( $apiUrl, ['https'] ); ?>",
         "<?php echo filter_var( $elemId, FILTER_UNSAFE_RAW ); ?>",
         {
+          linkTarget: "<?php echo filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW ); ?>",
           text: {
             boosted: "<?php echo esc_js( $atts['text-boosted'] ); ?>",
             viewOnInstance: "<?php echo esc_js( $atts['text-viewoninstance'] ); ?>",
