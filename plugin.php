@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.5.0
+	Version: 1.6.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -308,6 +308,8 @@ function include_mastodon_feed_init_scripts() {
         let media = attachments[mediaIndex];
         let mediaElem = mastodonFeedCreateElement('div', 'image');
         if('image' == media.type) {
+          let mediaElemImgLink = mastodonFeedCreateElement('a');
+          mediaElemImgLink.href = status.url;
           let mediaElemImg = mastodonFeedCreateElement('img');
           if(null === media.remote_url) {
             mediaElemImg.src = media.preview_url;
@@ -318,9 +320,12 @@ function include_mastodon_feed_init_scripts() {
           if(null !== media.description) {
             mediaElemImg.title = media.description;
           }
-          mediaElem.appendChild(mediaElemImg);
+          mediaElemImgLink.appendChild(mediaElemImg);
+          mediaElem.appendChild(mediaElemImgLink);
         }
         else if('gifv' == media.type) {
+          let mediaElemGifvLink = mastodonFeedCreateElement('a');
+          mediaElemGifvLink.href = status.url;
           let mediaElemGifv = mastodonFeedCreateElement('video', 'requiresInteraction');
           if(null === media.remote_url) {
             mediaElemGifv.src = media.url;
@@ -332,7 +337,8 @@ function include_mastodon_feed_init_scripts() {
           if(null !== media.description) {
             mediaElemGifv.title = media.description;
           }
-          mediaElem.appendChild(mediaElemGifv);
+          mediaElemGifvLink.appendChild(mediaElemGifv);
+          mediaElem.appendChild(mediaElemGifvLink);
 
           "click mouseover".split(" ").forEach(function(e){
             mediaElemGifv.addEventListener(e, (event) => {

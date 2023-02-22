@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.6.0
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -110,6 +110,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.6.0 =
+* image attachments are now clickable (link to original status)
 
 = 1.5.0 =
 * added option to show only statuses with specific tag
