@@ -59,7 +59,13 @@ See [config-example.php](config-example.php) for a full list of supported settin
 
 ## Installation
 
-The plugin is not yet listed in the official Wordpress plugin directory
+The plugin is available through the official Wordpress plugin directory https://wordpress.org/plugins/include-mastodon-feed/
+
+1. Log into your Wordpress installation
+2. Go to "Plugins" and select "Add New"
+3. Search for "Include Mastodon Feed"
+4. Hit the "Install" button
+5. After installation hit the "Activate" button
 
 ### Installation via ZIP file
 
