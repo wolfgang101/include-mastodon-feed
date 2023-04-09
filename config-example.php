@@ -86,12 +86,28 @@
     define('INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE', 'view on instance',);
 
     // default text for content warning buttons
+    // can be overridden in shortcode
     define('INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT', 'Show content');
     
+    // default text in front of post permalink (date & time)
+    // can be overridden in shortcode
+    define('INCLUDE_MASTODON_FEED_TEXT_PERMALINK_PRE', 'on');
+
+    // default text after post permalink (date & time)
+    // can be overridden in shortcode
+    // empty by default
+    define('INCLUDE_MASTODON_FEED_TEXT_PERMALINK_POST', '');
+
+    // default text indicating edited posts
+    // can be overridden in shortcode
+    define('INCLUDE_MASTODON_FEED_TEXT_EDITED', '(edited)');
+
     // locale for date string, used in toLocaleString()
     // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+    // can be overridden in shortcode
     define('INCLUDE_MASTODON_FEED_DATE_LOCALE', 'en-US');
 
     // format options directly fed into toLocaleString()
     // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+    // can be overridden in shortcode
     define('INCLUDE_MASTODON_FEED_DATE_OPTIONS', '{}');

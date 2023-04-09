@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.6.0
+	Version: 1.7.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -87,6 +87,18 @@ $constants = [
   [
     'key' => 'INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT',
     'value' => 'Show content',
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_TEXT_PERMALINK_PRE',
+    'value' => 'on',
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_TEXT_PERMALINK_POST',
+    'value' => '',
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_TEXT_EDITED',
+    'value' => '(edited)',
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_DATE_LOCALE',
@@ -411,15 +423,16 @@ function include_mastodon_feed_init_scripts() {
 
     const mastodonFeedCreateElementTimeinfo = function(status, options, url = false) {
       let createdInfo = mastodonFeedCreateElement('span', 'permalink');
-      createdInfo.innerHTML = ' on ';
+      createdInfo.innerHTML = ' ' + options.text.permalinkPre + ' ';
       if(false === url) {
         createdInfo.innerHTML += new Date(status.created_at).toLocaleString(options.localization.date.locale, options.localization.date.options);
       }
       else {
         createdInfo.appendChild(mastodonFeedCreateElementPermalink(status, new Date(status.created_at).toLocaleString(options.localization.date.locale, options.localization.date.options)));
       }
+      createdInfo.innerHTML += ' ' + options.text.permalinkPost + ' ';
       if(null !== status.edited_at) {
-        createdInfo.innerHTML += ' (edited)';
+        createdInfo.innerHTML += ' ' + options.text.edited;
       }
       return createdInfo;
     }
@@ -574,6 +587,9 @@ function include_mastodon_feed_display_feed($atts) {
           'text-boosted' => INCLUDE_MASTODON_FEED_TEXT_BOOSTED,
           'text-viewoninstance' => INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE,
           'text-showcontent' => INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT,
+          'text-permalinkpre' => INCLUDE_MASTODON_FEED_TEXT_PERMALINK_PRE,
+          'text-permalinkpost' => INCLUDE_MASTODON_FEED_TEXT_PERMALINK_POST,
+          'text-edited' => INCLUDE_MASTODON_FEED_TEXT_EDITED,
           'date-locale' => INCLUDE_MASTODON_FEED_DATE_LOCALE,
           'date-options' => INCLUDE_MASTODON_FEED_DATE_OPTIONS,
 
@@ -624,6 +640,9 @@ function include_mastodon_feed_display_feed($atts) {
             boosted: "<?php echo esc_js( $atts['text-boosted'] ); ?>",
             viewOnInstance: "<?php echo esc_js( $atts['text-viewoninstance'] ); ?>",
             showContent: "<?php echo esc_js( $atts['text-showcontent'] ); ?>",
+            permalinkPre: "<?php echo esc_js( $atts['text-permalinkpre'] ); ?>",
+            permalinkPost: "<?php echo esc_js( $atts['text-permalinkpost'] ); ?>",
+            edited: "<?php echo esc_js( $atts['text-edited'] ); ?>",
           },
           localization: {
             date: {

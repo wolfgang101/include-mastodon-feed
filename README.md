@@ -41,6 +41,9 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | text-boosted        | "boosted 🚀"                  | text-boosted="🚀"         | Boosted status indicator text                                     |
 | text-viewOnInstance | "view on instance"            | text-viewOnInstance="🔗"  | View status on instance link text                                 |
 | text-showContent    | "Show content"                | text-showContent="👀"     | Text for content warning buttons                                  |
+| text-permalinkPre   | "on"                          | text-showContent="📅"     | Text before post permalink (date & time)                          |
+| text-permalinkPost  | ""                            | text-showContent="📅"     | Text after post permalink (date & time)                           |
+| text-edited         | "(edited)"                    | text-showContent="✏"      | Text indicating edited posts                                      |
 | date-locale         | "en-US"                       | date-locale="de-DE"       | Locale for date string, used in toLocaleString()                  |
 | date-options        | "{}"                          | date-options="{dateStyle: 'short', timeStyle: 'long'}" | Format options directly fed into toLocaleString()                 |
 
@@ -82,6 +85,8 @@ If you are familiar with Github you can clone the repository right into your Wor
 ### Todo
 
 * improve support for video and audio media attachment types
+* integrate i18n into translate.wordpress.org instead
+* re-build plugin as custom gutenberg block
 
 ## FAQ
 

@@ -3,9 +3,9 @@ Contributors: wolfgang101
 Donate link: https://wolfgang.lol/
 Tags: mastodon, status, feed
 Requires at least: 6.0
-Tested up to: 6.1.1
+Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 1.6.0
+Stable tag: 1.7.0
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -69,6 +69,15 @@ View status on instance link text (Default: view on instance)
 * **text-showContent**
 Text for content warning buttons (Default: Show content)
 
+* **text-permalinkPre**
+Text before post permalink (date & time) (Default: on)
+
+* **text-permalinkPost**
+Text after post permalink (date & time) (Default: )
+
+* **text-edited**
+Text indicating edited posts (Default: (edited))
+
 * **date-locale**
 Locale for date string, used in toLocaleString() (Default: en-US)
 
@@ -104,12 +113,19 @@ Use the following URL to get your ID:
 
 = Known Issues / Todo =
 * improve support for video and audio media attachment types
+* integrate i18n into translate.wordpress.org instead
+* re-build plugin as custom gutenberg block
 
 == Screenshots ==
 
 * No screenshots
 
 == Changelog ==
+
+= 1.7.0 =
+* bumped tested wordpress version to 6.2
+* added option to customize permalink text (before and after date/time)
+* added option to customize text indicating edited posts
 
 = 1.6.0 =
 * image attachments are now clickable (link to original status)
