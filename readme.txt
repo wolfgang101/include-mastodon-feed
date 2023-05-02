@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 1.7.0
+Stable tag: 1.8.0
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -113,7 +113,7 @@ Use the following URL to get your ID:
 
 = Known Issues / Todo =
 * improve support for video and audio media attachment types
-* integrate i18n into translate.wordpress.org instead
+* integrate i18n into translate.wordpress.org instead of text constants
 * re-build plugin as custom gutenberg block
 
 == Screenshots ==
@@ -121,6 +121,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.8.0 =
+* refactoring: introducing plugin namespace
 
 = 1.7.0 =
 * bumped tested wordpress version to 6.2

@@ -3,10 +3,12 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.7.0
+	Version: 1.8.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
+
+namespace IncludeMastodonFeed;
 
 // set defaults
 $constants = [
@@ -116,12 +118,12 @@ foreach($constants as $constant) {
 }
 unset($constants);
 
-function include_mastodon_feed_error($msg) {
+function error($msg) {
   return '[include-mastodon-feed] ' . $msg;
 }
 
 
-function include_mastodon_feed_init_styles() {
+function init_styles() {
   ob_start();
 ?>
   <style>
@@ -265,9 +267,9 @@ function include_mastodon_feed_init_styles() {
 <?php
   echo ob_get_clean();
 }
-add_action('wp_head', 'include_mastodon_feed_init_styles', 7);
+add_action('wp_head', __NAMESPACE__ . '\init_styles', 7);
 
-function include_mastodon_feed_init_scripts() {
+function init_scripts() {
   ob_start();
 ?>
   <script>
@@ -568,9 +570,9 @@ function include_mastodon_feed_init_scripts() {
 <?php
   echo ob_get_clean();
 }
-add_action('wp_footer', 'include_mastodon_feed_init_scripts');
+add_action('wp_footer', __NAMESPACE__ . '\init_scripts');
 
-function include_mastodon_feed_display_feed($atts) {
+function display_feed($atts) {
   $atts = shortcode_atts(
       array(
           'instance' => ( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE === false ? false : filter_var( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE, FILTER_UNSAFE_RAW ) ),
@@ -597,10 +599,10 @@ function include_mastodon_feed_display_feed($atts) {
       ), $atts
   );
   if(false == $atts['instance']) {
-    return include_mastodon_feed_error('missing configuration: instance');
+    return error('missing configuration: instance');
   }
   if(false == $atts['account']) {
-    return include_mastodon_feed_error('missing configuration: account id');
+    return error('missing configuration: account id');
   }
 
   $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/accounts/'.$atts['account'].'/statuses';
@@ -658,4 +660,4 @@ function include_mastodon_feed_display_feed($atts) {
 <?php
   return ob_get_clean();
 }
-add_shortcode('include-mastodon-feed', 'include_mastodon_feed_display_feed');
+add_shortcode('include-mastodon-feed', __NAMESPACE__ . '\display_feed');

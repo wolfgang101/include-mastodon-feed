@@ -91,7 +91,7 @@ If you are familiar with Github you can clone the repository right into your Wor
 ### Todo
 
 * improve support for video and audio media attachment types
-* integrate i18n into translate.wordpress.org instead
+* integrate i18n into translate.wordpress.org instead of text constants
 * re-build plugin as custom gutenberg block
 
 ## FAQ
