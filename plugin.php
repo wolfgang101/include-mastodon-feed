@@ -8,7 +8,7 @@
 	Author URI: https://wolfgang.lol
 */
 
-namespace IncludeMastodonFeed;
+namespace IncludeMastodonFeedPlugin;
 
 // set defaults
 $constants = [
@@ -554,17 +554,17 @@ function init_scripts() {
         const rootElem = document.getElementById(elementId);
         rootElem.innerHTML = '';
         <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
-          console.log(url);
+          console.log("<?php echo __NAMESPACE__; ?>", url);
         <?php endif; ?>
         if (xhr.status === 200) {
           <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
-            console.log(xhr.response);
+            console.log("<?php echo __NAMESPACE__; ?>", xhr.response);
           <?php endif; ?>
           mastodonFeedRenderStatuses(statuses, rootElem, options);
         }
         else {
           <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
-            console.log(xhr);
+            console.log("<?php echo __NAMESPACE__; ?>", xhr);
           <?php endif; ?>
           rootElem.appendChild(document.createTextNode(xhr.response.error));
         }
