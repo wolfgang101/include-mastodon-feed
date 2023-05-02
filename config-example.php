@@ -41,7 +41,7 @@
     define('INCLUDE_MASTODON_FEED_TAGGED', 'tagname');
 
     // target for all links (e.g. new tab "_blank")
-    define('INCLUDE_MASTODON_FEED_TAGGED', '_self');
+    define('INCLUDE_MASTODON_FEED_LINKTARGET', '_self');
 
     /*
      *  DEFAULT STYLES
