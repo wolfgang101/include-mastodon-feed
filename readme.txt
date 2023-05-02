@@ -128,6 +128,7 @@ Use the following URL to get your ID:
 = 1.8.0 =
 * added option to show/hide preview cards
 * refactoring: introducing plugin namespace
+* refactoring: improved debug console output
 
 = 1.7.0 =
 * bumped tested wordpress version to 6.2
