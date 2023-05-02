@@ -43,6 +43,9 @@
     // target for all links (e.g. new tab "_blank")
     define('INCLUDE_MASTODON_FEED_LINKTARGET', '_self');
 
+    // show / hide preview cards
+    define('INCLUDE_MASTODON_FEED_SHOW_PREVIEWCARDS', true);
+
     /*
      *  DEFAULT STYLES
      */

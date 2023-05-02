@@ -54,6 +54,9 @@ No leading #, case insensitive, e.g.: tagged="tagname"
 * **linkTarget**
 Target for all links e.g. new tab would be "_blank" (Default: _self)
 
+* **showPreviewCards**
+Show preview cards (Default: true)
+
 * **darkmode**
 Enable dark mode (Default: false)
 
@@ -123,6 +126,7 @@ Use the following URL to get your ID:
 == Changelog ==
 
 = 1.8.0 =
+* added option to show/hide preview cards
 * refactoring: introducing plugin namespace
 
 = 1.7.0 =

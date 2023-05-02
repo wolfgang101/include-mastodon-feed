@@ -48,6 +48,11 @@ $constants = [
     'key' => 'INCLUDE_MASTODON_FEED_LINKTARGET',
     'value' => '_self',
   ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_SHOW_PREVIEWCARDS',
+    'value' => true,
+  ],
+
   // set styles
   [
     'key' => 'INCLUDE_MASTODON_FEED_DARKMODE',
@@ -524,7 +529,7 @@ function init_scripts() {
         }
 
         // handle preview card
-        if(showStatus.card != null) {
+        if(options.showPreviewCards && showStatus.card != null) {
           let cardElem = mastodonFeedCreateElementPreviewCard(showStatus.card);
           contentElem.appendChild(cardElem);
         }
@@ -584,6 +589,7 @@ function display_feed($atts) {
           'onlymedia' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_MEDIA), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'tagged' => INCLUDE_MASTODON_FEED_TAGGED,
           'linktarget' => INCLUDE_MASTODON_FEED_LINKTARGET,
+          'showpreviewcards' => filter_var(esc_html(INCLUDE_MASTODON_FEED_SHOW_PREVIEWCARDS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
 
           'text-loading' => INCLUDE_MASTODON_FEED_TEXT_LOADING,
           'text-boosted' => INCLUDE_MASTODON_FEED_TEXT_BOOSTED,
@@ -598,6 +604,7 @@ function display_feed($atts) {
           'darkmode' => filter_var(esc_html(INCLUDE_MASTODON_FEED_DARKMODE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
       ), $atts
   );
+
   if(false == $atts['instance']) {
     return error('missing configuration: instance');
   }
@@ -638,6 +645,7 @@ function display_feed($atts) {
         "<?php echo filter_var( $elemId, FILTER_UNSAFE_RAW ); ?>",
         {
           linkTarget: "<?php echo filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW ); ?>",
+          showPreviewCards: <?php echo (filter_var( $atts['showpreviewcards'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           text: {
             boosted: "<?php echo esc_js( $atts['text-boosted'] ); ?>",
             viewOnInstance: "<?php echo esc_js( $atts['text-viewoninstance'] ); ?>",

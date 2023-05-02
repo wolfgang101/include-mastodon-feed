@@ -36,6 +36,7 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | onlyMedia           | false                         | onlyMedia="true"          | Show only statuses containing media                               |
 | tagged              | false                         | tagged="tagname"          | Show only statuses that are tagged with given tag name (no #!)    |
 | linkTarget          | "_self"                       | linkTarget="_blank"       | Target for all links                                              |
+| showPreviewCards    | true                          | showPreviewCards="false"  | Show preview cards                                                |
 | darkmode            | false                         | darkmode="true"           | Enable dark mode                                                  |
 | text-loading        | "Loading Mastodon feed..."    | text-loading="Loading ⏳" | Loading text                                                      |
 | text-boosted        | "boosted 🚀"                  | text-boosted="🚀"         | Boosted status indicator text                                     |
