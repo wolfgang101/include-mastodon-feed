@@ -268,6 +268,9 @@ function init_styles() {
     .include-mastodon-feed.dark .card {
       background: var(--include-mastodon-feed-bg-dark);
     }
+    .include-mastodon-feed {
+      word-wrap: break-word;
+   }
   </style>
 <?php
   echo ob_get_clean();
