@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -30,7 +30,7 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
 The account ID (a long number - see FAQ on how to get it)
 
 * **instance** (required)
-Domain name of the instance (e.g. example.org)
+Domain name of the instance without https:// (e.g. example.org)
 
 * **limit**
 Maximum number of statuses (Default: 20)
@@ -124,6 +124,11 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.8.1 =
+* fix: boolean param validation was wonky
+* fix: stop links from overflowing (thanks to https://github.com/moan0s for contributing)
+* refactoring: improved styling of embedded images
 
 = 1.8.0 =
 * added option to show/hide preview cards

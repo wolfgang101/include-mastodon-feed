@@ -28,7 +28,7 @@ Place the following shortcode right into the page. Either as shortcode block or 
  | Attribute          | Default value                 | Example                   | Description                                                       |
 | ------------------- | ----------------------------- | ------------------------- | ----------------------------------------------------------------- |
 | **account**         |                               | id="012345678910"         | (required attribute) Your account ID ([a long number](#how-do-i-find-my-account-id))   |
-| **instance**        |                               | instance="example.org"    | (required attribute) Domain name of the instance                                       |
+| **instance**        |                               | instance="example.org"    | (required attribute) Domain name of the instance without https:// |
 | limit               | 20                            | limit="10"                | Maximum number of statuses                                        |
 | excludeReplies      | false                         | excludeReplies="true"     | Exclude replies to other accounts                                 |
 | excludeBoosts       | false                         | excludeBoosts="true"      | Exclude boosted statuses                                          |

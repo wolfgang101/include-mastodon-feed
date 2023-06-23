@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.8.0
+	Version: 1.8.1
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -149,6 +149,7 @@ function init_styles() {
     .include-mastodon-feed .status a {
       color: var(--include-mastodon-feed-accent-color);
       text-decoration: none;
+      word-wrap: break-word;
     }
     .include-mastodon-feed .status a:hover {
       text-decoration: underline;
@@ -215,11 +216,16 @@ function init_styles() {
       font-weight: bold;
       text-align: center;
       flex-basis: calc(50% - 0.5rem);
-      flex-grow: 1;
     }
-    .include-mastodon-feed .media .image img {
+    .include-mastodon-feed .media .image a { 
       border-radius: var(--include-mastodon-feed-border-radius);
-      max-width: 100%;
+      display: block;
+      aspect-ratio: 1.618;                                                      
+      background-size: cover;
+      background-position: center;
+    }   
+    .include-mastodon-feed .media .image a:hover {
+      filter: contrast(110%) brightness(130%) saturate(130%);
     }
     .include-mastodon-feed .card {
       border-radius: var(--include-mastodon-feed-border-radius);
@@ -260,17 +266,11 @@ function init_styles() {
     .include-mastodon-feed .card .title {
       font-weight: bold;
     }
-  
-
-
     .include-mastodon-feed.dark .status,
     .include-mastodon-feed.dark .contentWrapper.boosted,
     .include-mastodon-feed.dark .card {
       background: var(--include-mastodon-feed-bg-dark);
     }
-    .include-mastodon-feed {
-      word-wrap: break-word;
-   }
   </style>
 <?php
   echo ob_get_clean();
@@ -332,17 +332,15 @@ function init_scripts() {
         if('image' == media.type) {
           let mediaElemImgLink = mastodonFeedCreateElement('a');
           mediaElemImgLink.href = status.url;
-          let mediaElemImg = mastodonFeedCreateElement('img');
           if(null === media.remote_url) {
-            mediaElemImg.src = media.preview_url;
+            mediaElemImgLink.style.backgroundImage = 'url("' + media.preview_url + '")';
           }
           else {
-            mediaElemImg.src = media.remote_url;
+            mediaElemImgLink.style.backgroundImage = 'url("' + media.remote_url + '")';
           }
           if(null !== media.description) {
-            mediaElemImg.title = media.description;
+            mediaElem.title = media.description;
           }
-          mediaElemImgLink.appendChild(mediaElemImg);
           mediaElem.appendChild(mediaElemImgLink);
         }
         else if('gifv' == media.type) {
@@ -605,13 +603,13 @@ function display_feed($atts) {
           'date-options' => INCLUDE_MASTODON_FEED_DATE_OPTIONS,
 
           'darkmode' => filter_var(esc_html(INCLUDE_MASTODON_FEED_DARKMODE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
-      ), $atts
+      ), array_change_key_case($atts, CASE_LOWER)
   );
 
-  if(false == $atts['instance']) {
+  if(false === filter_var($atts['instance'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
     return error('missing configuration: instance');
   }
-  if(false == $atts['account']) {
+  if(false === filter_var($atts['account'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
     return error('missing configuration: account id');
   }
 
@@ -620,19 +618,19 @@ function display_feed($atts) {
   if($atts['limit'] != 20 && $atts['limit'] > 0) {
     $getParams[] = 'limit=' . filter_var( $atts['limit'], FILTER_SANITIZE_NUMBER_INT );
   }
-  if(false != $atts['excludeboosts']) {
+  if(false !== filter_var($atts['excludeboosts'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
     $getParams[] = 'exclude_reblogs=true';
   }
-  if(false != $atts['excludereplies']) {
+  if(false !== filter_var($atts['excludereplies'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
     $getParams[] = 'exclude_replies=true';
   }
-  if(true == $atts['onlypinned']) {
+  if(true === filter_var($atts['onlypinned'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
     $getParams[] = 'pinned=true';
   }
-  if(true == $atts['onlymedia']) {
+  if(true === filter_var($atts['onlymedia'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
     $getParams[] = 'only_media=true';
   }
-  if(false != $atts['tagged']) {
+  if(false !== filter_var($atts['tagged'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
     $getParams[] = 'tagged=' . filter_var( $atts['tagged'], FILTER_UNSAFE_RAW );
   }
   if(sizeof($getParams) > 0) {
