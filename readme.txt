@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 1.8.1
+Stable tag: 1.9.0
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -37,6 +37,9 @@ Maximum number of statuses (Default: 20)
 
 * **excludeReplies**
 Exclude replies to other accounts (Default: false)
+
+* **excludeConversationStarters**
+Exclude statuses that start with a user mention (Default: false)
 
 * **excludeBoosts**
 Exclude boosted statuses (Default: false)
@@ -125,6 +128,9 @@ Use the following URL to get your ID:
 
 == Changelog ==
 
+= 1.9.0 =
+* added option to exclude conversation starters (posts that start with a user mention)
+
 = 1.8.1 =
 * fix: boolean param validation was wonky
 * fix: stop links from overflowing (thanks to https://github.com/moan0s for contributing)
@@ -188,6 +194,9 @@ Use the following URL to get your ID:
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.8.1 =
+* minor style updates - if you have custom styling make sure to check if all is good
 
 = 1.3.1 =
 * plugin constants for setting custom default options have to be defined in `wp-config.php`, as the previous config.php file gets removed with every automatic plugin update

@@ -30,6 +30,9 @@
     // exclude replies to other accounts from statuses
     define('INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES', false);
 
+    // exclude statuses that start with a user mention
+    define('INCLUDE_MASTODON_FEED_EXCLUDE_CONVERSATIONSTARTERS', false);
+
     // show only pinned statuses
     define('INCLUDE_MASTODON_FEED_ONLY_PINNED', false);
 

@@ -30,8 +30,9 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | **account**         |                               | id="012345678910"         | (required attribute) Your account ID ([a long number](#how-do-i-find-my-account-id))   |
 | **instance**        |                               | instance="example.org"    | (required attribute) Domain name of the instance without https:// |
 | limit               | 20                            | limit="10"                | Maximum number of statuses                                        |
-| excludeReplies      | false                         | excludeReplies="true"     | Exclude replies to other accounts                                 |
 | excludeBoosts       | false                         | excludeBoosts="true"      | Exclude boosted statuses                                          |
+| excludeReplies      | false                         | excludeReplies="true"     | Exclude replies to other accounts                                 |
+| excludeConversationStarters       | false           | excludeBoosts="true"      | Exclude statuses that start with a user mention                   |
 | onlyPinned          | false                         | onlyPinned="true"         | Show only pinned statuses                                         |
 | onlyMedia           | false                         | onlyMedia="true"          | Show only statuses containing media                               |
 | tagged              | false                         | tagged="tagname"          | Show only statuses that are tagged with given tag name (no #!)    |
@@ -46,7 +47,7 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | text-permalinkPost  | ""                            | text-showContent="📅"     | Text after post permalink (date & time)                           |
 | text-edited         | "(edited)"                    | text-showContent="✏"      | Text indicating edited posts                                      |
 | date-locale         | "en-US"                       | date-locale="de-DE"       | Locale for date string, used in toLocaleString()                  |
-| date-options        | "{}"                          | date-options="{dateStyle: 'short', timeStyle: 'long'}" | Format options directly fed into toLocaleString()                 |
+| date-options        | "{}"                          | date-options="{dateStyle: 'short', timeStyle: 'long'}" | Format options directly fed into toLocaleString() |
 
 ### Additional customizations
 

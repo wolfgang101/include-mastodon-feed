@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.8.1
+	Version: 1.9.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -30,6 +30,10 @@ $constants = [
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES',
+    'value' => false,
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_EXCLUDE_CONVERSATIONSTARTERS',
     'value' => false,
   ],
   [
@@ -561,7 +565,23 @@ function init_scripts() {
           <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
             console.log("<?php echo __NAMESPACE__; ?>", xhr.response);
           <?php endif; ?>
-          mastodonFeedRenderStatuses(statuses, rootElem, options);
+          if(options.excludeConversationStarters && statuses.length > 0) {
+            const filteredStatuses = [];
+            for(let i = 0; i < statuses.length; i++) {
+              if(statuses[i].mentions.length > 0) {
+                const statusContent = document.createElement('div');
+                statusContent.innerHTML = statuses[i].content;
+                const plainTextContent = statusContent.textContent || statusContent.innerText;
+                if(plainTextContent.substring(1, ('@' + statuses[i].mentions[0].acct).length) != statuses[i].mentions[0].acct) {
+                  filteredStatuses.push(statuses[i]);
+                }
+              }
+            }
+            mastodonFeedRenderStatuses(filteredStatuses, rootElem, options);
+          }
+          else  {
+            mastodonFeedRenderStatuses(statuses, rootElem, options);
+          }
         }
         else {
           <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
@@ -586,6 +606,7 @@ function display_feed($atts) {
           'limit' => INCLUDE_MASTODON_FEED_LIMIT,
           'excludeboosts' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'excludereplies' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+          'excludeconversationstarters' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_CONVERSATIONSTARTERS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'onlypinned' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_PINNED), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'onlymedia' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_MEDIA), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'tagged' => INCLUDE_MASTODON_FEED_TAGGED,
@@ -647,6 +668,7 @@ function display_feed($atts) {
         {
           linkTarget: "<?php echo filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW ); ?>",
           showPreviewCards: <?php echo (filter_var( $atts['showpreviewcards'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
+          excludeConversationStarters: <?php echo (filter_var( $atts['excludeconversationstarters'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           text: {
             boosted: "<?php echo esc_js( $atts['text-boosted'] ); ?>",
             viewOnInstance: "<?php echo esc_js( $atts['text-viewoninstance'] ); ?>",
