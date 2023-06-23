@@ -32,7 +32,7 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | limit               | 20                            | limit="10"                | Maximum number of statuses                                        |
 | excludeBoosts       | false                         | excludeBoosts="true"      | Exclude boosted statuses                                          |
 | excludeReplies      | false                         | excludeReplies="true"     | Exclude replies to other accounts                                 |
-| excludeConversationStarters       | false           | excludeBoosts="true"      | Exclude statuses that start with a user mention                   |
+| excludeConversationStarters       | false           | excludeConversationStarters="true"      | Exclude statuses that start with a user mention     |
 | onlyPinned          | false                         | onlyPinned="true"         | Show only pinned statuses                                         |
 | onlyMedia           | false                         | onlyMedia="true"          | Show only statuses containing media                               |
 | tagged              | false                         | tagged="tagname"          | Show only statuses that are tagged with given tag name (no #!)    |
