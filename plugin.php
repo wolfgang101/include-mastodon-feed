@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.9.0
+	Version: 1.9.1
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -86,6 +86,10 @@ $constants = [
   [
     'key' => 'INCLUDE_MASTODON_FEED_TEXT_LOADING',
     'value' => 'Loading Mastodon feed...',
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_TEXT_NO_STATUSES',
+    'value' => 'No statuses availablae',
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_TEXT_BOOSTED',
@@ -454,94 +458,100 @@ function init_scripts() {
     }
 
     const mastodonFeedRenderStatuses = function(statuses, rootElem, options) {
-      for(let i = 0; i < statuses.length; i++) {
-        let status = statuses[i];
-        let isEdited = (null === status.edited_at ? true : false);
-        let isReblog = (null === status.reblog ? false : true);
+      if(statuses.length < 1) {
+        console.log(options);
+        rootElem.innerHTML = options.text.noStatuses;
+      }
+      else {
+        for(let i = 0; i < statuses.length; i++) {
+          let status = statuses[i];
+          let isEdited = (null === status.edited_at ? true : false);
+          let isReblog = (null === status.reblog ? false : true);
 
-        let statusElem = mastodonFeedCreateElement('div', 'status');
+          let statusElem = mastodonFeedCreateElement('div', 'status');
 
-        // add account meta info
-        let accountElem = mastodonFeedCreateElement('div', 'account');
+          // add account meta info
+          let accountElem = mastodonFeedCreateElement('div', 'account');
 
-        if(isReblog) {
-          let boosterElem = mastodonFeedCreateElement('span', 'booster');
-          boosterElem.appendChild(document.createTextNode( options.text.boosted ));
-          accountElem.appendChild(boosterElem);
-        }
-        accountElem.appendChild(mastodonFeedCreateElementAccountLink(status.account));
-        accountElem.appendChild(mastodonFeedCreateElementTimeinfo(status, options, (isReblog ? false : status.url)));
-        
-        statusElem.appendChild(accountElem);
+          if(isReblog) {
+            let boosterElem = mastodonFeedCreateElement('span', 'booster');
+            boosterElem.appendChild(document.createTextNode( options.text.boosted ));
+            accountElem.appendChild(boosterElem);
+          }
+          accountElem.appendChild(mastodonFeedCreateElementAccountLink(status.account));
+          accountElem.appendChild(mastodonFeedCreateElementTimeinfo(status, options, (isReblog ? false : status.url)));
+          
+          statusElem.appendChild(accountElem);
 
-        // prepare content rendering
-        let showStatus = status;
-        if(isReblog) {
-          showStatus = status.reblog;
-        }
-        let contentWrapperElem = mastodonFeedCreateElement('div', 'contentWrapper' + (isReblog ? ' boosted' : ''));
+          // prepare content rendering
+          let showStatus = status;
+          if(isReblog) {
+            showStatus = status.reblog;
+          }
+          let contentWrapperElem = mastodonFeedCreateElement('div', 'contentWrapper' + (isReblog ? ' boosted' : ''));
 
-        // add boosted post meta info
-        if(isReblog) {
-          let boostElem = mastodonFeedCreateElement('div', 'account');
-          let boostAccountLink = mastodonFeedCreateElementAccountLink(showStatus.account);
-          boostElem.appendChild(boostAccountLink);
-          boostElem.appendChild(mastodonFeedCreateElementTimeinfo(showStatus, options, showStatus.url));
+          // add boosted post meta info
+          if(isReblog) {
+            let boostElem = mastodonFeedCreateElement('div', 'account');
+            let boostAccountLink = mastodonFeedCreateElementAccountLink(showStatus.account);
+            boostElem.appendChild(boostAccountLink);
+            boostElem.appendChild(mastodonFeedCreateElementTimeinfo(showStatus, options, showStatus.url));
 
-          contentWrapperElem.appendChild(boostElem);
-        }
-
-        let contentElem = mastodonFeedCreateElement('div', 'content');
-
-        // handle content warnings
-        if(showStatus.sensitive || showStatus.spoiler_text.length > 0) {
-          let cwElem = mastodonFeedCreateElement('div', 'contentWarning');
-
-          if(showStatus.spoiler_text.length > 0) {
-            let cwTitleElem = mastodonFeedCreateElement('div', 'title');
-            cwTitleElem.innerHTML = showStatus.spoiler_text;
-            cwElem.appendChild(cwTitleElem);
+            contentWrapperElem.appendChild(boostElem);
           }
 
-          let cwLinkElem = mastodonFeedCreateElement('a');
-          cwLinkElem.href = '#';
-          cwLinkElem.onclick = function() {
-            this.parentElement.style = 'display: none;';
-            this.parentElement.nextSibling.style = 'display: block;';
-            return false;
+          let contentElem = mastodonFeedCreateElement('div', 'content');
+
+          // handle content warnings
+          if(showStatus.sensitive || showStatus.spoiler_text.length > 0) {
+            let cwElem = mastodonFeedCreateElement('div', 'contentWarning');
+
+            if(showStatus.spoiler_text.length > 0) {
+              let cwTitleElem = mastodonFeedCreateElement('div', 'title');
+              cwTitleElem.innerHTML = showStatus.spoiler_text;
+              cwElem.appendChild(cwTitleElem);
+            }
+
+            let cwLinkElem = mastodonFeedCreateElement('a');
+            cwLinkElem.href = '#';
+            cwLinkElem.onclick = function() {
+              this.parentElement.style = 'display: none;';
+              this.parentElement.nextSibling.style = 'display: block;';
+              return false;
+            }
+            cwLinkElem.innerHTML = options.text.showContent;
+            cwElem.appendChild(cwLinkElem);
+
+            contentWrapperElem.appendChild(cwElem);
+            contentElem.style = 'display: none;';
           }
-          cwLinkElem.innerHTML = options.text.showContent;
-          cwElem.appendChild(cwLinkElem);
 
-          contentWrapperElem.appendChild(cwElem);
-          contentElem.style = 'display: none;';
+          // add regular content
+          let renderContent = showStatus.content;
+          // inject emojis
+          if(showStatus.emojis.length > 0) {
+            showStatus.emojis.forEach(function(emoji) {
+              renderContent = mastodonFeedInjectEmoji(renderContent, emoji);
+            });
+          }
+          contentElem.innerHTML += renderContent;
+
+          // handle media attachments
+          if(showStatus.media_attachments.length > 0) {
+            let mediaAttachmentsElem = mastodonFeedCreateElementMediaAttachments(showStatus, options);
+            contentElem.appendChild(mediaAttachmentsElem);
+          }
+
+          // handle preview card
+          if(options.showPreviewCards && showStatus.card != null) {
+            let cardElem = mastodonFeedCreateElementPreviewCard(showStatus.card);
+            contentElem.appendChild(cardElem);
+          }
+
+          contentWrapperElem.appendChild(contentElem);
+          statusElem.appendChild(contentWrapperElem);
+          rootElem.appendChild(statusElem);
         }
-
-        // add regular content
-        let renderContent = showStatus.content;
-        // inject emojis
-        if(showStatus.emojis.length > 0) {
-          showStatus.emojis.forEach(function(emoji) {
-            renderContent = mastodonFeedInjectEmoji(renderContent, emoji);
-          });
-        }
-        contentElem.innerHTML += renderContent;
-
-        // handle media attachments
-        if(showStatus.media_attachments.length > 0) {
-          let mediaAttachmentsElem = mastodonFeedCreateElementMediaAttachments(showStatus, options);
-          contentElem.appendChild(mediaAttachmentsElem);
-        }
-
-        // handle preview card
-        if(options.showPreviewCards && showStatus.card != null) {
-          let cardElem = mastodonFeedCreateElementPreviewCard(showStatus.card);
-          contentElem.appendChild(cardElem);
-        }
-
-        contentWrapperElem.appendChild(contentElem);
-        statusElem.appendChild(contentWrapperElem);
-        rootElem.appendChild(statusElem);
       }
       if('_self' != options.linkTarget) {
         rootElem.querySelectorAll('a').forEach(function(e) {
@@ -568,13 +578,17 @@ function init_scripts() {
           if(options.excludeConversationStarters && statuses.length > 0) {
             const filteredStatuses = [];
             for(let i = 0; i < statuses.length; i++) {
+              let includeStatus = true;
               if(statuses[i].mentions.length > 0) {
                 const statusContent = document.createElement('div');
                 statusContent.innerHTML = statuses[i].content;
                 const plainTextContent = statusContent.textContent || statusContent.innerText;
-                if(plainTextContent.substring(1, ('@' + statuses[i].mentions[0].acct).length) != statuses[i].mentions[0].acct) {
-                  filteredStatuses.push(statuses[i]);
+                if(plainTextContent.substring(1, ('@' + statuses[i].mentions[0].acct).length) == statuses[i].mentions[0].acct) {
+                  includeStatus = false;
                 }
+              }
+              if(includeStatus) {
+                filteredStatuses.push(statuses[i]);
               }
             }
             mastodonFeedRenderStatuses(filteredStatuses, rootElem, options);
@@ -614,6 +628,7 @@ function display_feed($atts) {
           'showpreviewcards' => filter_var(esc_html(INCLUDE_MASTODON_FEED_SHOW_PREVIEWCARDS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
 
           'text-loading' => INCLUDE_MASTODON_FEED_TEXT_LOADING,
+          'text-nostatuses' => INCLUDE_MASTODON_FEED_TEXT_NO_STATUSES,
           'text-boosted' => INCLUDE_MASTODON_FEED_TEXT_BOOSTED,
           'text-viewoninstance' => INCLUDE_MASTODON_FEED_TEXT_VIEW_ON_INSTANCE,
           'text-showcontent' => INCLUDE_MASTODON_FEED_TEXT_SHOW_CONTENT,
@@ -671,6 +686,7 @@ function display_feed($atts) {
           excludeConversationStarters: <?php echo (filter_var( $atts['excludeconversationstarters'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           text: {
             boosted: "<?php echo esc_js( $atts['text-boosted'] ); ?>",
+            noStatuses: "<?php echo esc_html( $atts['text-nostatuses'] ); ?>",
             viewOnInstance: "<?php echo esc_js( $atts['text-viewoninstance'] ); ?>",
             showContent: "<?php echo esc_js( $atts['text-showcontent'] ); ?>",
             permalinkPre: "<?php echo esc_js( $atts['text-permalinkpre'] ); ?>",

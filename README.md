@@ -40,6 +40,7 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | showPreviewCards    | true                          | showPreviewCards="false"  | Show preview cards                                                |
 | darkmode            | false                         | darkmode="true"           | Enable dark mode                                                  |
 | text-loading        | "Loading Mastodon feed..."    | text-loading="Loading ⏳" | Loading text                                                      |
+| text-noStatuses     | "No statuses available"       | text-noStatuses="💩"      | Text if no statuses are available                                 |
 | text-boosted        | "boosted 🚀"                  | text-boosted="🚀"         | Boosted status indicator text                                     |
 | text-viewOnInstance | "view on instance"            | text-viewOnInstance="🔗"  | View status on instance link text                                 |
 | text-showContent    | "Show content"                | text-showContent="👀"     | Text for content warning buttons                                  |

@@ -83,6 +83,10 @@
     // can be overridden in shortcode
     define('INCLUDE_MASTODON_FEED_TEXT_LOADING', 'Loading Mastodon feed...',);
 
+    // default text when no statuses are available
+    // can be overridden in shortcode
+    define('INCLUDE_MASTODON_FEED_TEXT_NO_STATUSES', 'No statuses available',);
+
     // default "boosted" indicator
     // can be overridden in shortcode
     define('INCLUDE_MASTODON_FEED_TEXT_BOOSTED', 'boosted 🚀',);

@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -65,6 +65,9 @@ Enable dark mode (Default: false)
 
 * **text-loading**
 Loading text (Default: Loading Mastodon feed...)
+
+* **text-noStatuses**
+Text if no statuses are available (Default: No statuses available)
 
 * **text-boosted**
 Text indicating boosted statuses (Default: boosted 🚀)
