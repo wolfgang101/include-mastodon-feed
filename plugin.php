@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.9.1
+	Version: 1.9.2
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -219,22 +219,30 @@ function init_styles() {
       gap: 0.5rem;
       margin: 1rem;
     }
-    .include-mastodon-feed .media .image {
+    .include-mastodon-feed .media > div {
+      flex-basis: calc(50% - 0.5rem);
+      flex-grow: 1;
+    }
+    .include-mastodon-feed .media > .image {
       font-size: 0.8rem;
       font-weight: bold;
       text-align: center;
-      flex-basis: calc(50% - 0.5rem);
     }
-    .include-mastodon-feed .media .image a { 
+    .include-mastodon-feed .media > .image a { 
       border-radius: var(--include-mastodon-feed-border-radius);
       display: block;
       aspect-ratio: 1.618;                                                      
       background-size: cover;
       background-position: center;
     }   
-    .include-mastodon-feed .media .image a:hover {
+    .include-mastodon-feed .media > .image a:hover {
       filter: contrast(110%) brightness(130%) saturate(130%);
     }
+
+    .include-mastodon-feed .media > .gifv video {
+      max-width: 100%;
+    }
+
     .include-mastodon-feed .card {
       border-radius: var(--include-mastodon-feed-border-radius);
       margin: 1rem 0.5rem;
@@ -336,7 +344,7 @@ function init_scripts() {
       let mediaWrapperElem = mastodonFeedCreateElement('div', 'media');
       for(let mediaIndex = 0; mediaIndex < attachments.length; mediaIndex++) {
         let media = attachments[mediaIndex];
-        let mediaElem = mastodonFeedCreateElement('div', 'image');
+        let mediaElem = mastodonFeedCreateElement('div', media.type);
         if('image' == media.type) {
           let mediaElemImgLink = mastodonFeedCreateElement('a');
           mediaElemImgLink.href = status.url;
@@ -362,24 +370,15 @@ function init_scripts() {
             mediaElemGifv.src = media.remote_url;
           }
           mediaElemGifv.loop = true;
+          mediaElemGifv.muted = 'muted';
           if(null !== media.description) {
             mediaElemGifv.title = media.description;
           }
           mediaElemGifvLink.appendChild(mediaElemGifv);
           mediaElem.appendChild(mediaElemGifvLink);
 
-          "click mouseover".split(" ").forEach(function(e){
-            mediaElemGifv.addEventListener(e, (event) => {
-              let promise = document.querySelector('.include-mastodon-feed .requiresInteraction').play();
-              if (promise !== undefined) {
-                  promise.then(_ => {
-                    mediaElemGifv.play();
-                    mediaElemGifv.style.cursor = 'auto';
-                  }).catch(error => {
-                      mediaElemGifv.style.cursor = 'pointer';
-                  });
-              }
-            });
+          mediaElemGifv.addEventListener('mouseover', (event) => {
+            mediaElemGifv.play();
           });
           mediaElemGifv.addEventListener('mouseout', (event) => {
             mediaElemGifv.pause();

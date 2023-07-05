@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -130,6 +130,14 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.9.2 =
+* fix: style for embedded videos / GIFs
+* refactor: play gifv on mouseover
+
+= 1.9.1 =
+* refactor: show meaningful message if no statuses are available
+* fix: broken excludeConversationStarters logic
 
 = 1.9.0 =
 * added option to exclude conversation starters (posts that start with a user mention)
