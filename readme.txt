@@ -1,6 +1,6 @@
 === Include Mastodon Feed ===
 Contributors: wolfgang101
-Donate link: https://wolfgang.lol/
+Donate link: https://www.buymeacoffee.com/w101
 Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.2
