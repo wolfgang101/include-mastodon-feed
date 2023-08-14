@@ -134,6 +134,7 @@ Use the following URL to get your ID:
 = 1.9.2 =
 * fix: style for embedded videos / GIFs
 * refactor: play gifv on mouseover
+* refactor: load markup related javascript in footer instead of embedding it directly with the html markup
 
 = 1.9.1 =
 * refactor: show meaningful message if no statuses are available
