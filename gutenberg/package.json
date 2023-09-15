@@ -1,0 +1,31 @@
+{
+  "name": "include-mastodon-feed",
+  "version": "1.0.0",
+  "description": "Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages.",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "format": "wp-scripts format",
+    "lint:css": "wp-scripts lint-style",
+    "lint:js": "wp-scripts lint-js",
+    "packages-update": "wp-scripts packages-update",
+    "plugin-zip": "wp-scripts plugin-zip",
+    "start": "wp-scripts start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wolfgang101/include-mastodon-feed.git"
+  },
+  "author": "@w101@mastodon.social",
+  "license": "Expat",
+  "bugs": {
+    "url": "https://github.com/wolfgang101/include-mastodon-feed/issues"
+  },
+  "homepage": "https://github.com/wolfgang101/include-mastodon-feed#readme",
+  "devDependencies": {
+    "@wordpress/scripts": "^26.12.0"
+  },
+  "dependencies": {
+    "@wordpress/icons": "^9.32.0"
+  }
+}

@@ -131,6 +131,11 @@ foreach($constants as $constant) {
 }
 unset($constants);
 
+function register_gutenberg_block() {
+  register_block_type( __DIR__ .'/gutenberg/build' );
+}
+add_action( 'init', __NAMESPACE__ . '\register_gutenberg_block' );
+
 function error($msg) {
   return '[include-mastodon-feed] ' . $msg;
 }
@@ -612,6 +617,7 @@ function init_scripts() {
 add_action('wp_footer', __NAMESPACE__ . '\init_scripts');
 
 function display_feed($atts) {
+
   $atts = shortcode_atts(
       array(
           'instance' => ( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE === false ? false : filter_var( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE, FILTER_UNSAFE_RAW ) ),
@@ -638,7 +644,7 @@ function display_feed($atts) {
           'date-options' => INCLUDE_MASTODON_FEED_DATE_OPTIONS,
 
           'darkmode' => filter_var(esc_html(INCLUDE_MASTODON_FEED_DARKMODE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
-      ), array_change_key_case($atts, CASE_LOWER)
+      ), ( is_array($atts) ? array_change_key_case($atts, CASE_LOWER) : [] )
   );
 
   if(false === filter_var($atts['instance'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {

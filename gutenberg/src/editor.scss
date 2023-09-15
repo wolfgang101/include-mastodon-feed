@@ -1,0 +1,17 @@
+.wp-block-include-mastodon-feed-gutenberg-block {
+    padding: 3rem 1rem;
+    text-align: center;
+    background: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(255, 255, 255, .1) 10px,
+            rgba(255, 255, 255, .1) 20px
+        ),
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, .1),
+            rgba(0, 0, 0, .3)
+        );
+}

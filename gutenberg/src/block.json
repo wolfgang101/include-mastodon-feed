@@ -1,0 +1,15 @@
+{
+    "apiVersion": 3,
+    "title": "Mastodon Feed",
+    "description": "Embed the latest public posts of a Mastodon user",
+    "name": "include-mastodon-feed/gutenberg-block",
+    "category": "embed",
+    "icon": "embed-generic",
+    "supports": {
+		"html": false
+	},
+	"textdomain": "include-mastodon-feed",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}
