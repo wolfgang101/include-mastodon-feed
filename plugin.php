@@ -131,16 +131,48 @@ foreach($constants as $constant) {
 }
 unset($constants);
 
-function register_gutenberg_block() {
-  register_block_type( __DIR__ .'/gutenberg/build' );
-}
 add_action( 'init', __NAMESPACE__ . '\register_gutenberg_block' );
+function register_gutenberg_block() {
+
+  register_block_type( __DIR__ .'/gutenberg/build', [
+    'name' => 'include-mastodon-feed/gutenberg-block',
+    'api_version' => 3,
+    'attributes'      => [
+      'instance'    => [
+        'type'      => 'string',
+      ],
+      'account' => [
+        'type'      => 'string',
+      ],
+      'limit' => [
+        'type'    => 'integer',
+      ]
+    ],
+    'render_callback' => __NAMESPACE__ . '\display_feed'
+  ] );
+
+}
+
+add_action( 'current_screen', __NAMESPACE__ . '\register_gutenberg_block_admin', 999 );
+function register_gutenberg_block_admin() {
+
+  if(is_admin()) {
+    $screen = get_current_screen();
+    if (
+      method_exists( $screen, 'is_block_editor' )
+      && $screen->is_block_editor()
+    ) {
+      add_action('admin_footer', __NAMESPACE__ . '\init_scripts');
+    }
+  }
+
+}
 
 function error($msg) {
   return '[include-mastodon-feed] ' . $msg;
 }
 
-
+add_action('wp_head', __NAMESPACE__ . '\init_styles', 7);
 function init_styles() {
   ob_start();
 ?>
@@ -296,8 +328,8 @@ function init_styles() {
 <?php
   echo ob_get_clean();
 }
-add_action('wp_head', __NAMESPACE__ . '\init_styles', 7);
 
+add_action('wp_footer', __NAMESPACE__ . '\init_scripts');
 function init_scripts() {
   ob_start();
 ?>
@@ -564,13 +596,17 @@ function init_scripts() {
       }
     }
 
-    const mastodonFeedLoad = function(url, elementId, options) {
+    const mastodonFeedLoad = function(url, element, options) {
+      const rootElem = ( 'object' === typeof element ? element : document.getElementById(element) );
+      if( 'object' === typeof element ) {
+        rootElem.innerHTML = 'Loading preview...';
+      }
       const xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
       xhr.responseType = 'json';
       xhr.onload = function() {
         const statuses = xhr.response;
-        const rootElem = document.getElementById(elementId);
+        
         rootElem.innerHTML = '';
         <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
           console.log("<?php echo __NAMESPACE__; ?>", url);
@@ -610,12 +646,13 @@ function init_scripts() {
       };
       xhr.send();
     }
+    window.mastodonFeedLoad = mastodonFeedLoad;
   </script>
 <?php
   echo ob_get_clean();
 }
-add_action('wp_footer', __NAMESPACE__ . '\init_scripts');
 
+add_shortcode('include-mastodon-feed', __NAMESPACE__ . '\display_feed');
 function display_feed($atts) {
 
   $atts = shortcode_atts(
@@ -719,4 +756,3 @@ function display_feed($atts) {
 <?php
   return ob_get_clean();
 }
-add_shortcode('include-mastodon-feed', __NAMESPACE__ . '\display_feed');

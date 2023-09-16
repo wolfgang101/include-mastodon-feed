@@ -17,14 +17,13 @@ import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-edi
 import { PanelBody, TextControl, SelectControl } from '@wordpress/components';
 import { cog as IconAppearance } from '@wordpress/icons';
 import { getBlockType } from '@wordpress/blocks';
-
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-import './editor.scss';
+import './style-editor.css';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -47,7 +46,6 @@ export default function Edit( { attributes, setAttributes } ) {
 		}
 		return false;
 	}
-
 		
 	const onChangeInstance = ( instance ) => {
 		// TODO: validate if correct instance
@@ -59,21 +57,62 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( { 'account': account } );
 	}
 
+	const loadFeed = (apiUrl, event) => {
+		event.preventDefault();
+		if(attributes.instance && attributes.account) {
+			console.log('loading feed', apiUrl);
+			const options = {
+				linkTarget: "",
+				showPreviewCards: true,
+				excludeConversationStarters: false,
+				text: {
+					boosted: "boosted",
+					noStatuses: "no statuses",
+					viewOnInstance: "view on instance",
+					showContent: "show content",
+					permalinkPre: "",
+					permalinkPost: "",
+					edited: "edited",
+				},
+				localization: {
+					date: {
+						locale: "en-US",
+						options: {},
+					}
+				}
+			};
+			window.mastodonFeedLoad(apiUrl, event.currentTarget, options);
+		}
+	}
+
+	const apiUrl = 'https://' + (attributes.instance) + '/api/v1/accounts/' + attributes.account + '/statuses';
+	attributes.darkmode = true;
+
 	return (
 		<div { ...useBlockProps() }>
 			{
 				validateSettings() ||
-					<>
-						<strong>{ __("Mastodon Feed") }</strong> <small>{ __("Please set instance and account id") }</small>
-					</>
+					<div className="editor-block">
+						<p className="text-center">
+							<strong>{ __("Mastodon Feed") }</strong><br />
+							<small>{ __("Please set instance and account id") }</small>
+						</p>
+					</div>
 			}
 			{
-				// TODO: render correct shortcode here
+				// TODO: rebuild render function
 				validateSettings() &&
-					<>
-						<p><strong>{ __("Mastodon Feed") }</strong> <small>{ __("Will only be displayed in frontend") }</small></p>
-						<p><small>{ sprintf("Account ID %1$s on instance %2$s", attributes.account, attributes.instance) }</small></p>
-					</>
+					<div onClick={ (e) => loadFeed(apiUrl, e) } className={ 'include-mastodon-feed' + (attributes.darkmode ? ' dark' : '') }>
+						<div className="editor-block">
+							<p className="text-center">
+								<strong>{ __("Mastodon Feed") }</strong><br />
+								<small>{ sprintf("Account ID %1$s on instance %2$s", attributes.account, attributes.instance) }</small>
+							</p>
+							<div className="text-center">
+								Click to preview
+							</div>
+						</div>
+					</div>
 			}
 			<InspectorControls key="setting">
 				<PanelBody title={ __("Source") }>

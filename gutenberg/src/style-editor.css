@@ -1,0 +1,175 @@
+.editor-block {
+  cursor: pointer;
+  padding: 3rem 1rem;
+  background: 
+      repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 10px,
+          rgba(255, 255, 255, .1) 10px,
+          rgba(255, 255, 255, .1) 20px
+      ),
+      linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, .1),
+          rgba(0, 0, 0, .3)
+      );
+}
+
+.editor-block .text-center {
+    text-align: center;
+}
+
+.include-mastodon-feed .status {
+  pointer-events: none;
+}
+
+
+
+:root {
+    --include-mastodon-feed-bg-light: rgba(100, 100, 100, 0.15);
+    --include-mastodon-feed-bg-dark: rgba(155, 155, 155, 0.15);
+    --include-mastodon-feed-accent-color: rgb(99, 100, 255);
+    --include-mastodon-feed-accent-font-color: rgb(255, 255, 255);
+    --include-mastodon-feed-border-radius: 0.25rem;
+  }
+
+  .include-mastodon-feed .status {
+    margin: 0.5rem 0 1.5rem;
+    border-radius: var(--include-mastodon-feed-border-radius);
+    padding: 0.5rem;
+    background: var(--include-mastodon-feed-bg-light);
+  }
+  .include-mastodon-feed .status a {
+    color: var(--include-mastodon-feed-accent-color);
+    text-decoration: none;
+    word-wrap: break-word;
+  }
+  .include-mastodon-feed .status a:hover {
+    text-decoration: underline;
+  }
+  .include-mastodon-feed .avatar {
+    height: 1.25rem;
+    border-radius: var(--include-mastodon-feed-border-radius);
+    vertical-align: top;
+  }
+  .include-mastodon-feed .account {
+    font-size: 0.8rem;
+  }
+  .include-mastodon-feed .account a {
+    display: inline-block;
+  }
+  .include-mastodon-feed .account .booster {
+    float: right;
+    font-style: italic;
+  }
+  .include-mastodon-feed .boosted .account > a:first-child,
+  .include-mastodon-feed .contentWarning a {
+    border-radius: var(--include-mastodon-feed-border-radius);
+    padding: 0.15rem 0.5rem;
+    background: var(--include-mastodon-feed-accent-color);
+    color: var(--include-mastodon-feed-accent-font-color);
+  }
+  .include-mastodon-feed .boosted .account > a:first-child:hover,
+  .include-mastodon-feed .contentWarning a:hover {
+    border-radius: var(--include-mastodon-feed-border-radius);
+    padding: 0.15rem 0.5rem;
+    background: var(--include-mastodon-feed-accent-font-color);
+    color: var(--include-mastodon-feed-accent-color);
+    text-decoration: none;
+  }
+  .include-mastodon-feed .contentWrapper.boosted {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: var(--include-mastodon-feed-bg-light);
+  }
+  .include-mastodon-feed .contentWarning {
+    text-align: center;
+    margin: 1rem;
+    padding: 1rem;
+  }
+  .include-mastodon-feed .contentWarning .title {
+    font-weight: bold;
+  }
+  .include-mastodon-feed img.emoji {
+    height: 1rem;
+  }
+  .include-mastodon-feed .content .invisible {
+    display: none;
+  }
+  .include-mastodon-feed .media {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem;
+  }
+  .include-mastodon-feed .media > div {
+    flex-basis: calc(50% - 0.5rem);
+    flex-grow: 1;
+  }
+  .include-mastodon-feed .media > .image {
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  .include-mastodon-feed .media > .image a { 
+    border-radius: var(--include-mastodon-feed-border-radius);
+    display: block;
+    aspect-ratio: 1.618;                                                      
+    background-size: cover;
+    background-position: center;
+  }   
+  .include-mastodon-feed .media > .image a:hover {
+    filter: contrast(110%) brightness(130%) saturate(130%);
+  }
+
+  .include-mastodon-feed .media > .gifv video {
+    max-width: 100%;
+  }
+
+  .include-mastodon-feed .card {
+    border-radius: var(--include-mastodon-feed-border-radius);
+    margin: 1rem 0.5rem;
+  }
+  .include-mastodon-feed .card iframe {
+    border-radius: var(--include-mastodon-feed-border-radius);
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 2 / 1.25;
+  }
+  .include-mastodon-feed .card a {
+    border-radius: var(--include-mastodon-feed-border-radius);
+    display: block;
+    text-decoration: none;
+    color: #000;
+  }
+  .include-mastodon-feed.dark .card a {
+    color: #fff;
+  }
+  .include-mastodon-feed .card a:hover {
+    text-decoration: none;
+    background: var(--include-mastodon-feed-accent-color);
+    color: var(--include-mastodon-feed-accent-font-color);
+  }
+  .include-mastodon-feed .card .meta {
+    background: var(--include-mastodon-feed-bg-light);
+    font-size: 0.8rem;
+    padding: 1rem;
+  }
+  .include-mastodon-feed .card .image {
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  .include-mastodon-feed .card .image img {
+    max-width: 75%;
+  }
+  .include-mastodon-feed .card .title {
+    font-weight: bold;
+  }
+  .include-mastodon-feed.dark .status,
+  .include-mastodon-feed.dark .contentWrapper.boosted,
+  .include-mastodon-feed.dark .card {
+    background: var(--include-mastodon-feed-bg-dark);
+  }
