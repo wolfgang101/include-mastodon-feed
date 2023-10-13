@@ -702,13 +702,6 @@ function display_feed($atts) {
       );
     });
   </script>
-<?php
-  $script = ob_get_clean();
-  add_action('wp_footer', function() use ($script) {
-    echo $script; 
-  });
-  ob_start();
-?>
   <div class="include-mastodon-feed<?php echo (true == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo esc_attr( $elemId ); ?>"><?php echo esc_html( $atts['text-loading'] ); ?></div>
 <?php
   return ob_get_clean();
