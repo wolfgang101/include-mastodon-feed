@@ -581,8 +581,9 @@ function init_scripts() {
               if(statuses[i].mentions.length > 0) {
                 const statusContent = document.createElement('div');
                 statusContent.innerHTML = statuses[i].content;
+                const mentionUsername = statuses[i].mentions[0].acct.split('@')[0];
                 const plainTextContent = statusContent.textContent || statusContent.innerText;
-                if(plainTextContent.substring(1, ('@' + statuses[i].mentions[0].acct).length) == statuses[i].mentions[0].acct) {
+                if(plainTextContent.substring(1, ('@' + mentionUsername).length) == mentionUsername) {
                   includeStatus = false;
                 }
               }
