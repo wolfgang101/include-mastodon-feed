@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.3
 Requires PHP: 7.4
-Stable tag: 1.9.2
+Stable tag: 1.9.3
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -130,6 +130,10 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.9.3 =
+* fix: improved excludeConversationStarters detection (did not work correctly)
+* fix: undid last refactor to load JS inline with markup instead footer to fix problem with JS that was added to footer even if shortcode was not visibly rendered
 
 = 1.9.2 =
 * fix: style for embedded videos / GIFs
