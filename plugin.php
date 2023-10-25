@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.9.2
+	Version: 1.9.3
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
 */
@@ -581,8 +581,9 @@ function init_scripts() {
               if(statuses[i].mentions.length > 0) {
                 const statusContent = document.createElement('div');
                 statusContent.innerHTML = statuses[i].content;
+                const mentionUsername = statuses[i].mentions[0].acct.split('@')[0];
                 const plainTextContent = statusContent.textContent || statusContent.innerText;
-                if(plainTextContent.substring(1, ('@' + statuses[i].mentions[0].acct).length) == statuses[i].mentions[0].acct) {
+                if(plainTextContent.substring(1, ('@' + mentionUsername).length) == mentionUsername) {
                   includeStatus = false;
                 }
               }
@@ -702,13 +703,6 @@ function display_feed($atts) {
       );
     });
   </script>
-<?php
-  $script = ob_get_clean();
-  add_action('wp_footer', function() use ($script) {
-    echo $script; 
-  });
-  ob_start();
-?>
   <div class="include-mastodon-feed<?php echo (true == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo esc_attr( $elemId ); ?>"><?php echo esc_html( $atts['text-loading'] ); ?></div>
 <?php
   return ob_get_clean();
