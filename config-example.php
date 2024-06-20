@@ -79,10 +79,10 @@
     define('INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS', '0.25rem',);
 
     // hide status meta information (automatically also hides date and time)
-    define('INCLUDE_MASTODON_FEED_HIDE_STATUS_META', true)
+    define('INCLUDE_MASTODON_FEED_HIDE_STATUS_META', true);
 
     // hide date and time from status meta information
-    define('INCLUDE_MASTODON_FEED_HIDE_DATETIME', true)
+    define('INCLUDE_MASTODON_FEED_HIDE_DATETIME', true);
 
 
 
