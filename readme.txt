@@ -5,14 +5,14 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.9.3
+Stable tag: 1.9.4
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
 Plugin that provides a shortcode to easily integrate mastodon feeds into wordpress pages.
 
 == Description ==
-Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages.
+Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
 
 The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
 
@@ -28,6 +28,9 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
 = Shortcode attributes =
 * **account** (required)
 The account ID (a long number - see FAQ on how to get it)
+
+* **tag**
+Use **tag** instead of **account** if you want to embed a tag feed instead of a personal feed
 
 * **instance** (required)
 Domain name of the instance without https:// (e.g. example.org)
@@ -50,6 +53,9 @@ Show only pinned statuses (Default: false)
 * **onlyMedia**
 Show only statuses containing media (Default: false)
 
+* **preserveImageAspectRatio**
+Preserve image aspect ratio (Default: false)
+
 * **tagged**
 Show only statuses that are tagged with given tag name (Default: false)
 No leading #, case insensitive, e.g.: tagged="tagname"
@@ -59,6 +65,12 @@ Target for all links e.g. new tab would be "_blank" (Default: _self)
 
 * **showPreviewCards**
 Show preview cards (Default: true)
+
+* **hideStatusMeta**
+Hide status meta information, automatically also hides date and time (Default: false)
+
+* **hideDateTime**
+Hide date and time from status meta information (Default: false)
 
 * **darkmode**
 Enable dark mode (Default: false)
@@ -130,6 +142,12 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.9.4 =
+* added option to hide status meta information and date/time (thank you @PaulKingtiger@dice.camp)
+* added tag support - you can now embed tag feeds (thank you @martin@openedtech.social)
+* added option to show embedded images in original aspect ratio (thank you @beach@illo.social)
+* fix: correctly inject repeating emojis in display names and status texts (thank you @kanigsson@discuss.systems)
 
 = 1.9.3 =
 * fix: improved excludeConversationStarters detection (did not work correctly)

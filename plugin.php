@@ -45,6 +45,10 @@ $constants = [
     'value' => false,
   ],
   [
+    'key' => 'INCLUDE_MASTODON_FEED_PRESERVE_IMAGE_ASPECT_RATIO',
+    'value' => false,
+  ],
+  [
     'key' => 'INCLUDE_MASTODON_FEED_TAGGED',
     'value' => false,
   ],
@@ -81,6 +85,14 @@ $constants = [
   [
     'key' => 'INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS',
     'value' => '0.25rem',
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_HIDE_STATUS_META',
+    'value' => false,
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_HIDE_DATETIME',
+    'value' => false,
   ],
   // set texts and localization
   [
@@ -271,11 +283,13 @@ function init_styles() {
       aspect-ratio: 1.618;                                                      
       background-size: cover;
       background-position: center;
-    }   
-    .include-mastodon-feed .media > .image a:hover {
+    }
+        .include-mastodon-feed .media > .image a:hover {
       filter: contrast(110%) brightness(130%) saturate(130%);
     }
-
+    .include-mastodon-feed .media > .image a img {
+      width: 100%;
+    }
     .include-mastodon-feed .media > .gifv video {
       max-width: 100%;
     }
@@ -394,6 +408,16 @@ function init_scripts() {
           if(null !== media.description) {
             mediaElem.title = media.description;
           }
+          if(options.preserveImageAspectRatio) {
+            let mediaElemImgImage = mastodonFeedCreateElement('img');
+            if(null === media.remote_url) {
+              mediaElemImgImage.src = media.preview_url;
+            }
+            else {
+              mediaElemImgImage.src = media.remote_url;
+            }
+            mediaElemImgLink.appendChild(mediaElemImgImage);
+          }
           mediaElem.appendChild(mediaElemImgLink);
         }
         else if('gifv' == media.type) {
@@ -482,15 +506,12 @@ function init_scripts() {
       else {
         createdInfo.appendChild(mastodonFeedCreateElementPermalink(status, new Date(status.created_at).toLocaleString(options.localization.date.locale, options.localization.date.options)));
       }
-      createdInfo.innerHTML += ' ' + options.text.permalinkPost + ' ';
-      if(null !== status.edited_at) {
-        createdInfo.innerHTML += ' ' + options.text.edited;
-      }
+      createdInfo.innerHTML += ' ' + options.text.permalinkPost;
       return createdInfo;
     }
 
     const mastodonFeedInjectEmoji = function(string, emoji) {
-      return string.replace(':' + emoji.shortcode + ':', '<img class="emoji" src="' + emoji.url + '" title="' + emoji.shortcode + '" />');
+      return string.replaceAll(':' + emoji.shortcode + ':', '<img class="emoji" src="' + emoji.url + '" title="' + emoji.shortcode + '" />');
     }
 
     const mastodonFeedRenderStatuses = function(statuses, rootElem, options) {
@@ -507,17 +528,22 @@ function init_scripts() {
           let statusElem = mastodonFeedCreateElement('div', 'status');
 
           // add account meta info
-          let accountElem = mastodonFeedCreateElement('div', 'account');
-
-          if(isReblog) {
-            let boosterElem = mastodonFeedCreateElement('span', 'booster');
-            boosterElem.appendChild(document.createTextNode( options.text.boosted ));
-            accountElem.appendChild(boosterElem);
+          if(!options.content.hideStatusMeta) {
+            let accountElem = mastodonFeedCreateElement('div', 'account');
+            if(isReblog) {
+              let boosterElem = mastodonFeedCreateElement('span', 'booster');
+              boosterElem.appendChild(document.createTextNode( options.text.boosted ));
+              accountElem.appendChild(boosterElem);
+            }            
+            accountElem.appendChild(mastodonFeedCreateElementAccountLink(status.account));
+            if(!options.content.hideDateTime) {
+              accountElem.appendChild(mastodonFeedCreateElementTimeinfo(status, options, (isReblog ? false : status.url)));
+            }
+            if(null !== status.edited_at) {
+              accountElem.innerHTML += ' ' + options.text.edited;
+            }
+            statusElem.appendChild(accountElem);
           }
-          accountElem.appendChild(mastodonFeedCreateElementAccountLink(status.account));
-          accountElem.appendChild(mastodonFeedCreateElementTimeinfo(status, options, (isReblog ? false : status.url)));
-          
-          statusElem.appendChild(accountElem);
 
           // prepare content rendering
           let showStatus = status;
@@ -660,16 +686,19 @@ function display_feed($atts) {
       array(
           'instance' => ( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE === false ? false : filter_var( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE, FILTER_UNSAFE_RAW ) ),
 					'account' => false,
+          'tag' => false,
           'limit' => INCLUDE_MASTODON_FEED_LIMIT,
           'excludeboosts' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'excludereplies' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'excludeconversationstarters' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_CONVERSATIONSTARTERS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'onlypinned' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_PINNED), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'onlymedia' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_MEDIA), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+          'preserveimageaspectratio' => filter_var(esc_html(INCLUDE_MASTODON_FEED_PRESERVE_IMAGE_ASPECT_RATIO), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'tagged' => INCLUDE_MASTODON_FEED_TAGGED,
           'linktarget' => INCLUDE_MASTODON_FEED_LINKTARGET,
           'showpreviewcards' => filter_var(esc_html(INCLUDE_MASTODON_FEED_SHOW_PREVIEWCARDS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
-
+          'hidestatusmeta' => filter_var(esc_html(INCLUDE_MASTODON_FEED_HIDE_STATUS_META), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+          'hidedatetime' => filter_var(esc_html(INCLUDE_MASTODON_FEED_HIDE_DATETIME), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'text-loading' => INCLUDE_MASTODON_FEED_TEXT_LOADING,
           'text-nostatuses' => INCLUDE_MASTODON_FEED_TEXT_NO_STATUSES,
           'text-boosted' => INCLUDE_MASTODON_FEED_TEXT_BOOSTED,
@@ -680,7 +709,6 @@ function display_feed($atts) {
           'text-edited' => INCLUDE_MASTODON_FEED_TEXT_EDITED,
           'date-locale' => INCLUDE_MASTODON_FEED_DATE_LOCALE,
           'date-options' => INCLUDE_MASTODON_FEED_DATE_OPTIONS,
-
           'darkmode' => filter_var(esc_html(INCLUDE_MASTODON_FEED_DARKMODE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
       ), ( is_array($atts) ? array_change_key_case($atts, CASE_LOWER) : [] )
   );
@@ -688,11 +716,18 @@ function display_feed($atts) {
   if(false === filter_var($atts['instance'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
     return error('missing configuration: instance');
   }
-  if(false === filter_var($atts['account'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-    return error('missing configuration: account id');
+  if(false === filter_var($atts['account'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) && false === filter_var($atts['tag'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+    return error('missing configuration: account id or tag');
   }
 
-  $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/accounts/'.$atts['account'].'/statuses';
+
+  if(false !== filter_var($atts['account'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+    $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/accounts/'.$atts['account'].'/statuses';
+  }
+  if(false !== filter_var($atts['tag'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+    $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/timelines/tag/'.urlencode($atts['tag']);
+  }
+
   $getParams = [];
   if($atts['limit'] != 20 && $atts['limit'] > 0) {
     $getParams[] = 'limit=' . filter_var( $atts['limit'], FILTER_SANITIZE_NUMBER_INT );
@@ -727,6 +762,11 @@ function display_feed($atts) {
           linkTarget: "<?php echo filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW ); ?>",
           showPreviewCards: <?php echo (filter_var( $atts['showpreviewcards'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           excludeConversationStarters: <?php echo (filter_var( $atts['excludeconversationstarters'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
+          preserveImageAspectRatio: <?php echo (filter_var( $atts['preserveimageaspectratio'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
+          content: {
+            hideStatusMeta: <?php echo (filter_var( $atts['hidestatusmeta'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
+            hideDateTime: <?php echo (filter_var( $atts['hidedatetime'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>
+          },
           text: {
             boosted: "<?php echo esc_js( $atts['text-boosted'] ); ?>",
             noStatuses: "<?php echo esc_html( $atts['text-nostatuses'] ); ?>",
