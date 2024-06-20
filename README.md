@@ -1,6 +1,6 @@
 # Include Mastodon Feed Wordpress Plugin
 
-Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages.
+Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
 
 The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
 
@@ -28,6 +28,7 @@ Place the following shortcode right into the page. Either as shortcode block or 
  | Attribute          | Default value                 | Example                   | Description                                                       |
 | ------------------- | ----------------------------- | ------------------------- | ----------------------------------------------------------------- |
 | **account**         |                               | id="012345678910"         | (required attribute) Your account ID ([a long number](#how-do-i-find-my-account-id))   |
+| tag                 |                               | tag="travel"              | use **tag** instead of **account** if you want to embed a tag feed instead of a personal feed   |
 | **instance**        |                               | instance="example.org"    | (required attribute) Domain name of the instance without https:// |
 | limit               | 20                            | limit="10"                | Maximum number of statuses                                        |
 | excludeBoosts       | false                         | excludeBoosts="true"      | Exclude boosted statuses                                          |
@@ -35,9 +36,12 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | excludeConversationStarters       | false           | excludeConversationStarters="true"      | Exclude statuses that start with a user mention     |
 | onlyPinned          | false                         | onlyPinned="true"         | Show only pinned statuses                                         |
 | onlyMedia           | false                         | onlyMedia="true"          | Show only statuses containing media                               |
+| preserveImageAspectRatio          | false           | preserveImageAspectRatio="true"         | Preserve image aspect ratio                         |
 | tagged              | false                         | tagged="tagname"          | Show only statuses that are tagged with given tag name (no #!)    |
 | linkTarget          | "_self"                       | linkTarget="_blank"       | Target for all links                                              |
 | showPreviewCards    | true                          | showPreviewCards="false"  | Show preview cards                                                |
+| hideStatusMeta      | false                         | hideStatusMeta="true"     | Hide status meta information (automatically also hides date and time) |
+| hideDateTime        | false                         | hideDateTime="true"       | Hide date and time from status meta information                   |
 | darkmode            | false                         | darkmode="true"           | Enable dark mode                                                  |
 | text-loading        | "Loading Mastodon feed..."    | text-loading="Loading ⏳" | Loading text                                                      |
 | text-noStatuses     | "No statuses available"       | text-noStatuses="💩"      | Text if no statuses are available                                 |

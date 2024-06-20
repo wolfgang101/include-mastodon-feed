@@ -4,7 +4,7 @@
      * NOTE
      * 
      * None, any, or all constants can be defined in the
-     * config.local.php file to override default settings
+     * wp-config.php file to override default settings
      * 
      * default settings apply if file does not exist
      */
@@ -38,6 +38,10 @@
 
     // show only statuses containing media
     define('INCLUDE_MASTODON_FEED_ONLY_MEDIA', false);
+
+    // preserve image aspect ratio
+    // can be overridden in shortcode
+    define('INCLUDE_MASTODON_FEED_PRESERVE_IMAGE_ASPECT_RATIO', true);
 
     // only tagged statuses
     // tag name without leading #, case insensitive
@@ -73,6 +77,13 @@
 
     // general border radius on elements
     define('INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS', '0.25rem',);
+
+    // hide status meta information (automatically also hides date and time)
+    define('INCLUDE_MASTODON_FEED_HIDE_STATUS_META', true)
+
+    // hide date and time from status meta information
+    define('INCLUDE_MASTODON_FEED_HIDE_DATETIME', true)
+
 
 
     /*
