@@ -119,18 +119,23 @@ See the included `config-example.php` file for a full list of supported settings
 == Frequently Asked Questions ==
 
 = How do I find my account ID? =
+Please feel free to use [this handy lookup tool](https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin/)
+
+To look your ID up manually there are several ways.
+
 As an instance admin you can easily read your user ID in the admin backend.
 
 As regular user you can try an API v2 search to find your ID.
 
 **API v2 notes:**
-* You might have to be logged in to get any results
 * Change `example.org` to your instance
 * Replace `username` with your handle.
 
 Use the following URL to get your ID:
 
-`https://example.org/api/v2/search?q=username@example.org&resolve=true&limit=5`
+`https://example.org/api/v2/search?q=username@example.org&resolve=false&limit=5`
+
+
 
 = Known Issues / Todo =
 * improve support for video and audio media attachment types
