@@ -38,6 +38,7 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | onlyMedia           | false                         | onlyMedia="true"          | Show only statuses containing media                               |
 | preserveImageAspectRatio          | false           | preserveImageAspectRatio="true"         | Preserve image aspect ratio                         |
 | imageSize           | "preview"                     | imageSize="full"          | Load small sized preview images or full size high quality images  |
+| imageLink           | "status"                      | imageLink="image"         | Link image to status or image                                     |
 | tagged              | false                         | tagged="tagname"          | Show only statuses that are tagged with given tag name (no #!)    |
 | linkTarget          | "_self"                       | linkTarget="_blank"       | Target for all links                                              |
 | showPreviewCards    | true                          | showPreviewCards="false"  | Show preview cards                                                |

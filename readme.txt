@@ -59,6 +59,9 @@ Preserve image aspect ratio (Default: false)
 * **imageSize**
 Load small sized preview images or full size high quality images (Default: preview, full)
 
+* **imageLink**
+Link image to status or image (Default: status, image)
+
 * **tagged**
 Show only statuses that are tagged with given tag name (Default: false)
 No leading #, case insensitive, e.g.: tagged="tagname"
@@ -152,7 +155,8 @@ Use the following URL to get your ID:
 == Changelog ==
 
 = 1.9.5 =
-* added option to load large image versions instead of medea previews (preview still default)
+* added option to either display smaller image media attachment previews (default) or large image versions
+* added option to point image media attachment links to either status (default) or image
 
 = 1.9.4 =
 * added option to hide status meta information and date/time (thank you @PaulKingtiger@dice.camp)
