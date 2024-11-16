@@ -53,6 +53,10 @@ $constants = [
     'value' => 'preview',
   ],
   [
+    'key' => 'INCLUDE_MASTODON_FEED_IMAGE_LINK',
+    'value' => 'status',
+  ],
+  [
     'key' => 'INCLUDE_MASTODON_FEED_TAGGED',
     'value' => false,
   ],
@@ -366,18 +370,21 @@ function init_scripts() {
         if('image' == media.type) {
           let mediaElemImgLink = mastodonFeedCreateElement('a');
           let imageUrl = media.url;
-          if('full' === options.imageSize && null !== media.remote_url) {
+          if('full' === options.images.size && null !== media.remote_url) {
             imageUrl = media.remote_url;
           }
           else if(null !== media.preview_url) {
             imageUrl = media.preview_url;
           }
           mediaElemImgLink.href = status.url;
+          if('image' === options.images.link) {
+            mediaElemImgLink.href = media.remote_url ?? media.url;
+          }
           mediaElemImgLink.style.backgroundImage = 'url("' + imageUrl + '")';
           if(null !== media.description) {
             mediaElem.title = media.description;
           }
-          if(options.preserveImageAspectRatio) {
+          if(options.images.preserveImageAspectRatio) {
             let mediaElemImgImage = mastodonFeedCreateElement('img');
             mediaElemImgImage.src = imageUrl;
             mediaElemImgLink.appendChild(mediaElemImgImage);
@@ -654,6 +661,7 @@ function display_feed($atts) {
           'onlymedia' => filter_var(esc_html(INCLUDE_MASTODON_FEED_ONLY_MEDIA), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'preserveimageaspectratio' => filter_var(esc_html(INCLUDE_MASTODON_FEED_PRESERVE_IMAGE_ASPECT_RATIO), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'imagesize' => INCLUDE_MASTODON_FEED_IMAGE_SIZE,
+          'imagelink' => INCLUDE_MASTODON_FEED_IMAGE_LINK,
           'tagged' => INCLUDE_MASTODON_FEED_TAGGED,
           'linktarget' => INCLUDE_MASTODON_FEED_LINKTARGET,
           'showpreviewcards' => filter_var(esc_html(INCLUDE_MASTODON_FEED_SHOW_PREVIEWCARDS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
@@ -722,11 +730,14 @@ function display_feed($atts) {
           linkTarget: "<?php echo filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW ); ?>",
           showPreviewCards: <?php echo (filter_var( $atts['showpreviewcards'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           excludeConversationStarters: <?php echo (filter_var( $atts['excludeconversationstarters'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
-          preserveImageAspectRatio: <?php echo (filter_var( $atts['preserveimageaspectratio'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
-          imageSize: "<?php echo ( "full" === $atts['imagesize'] ? "full" : "preview" ); ?>",
           content: {
             hideStatusMeta: <?php echo (filter_var( $atts['hidestatusmeta'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
             hideDateTime: <?php echo (filter_var( $atts['hidedatetime'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>
+          },
+          images: {
+            preserveImageAspectRatio: <?php echo (filter_var( $atts['preserveimageaspectratio'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
+            size: "<?php echo ( "full" === $atts['imagesize'] ? "full" : "preview" ); ?>",
+            link: "<?php echo ( "image" === $atts['imagelink'] ? "image" : "status" ); ?>",
           },
           text: {
             boosted: "<?php echo esc_js( $atts['text-boosted'] ); ?>",

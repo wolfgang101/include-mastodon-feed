@@ -46,6 +46,9 @@
     // load small sized preview images or full size high quality images
     define( 'INCLUDE_MASTODON_FEED_IMAGE_SIZE', 'preview' );
 
+    // link image to status or image
+    define( 'INCLUDE_MASTODON_FEED_IMAGE_LINK', 'status' );
+
     // only tagged statuses
     // tag name without leading #, case insensitive
     define('INCLUDE_MASTODON_FEED_TAGGED', 'tagname');
