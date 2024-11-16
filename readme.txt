@@ -3,9 +3,9 @@ Contributors: wolfgang101
 Donate link: https://www.buymeacoffee.com/w101
 Tags: mastodon, status, feed
 Requires at least: 6.0
-Tested up to: 6.5
+Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.9.4
+Stable tag: 1.9.5
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -55,6 +55,9 @@ Show only statuses containing media (Default: false)
 
 * **preserveImageAspectRatio**
 Preserve image aspect ratio (Default: false)
+
+* **imageSize**
+Load small sized preview images or full size high quality images (Default: preview, full)
 
 * **tagged**
 Show only statuses that are tagged with given tag name (Default: false)
@@ -147,6 +150,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.9.5 =
+* added option to load large image versions instead of medea previews (preview still default)
 
 = 1.9.4 =
 * added option to hide status meta information and date/time (thank you @PaulKingtiger@dice.camp)

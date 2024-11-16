@@ -19,7 +19,7 @@
     // set a default instance
     // can still be overriden in shortcode
     // plugin will show a warning if no default is set and instance is omitted in shortcode
-    //define('INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE', 'example.org');
+    define('INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE', 'example.org');
 
     // Maximum number of statuses
     define('INCLUDE_MASTODON_FEED_LIMIT', 20);
@@ -42,6 +42,9 @@
     // preserve image aspect ratio
     // can be overridden in shortcode
     define('INCLUDE_MASTODON_FEED_PRESERVE_IMAGE_ASPECT_RATIO', true);
+
+    // load small sized preview images or full size high quality images
+    define( 'INCLUDE_MASTODON_FEED_IMAGE_SIZE', 'preview' );
 
     // only tagged statuses
     // tag name without leading #, case insensitive
