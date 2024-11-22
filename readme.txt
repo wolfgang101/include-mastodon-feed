@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.9.6
+Stable tag: 1.9.7
 License: Expat License
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -154,11 +154,14 @@ Use the following URL to get your ID:
 
 == Changelog ==
 
+= 1.9.7 =
+* fix option to either display smaller image media attachment previews (default) or large image versions (thank you @beach@illo.social)
+
 = 1.9.6 =
 * fixed XSS vulnerability where authenticated attackers with contributor permissions could insert malicious JavaScript
 
 = 1.9.5 =
-* added option to either display smaller image media attachment previews (default) or large image versions
+* added option to either display smaller image media attachment previews (default) or large image versions (thank you @beach@illo.social)
 * added option to point image media attachment links to either status (default) or image
 
 = 1.9.4 =
