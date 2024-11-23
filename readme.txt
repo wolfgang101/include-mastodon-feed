@@ -155,7 +155,7 @@ Use the following URL to get your ID:
 == Changelog ==
 
 = 1.9.8 =
-* fix broken date-locale and date-options parameters
+* fix broken date-locale and date-options parameters (thank you @crusy@chaos.social)
 * improved string excaping for text parameters and added url escaping
 * removed unnecessary output buffering
 * fix license SPDX Identifier
