@@ -3,9 +3,11 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.9.7
+	Version: 1.9.8
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
+  License: MIT
+  License URI: https://directory.fsf.org/wiki/License:Expat
 */
 
 namespace IncludeMastodonFeedPlugin;
@@ -157,7 +159,6 @@ function error($msg) {
 
 
 function init_styles() {
-  ob_start();
 ?>
   <style>
     :root {
@@ -311,12 +312,10 @@ function init_styles() {
     }
   </style>
 <?php
-  echo ob_get_clean();
 }
 add_action('wp_head', __NAMESPACE__ . '\init_styles', 7);
 
 function init_scripts() {
-  ob_start();
 ?>
   <script>
 
@@ -643,7 +642,6 @@ function init_scripts() {
     }
   </script>
 <?php
-  echo ob_get_clean();
 }
 add_action('wp_footer', __NAMESPACE__ . '\init_scripts');
 
@@ -724,10 +722,10 @@ function display_feed($atts) {
   <script>
     window.addEventListener("load", () => {
       mastodonFeedLoad(
-        "<?php echo sanitize_url( $apiUrl, ['https'] ); ?>",
+        "<?php echo esc_url(sanitize_url( $apiUrl, ['https'] )); ?>",
         "<?php echo filter_var( $elemId, FILTER_UNSAFE_RAW ); ?>",
         {
-          linkTarget: "<?php echo esc_js(filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW )); ?>",
+          linkTarget: "<?php echo esc_attr(filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW )); ?>",
           showPreviewCards: <?php echo (filter_var( $atts['showpreviewcards'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           excludeConversationStarters: <?php echo (filter_var( $atts['excludeconversationstarters'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           content: {
@@ -740,18 +738,18 @@ function display_feed($atts) {
             link: "<?php echo ( "image" === $atts['imagelink'] ? "image" : "status" ); ?>",
           },
           text: {
-            boosted: "<?php echo esc_js( $atts['text-boosted'] ); ?>",
+            boosted: "<?php echo esc_html( $atts['text-boosted'] ); ?>",
             noStatuses: "<?php echo esc_html( $atts['text-nostatuses'] ); ?>",
             viewOnInstance: "<?php echo esc_js( $atts['text-viewoninstance'] ); ?>",
-            showContent: "<?php echo esc_js( $atts['text-showcontent'] ); ?>",
-            permalinkPre: "<?php echo esc_js( $atts['text-permalinkpre'] ); ?>",
-            permalinkPost: "<?php echo esc_js( $atts['text-permalinkpost'] ); ?>",
-            edited: "<?php echo esc_js( $atts['text-edited'] ); ?>",
+            showContent: "<?php echo esc_html( $atts['text-showcontent'] ); ?>",
+            permalinkPre: "<?php echo esc_html( $atts['text-permalinkpre'] ); ?>",
+            permalinkPost: "<?php echo esc_html( $atts['text-permalinkpost'] ); ?>",
+            edited: "<?php echo esc_html( $atts['text-edited'] ); ?>",
           },
           localization: {
             date: {
-              locale: "<?php echo esc_js(filter_var( $atts['date-locale'], FILTER_UNSAFE_RAW )); ?>",
-              options: <?php echo esc_js(filter_var( $atts['date-options'], FILTER_UNSAFE_RAW )); ?>,
+              locale: "<?php echo filter_var( $atts['date-locale'], FILTER_UNSAFE_RAW ); ?>",
+              options: <?php echo filter_var( $atts['date-options'], FILTER_UNSAFE_RAW ); ?>,
             }
           }
         }

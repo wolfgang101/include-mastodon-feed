@@ -5,8 +5,8 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.9.7
-License: Expat License
+Stable tag: 1.9.8
+License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
 Plugin that provides a shortcode to easily integrate mastodon feeds into wordpress pages.
@@ -26,14 +26,14 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
 `[include-mastodon-feed instance="YOUR-INSTANCE" account="YOUR-ACCOUNT-ID"]`
 
 = Shortcode attributes =
+* **instance** (required)
+Domain name of the instance without https:// (e.g. example.org)
+
 * **account** (required)
 The account ID (a long number - see FAQ on how to get it)
 
 * **tag**
 Use **tag** instead of **account** if you want to embed a tag feed instead of a personal feed
-
-* **instance** (required)
-Domain name of the instance without https:// (e.g. example.org)
 
 * **limit**
 Maximum number of statuses (Default: 20)
@@ -153,6 +153,12 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.9.8 =
+* fix broken date-locale and date-options parameters
+* improved string excaping for text parameters and added url escaping
+* removed unnecessary output buffering
+* fix license SPDX Identifier
 
 = 1.9.7 =
 * fix option to either display smaller image media attachment previews (default) or large image versions (thank you @beach@illo.social)

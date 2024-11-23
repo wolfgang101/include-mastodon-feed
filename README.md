@@ -25,11 +25,11 @@ Place the following shortcode right into the page. Either as shortcode block or 
 
 ### Supported shortcode attributes
 
- | Attribute          | Default value                 | Example                   | Description                                                       |
+| Attribute           | Default value                 | Example                   | Description                                                       |
 | ------------------- | ----------------------------- | ------------------------- | ----------------------------------------------------------------- |
+| **instance**        |                               | instance="example.org"    | (required attribute) Domain name of the instance without https:// |
 | **account**         |                               | id="012345678910"         | (required attribute) Your account ID ([a long number](#how-do-i-find-my-account-id))   |
 | tag                 |                               | tag="travel"              | use **tag** instead of **account** if you want to embed a tag feed instead of a personal feed   |
-| **instance**        |                               | instance="example.org"    | (required attribute) Domain name of the instance without https:// |
 | limit               | 20                            | limit="10"                | Maximum number of statuses                                        |
 | excludeBoosts       | false                         | excludeBoosts="true"      | Exclude boosted statuses                                          |
 | excludeReplies      | false                         | excludeReplies="true"     | Exclude replies to other accounts                                 |
@@ -106,6 +106,8 @@ If you are familiar with Github you can clone the repository right into your Wor
 ## FAQ
 
 ### How do I find my account ID?
+Please feel free to use [this handy lookup tool](https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin/)
+
 As an instance admin you can easily read your user ID in the admin backend. As regular user you can try an API v2 search to find your ID
 
 Use the following URL to get your ID:
