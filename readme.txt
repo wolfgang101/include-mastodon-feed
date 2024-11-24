@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.9.8
+Stable tag: 1.9.9
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -153,6 +153,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.9.9 =
+* fixed esc_url context that previously broke the URL for the Mastodon API JS ajax request (thank you @beach@illo.social)
 
 = 1.9.8 =
 * fix broken date-locale and date-options parameters (thank you @crusy@chaos.social)
