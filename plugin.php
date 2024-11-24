@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.9.8
+	Version: 1.9.9
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -722,7 +722,7 @@ function display_feed($atts) {
   <script>
     window.addEventListener("load", () => {
       mastodonFeedLoad(
-        "<?php echo esc_url(sanitize_url( $apiUrl, ['https'] )); ?>",
+        "<?php echo esc_url( $apiUrl, ['https'], 'apicall' ); ?>",
         "<?php echo filter_var( $elemId, FILTER_UNSAFE_RAW ); ?>",
         {
           linkTarget: "<?php echo esc_attr(filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW )); ?>",
