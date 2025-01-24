@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.9.9
+	Version: 1.9.10
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -725,7 +725,7 @@ function display_feed($atts) {
         "<?php echo esc_url( $apiUrl, ['https'], 'apicall' ); ?>",
         "<?php echo filter_var( $elemId, FILTER_UNSAFE_RAW ); ?>",
         {
-          linkTarget: "<?php echo esc_attr(filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW )); ?>",
+          linkTarget: "<?php echo esc_js(filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW )); ?>",
           showPreviewCards: <?php echo (filter_var( $atts['showpreviewcards'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           excludeConversationStarters: <?php echo (filter_var( $atts['excludeconversationstarters'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           content: {
@@ -748,8 +748,8 @@ function display_feed($atts) {
           },
           localization: {
             date: {
-              locale: "<?php echo filter_var( $atts['date-locale'], FILTER_UNSAFE_RAW ); ?>",
-              options: <?php echo filter_var( $atts['date-options'], FILTER_UNSAFE_RAW ); ?>,
+              locale: "<?php echo esc_js( filter_var( $atts['date-locale'], FILTER_UNSAFE_RAW ) ); ?>",
+              options: <?php echo filter_var( INCLUDE_MASTODON_FEED_DATE_OPTIONS, FILTER_UNSAFE_RAW ); ?>,
             }
           }
         }
