@@ -54,11 +54,10 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | text-permalinkPost  | ""                            | text-showContent="📅"     | Text after post permalink (date & time)                           |
 | text-edited         | "(edited)"                    | text-showContent="✏"      | Text indicating edited posts                                      |
 | date-locale         | "en-US"                       | date-locale="de-DE"       | Locale for date string, used in toLocaleString()                  |
-| date-options        | "{}"                          | date-options="{dateStyle: 'short', timeStyle: 'long'}" | Format options directly fed into toLocaleString() |
 
 ### Additional customizations
 
-You can define several plugin constants to set custom default options that will be applied site-wide.
+You can define several plugin constants to set custom default options that will be applied site-wide (e.g. date options can only be set as php constant to mitigate an XSS vulnerability).
 
 1. Open your `wp-config.php` file
 2. Search for the line `/* Add any custom values between this line and the "stop editing" line. */`

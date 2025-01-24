@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.9.9
+Stable tag: 1.9.10
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -105,15 +105,9 @@ Text after post permalink (date & time) (Default: )
 * **text-edited**
 Text indicating edited posts (Default: (edited))
 
-* **date-locale**
-Locale for date string, used in toLocaleString() (Default: en-US)
-
-* **date-options**
-Format options directly fed into toLocaleString() (Default: {})
-
 = Additional customizations =
 
-You can define several plugin constants to set custom default options that will be applied site-wide.
+You can define several plugin constants to set custom default options that will be applied site-wide (e.g. date options can only be set as php constant to mitigate an XSS vulnerability).
 
 1. Open your `wp-config.php` file
 2. Search for the line `/* Add any custom values between this line and the "stop editing" line. */`
@@ -153,6 +147,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.9.10 =
+* fixed XSS vulnerability: removed support for date-options as shortcode attribute to mitigate an XSS vulnerability (still can be set as constant in PHP code)
 
 = 1.9.9 =
 * fixed esc_url context that previously broke the URL for the Mastodon API JS ajax request (thank you @beach@illo.social)
