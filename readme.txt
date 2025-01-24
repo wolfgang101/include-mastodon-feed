@@ -105,6 +105,10 @@ Text after post permalink (date & time) (Default: )
 * **text-edited**
 Text indicating edited posts (Default: (edited))
 
+* **date-locale**
+Locale for date string, used in toLocaleString() (Default: en-US)
+
+
 = Additional customizations =
 
 You can define several plugin constants to set custom default options that will be applied site-wide (e.g. date options can only be set as php constant to mitigate an XSS vulnerability).
@@ -149,7 +153,7 @@ Use the following URL to get your ID:
 == Changelog ==
 
 = 1.9.10 =
-* fixed XSS vulnerability: removed support for date-options as shortcode attribute to mitigate an XSS vulnerability (still can be set as constant in PHP code)
+* fixed XSS vulnerability: removed support for date-options as shortcode attribute completely - to mitigate an XSS vulnerability where authenticated attackers with contributor permission could insert malicious JavaScript (still can be set as constant in PHP code)
 
 = 1.9.9 =
 * fixed esc_url context that previously broke the URL for the Mastodon API JS ajax request (thank you @beach@illo.social)
