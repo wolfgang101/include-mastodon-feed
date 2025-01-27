@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.9.10
+Stable tag: 1.9.11
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -151,6 +151,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.9.11 =
+* cleaned up code after 1.9.10 release
 
 = 1.9.10 =
 * fixed XSS vulnerability: removed support for date-options as shortcode attribute completely - to mitigate an XSS vulnerability where authenticated attackers with contributor permission could insert malicious JavaScript (still can be set as constant in PHP code)
