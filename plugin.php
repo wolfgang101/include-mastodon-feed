@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.9.10
+	Version: 1.9.11
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -674,7 +674,6 @@ function display_feed($atts) {
           'text-permalinkpost' => INCLUDE_MASTODON_FEED_TEXT_PERMALINK_POST,
           'text-edited' => INCLUDE_MASTODON_FEED_TEXT_EDITED,
           'date-locale' => INCLUDE_MASTODON_FEED_DATE_LOCALE,
-          'date-options' => INCLUDE_MASTODON_FEED_DATE_OPTIONS,
           'darkmode' => filter_var(esc_html(INCLUDE_MASTODON_FEED_DARKMODE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
       ), array_change_key_case($atts, CASE_LOWER)
   );
