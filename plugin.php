@@ -169,18 +169,18 @@ function init_styles() {
       --include-mastodon-feed-border-radius: <?php echo filter_var( INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS, FILTER_UNSAFE_RAW ); ?>;
     }
 
-    .include-mastodon-feed .status {
+    .include-mastodon-feed .include-mastodon-feed-status {
       margin: 0.5rem 0 1.5rem;
       border-radius: var(--include-mastodon-feed-border-radius);
       padding: 0.5rem;
       background: var(--include-mastodon-feed-bg-light);
     }
-    .include-mastodon-feed .status a {
+    .include-mastodon-feed .include-mastodon-feed-status a {
       color: var(--include-mastodon-feed-accent-color);
       text-decoration: none;
       word-wrap: break-word;
     }
-    .include-mastodon-feed .status a:hover {
+    .include-mastodon-feed .include-mastodon-feed-status a:hover {
       text-decoration: underline;
     }
     .include-mastodon-feed .avatar {
@@ -229,7 +229,7 @@ function init_styles() {
     .include-mastodon-feed img.emoji {
       height: 1rem;
     }
-    .include-mastodon-feed .content .invisible {
+    .include-mastodon-feed .include-mastodon-feed-content .invisible {
       display: none;
     }
     .include-mastodon-feed .media {
@@ -305,7 +305,7 @@ function init_styles() {
     .include-mastodon-feed .card .title {
       font-weight: bold;
     }
-    .include-mastodon-feed.dark .status,
+    .include-mastodon-feed.dark .include-mastodon-feed-status,
     .include-mastodon-feed.dark .contentWrapper.boosted,
     .include-mastodon-feed.dark .card {
       background: var(--include-mastodon-feed-bg-dark);
@@ -494,7 +494,7 @@ function init_scripts() {
           let isEdited = (null === status.edited_at ? true : false);
           let isReblog = (null === status.reblog ? false : true);
 
-          let statusElem = mastodonFeedCreateElement('div', 'status');
+          let statusElem = mastodonFeedCreateElement('div', 'include-mastodon-feed-status');
 
           // add account meta info
           if(!options.content.hideStatusMeta) {
@@ -531,7 +531,7 @@ function init_scripts() {
             contentWrapperElem.appendChild(boostElem);
           }
 
-          let contentElem = mastodonFeedCreateElement('div', 'content');
+          let contentElem = mastodonFeedCreateElement('div', 'include-mastodon-feed-content');
 
           // handle content warnings
           if(showStatus.sensitive || showStatus.spoiler_text.length > 0) {
