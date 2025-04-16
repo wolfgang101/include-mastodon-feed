@@ -111,7 +111,7 @@ $constants = [
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_TEXT_NO_STATUSES',
-    'value' => 'No statuses availablae',
+    'value' => 'No statuses available',
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_TEXT_BOOSTED',
