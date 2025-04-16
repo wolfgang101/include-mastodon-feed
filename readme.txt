@@ -153,6 +153,7 @@ Use the following URL to get your ID:
 == Changelog ==
 
 = 1.9.11 =
+* fixed typo (thank you @hjek)
 * cleaned up code after 1.9.10 release
 
 = 1.9.10 =
