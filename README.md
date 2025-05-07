@@ -2,6 +2,8 @@
 
 Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
 
+Account and post images are automatically lazy loaded - post image lazy loading only works with preserveImageAspectRatio set to true.
+
 The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
 
 ## Table of contents
