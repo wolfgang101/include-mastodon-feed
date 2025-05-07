@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.9.11
+	Version: 1.10
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -333,6 +333,7 @@ function init_scripts() {
 
       let accountImageElem = mastodonFeedCreateElement('img', 'avatar');
       accountImageElem.src = account.avatar_static;
+      accountImageElem.loading = 'lazy';
 
       accountLinkElem.addEventListener('mouseover', (event) => {
         accountLinkElem.querySelector('.avatar').src = account.avatar;
@@ -379,14 +380,17 @@ function init_scripts() {
           if('image' === options.images.link) {
             mediaElemImgLink.href = media.remote_url ?? media.url;
           }
-          mediaElemImgLink.style.backgroundImage = 'url("' + imageUrl + '")';
           if(null !== media.description) {
             mediaElem.title = media.description;
           }
           if(options.images.preserveImageAspectRatio) {
             let mediaElemImgImage = mastodonFeedCreateElement('img');
             mediaElemImgImage.src = imageUrl;
+            mediaElemImgImage.loading = 'lazy';
             mediaElemImgLink.appendChild(mediaElemImgImage);
+          }
+          else {
+            mediaElemImgLink.style.backgroundImage = 'url("' + imageUrl + '")';
           }
           mediaElem.appendChild(mediaElemImgLink);
         }
@@ -439,6 +443,7 @@ function init_scripts() {
           let cardElemImageWrapper = mastodonFeedCreateElement('div', 'image');
           let cardElemImage = mastodonFeedCreateElement('img');
           cardElemImage.src = card.image;
+          cardElemImage.loading = 'lazy';
           cardElemImageWrapper.appendChild(cardElemImage);
           cardElemMeta.appendChild(cardElemImageWrapper);
         }

@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.9.11
+Stable tag: 1.10
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -13,6 +13,8 @@ Plugin that provides a shortcode to easily integrate mastodon feeds into wordpre
 
 == Description ==
 Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
+
+Account and post images are automatically lazy loaded - post image lazy loading only works with preserveImageAspectRatio set to true.
 
 The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
 
@@ -151,6 +153,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.10 =
+* added image lazy loading for account and post images (post image lazy loading only works with preserveImageAspectRatio set to true)
 
 = 1.9.11 =
 * fixed typo (thank you @hjek)
