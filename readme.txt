@@ -155,7 +155,7 @@ Use the following URL to get your ID:
 == Changelog ==
 
 = 1.10 =
-* added image lazy loading for account and post images (post image lazy loading only works with preserveImageAspectRatio set to true)
+* added image lazy loading for account and post images - post image lazy loading only works with preserveImageAspectRatio set to true (thank you @oldrup@mastodon.green)
 
 = 1.9.11 =
 * fixed typo (thank you @hjek)
