@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.10
+Stable tag: 1.11
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -153,6 +153,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.11 =
+* now favoring preview_url (smaler size) instead of remote_url (full size) for image previews (thank you @oldrup@mastodon.green)
 
 = 1.10 =
 * added image lazy loading for account and post images - post image lazy loading only works with preserveImageAspectRatio set to true (thank you @oldrup@mastodon.green)
