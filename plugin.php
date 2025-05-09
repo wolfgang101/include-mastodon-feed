@@ -379,6 +379,7 @@ function init_scripts() {
           }
           if(null !== media.description) {
             mediaElem.title = media.description;
+            mediaElem.alt = media.description;
           }
           if(options.images.preserveImageAspectRatio) {
             let mediaElemImgImage = mastodonFeedCreateElement('img');
@@ -405,6 +406,7 @@ function init_scripts() {
           mediaElemGifv.muted = 'muted';
           if(null !== media.description) {
             mediaElemGifv.title = media.description;
+            mediaElemGifv.alt = media.description;
           }
           mediaElemGifvLink.appendChild(mediaElemGifv);
           mediaElem.appendChild(mediaElemGifvLink);
