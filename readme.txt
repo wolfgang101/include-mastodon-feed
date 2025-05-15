@@ -166,7 +166,7 @@ Happy [Accesssibility Day](https://accessibility.day)
 * accessibility: added descriptive aria-label to links
 * accessibility: added aria-label and alt text to preview cards
 * accessibility: increased default text / background color contrast
-* accessibility: switched from <DIV> to semantic <OL> / <LI> structure
+* accessibility: switched from DIV to semantic OL / LI structure
 
 = 1.12 =
 * accessibility: added image alt attribute (thank you @oldrup@mastodon.green)
