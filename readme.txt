@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.12
+Stable tag: 1.13
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -14,7 +14,7 @@ Plugin that provides a shortcode to easily integrate mastodon feeds into wordpre
 == Description ==
 Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
 
-Account and post images are automatically lazy loaded - post image lazy loading only works with preserveImageAspectRatio set to true.
+Account and post images are lazy loaded if preserveImageAspectRatio is set to true (default: false).
 
 The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
 
@@ -153,6 +153,20 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.13 =
+Special release for Global Accessibility Awareness Day
+in collaboration with @oldrup@mastodon.green
+
+Happy [Accesssibility Day](https://accessibility.day)
+
+* accessibility (fix): image alt attributes - initial implementation was faulty
+* accessibility: added alt text to image / video attachments
+* accessibility: added alt text to avatar images
+* accessibility: added descriptive aria-label to links
+* accessibility: added aria-label and alt text to preview cards
+* accessibility: increased default text / background color contrast
+* accessibility: switched from <DIV> to semantic <OL> / <LI> structure
 
 = 1.12 =
 * accessibility: added image alt attribute (thank you @oldrup@mastodon.green)
