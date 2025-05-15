@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.12
+	Version: 1.13
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -86,7 +86,7 @@ $constants = [
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_STYLE_ACCENT_COLOR',
-    'value' => 'rgb(99, 100, 255)',
+    'value' => 'rgb(86, 58, 204)',
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_STYLE_ACCENT_FONT_COLOR',
@@ -169,7 +169,12 @@ function init_styles() {
       --include-mastodon-feed-border-radius: <?php echo filter_var( INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS, FILTER_UNSAFE_RAW ); ?>;
     }
 
+    .include-mastodon-feed-wrapper .include-mastodon-feed {
+      list-style: none;
+      padding-left: 0;
+    }
     .include-mastodon-feed .status {
+      display: block;
       margin: 0.5rem 0 1.5rem;
       border-radius: var(--include-mastodon-feed-border-radius);
       padding: 0.5rem;
@@ -184,6 +189,7 @@ function init_styles() {
       text-decoration: underline;
     }
     .include-mastodon-feed .avatar {
+      display: inline-block;
       height: 1.25rem;
       border-radius: var(--include-mastodon-feed-border-radius);
       vertical-align: top;
@@ -234,13 +240,16 @@ function init_styles() {
     }
     .include-mastodon-feed .media {
       display: flex;
+      list-style: none;
+      padding: 0;
       justify-content: space-around;
       align-items: center;
       flex-wrap: wrap;
       gap: 0.5rem;
       margin: 1rem;
     }
-    .include-mastodon-feed .media > div {
+    .include-mastodon-feed .media > * {
+      display: block;
       flex-basis: calc(50% - 0.5rem);
       flex-grow: 1;
     }
@@ -330,10 +339,12 @@ function init_scripts() {
     const mastodonFeedCreateElementAccountLink = function(account) {
       let accountLinkElem = mastodonFeedCreateElement('a');
       accountLinkElem.href = account.url;
+      accountLinkElem.setAttribute('aria-label', 'Link to Mastodon account of ' + account.display_name);
 
       let accountImageElem = mastodonFeedCreateElement('img', 'avatar');
       accountImageElem.src = account.avatar_static;
       accountImageElem.loading = 'lazy';
+      accountImageElem.alt = 'Mastodon avatar image of ' + account.display_name;
 
       accountLinkElem.addEventListener('mouseover', (event) => {
         accountLinkElem.querySelector('.avatar').src = account.avatar;
@@ -354,19 +365,20 @@ function init_scripts() {
       return accountLinkElem;
     }
 
-    const mastodonFeedCreateElementPermalink = function(status, label) {
+    const mastodonFeedCreateElementPermalink = function(status, label, ariaLabel) {
       let linkElem = mastodonFeedCreateElement('a');
       linkElem.href = status.url;
       linkElem.appendChild(document.createTextNode(label));
+      linkElem.setAttribute('aria-label', ariaLabel);
       return linkElem;
     }
 
     const mastodonFeedCreateElementMediaAttachments = function(status, options) {
       let attachments = status.media_attachments;
-      let mediaWrapperElem = mastodonFeedCreateElement('div', 'media');
+      let mediaWrapperElem = mastodonFeedCreateElement('ol', 'media');
       for(let mediaIndex = 0; mediaIndex < attachments.length; mediaIndex++) {
         let media = attachments[mediaIndex];
-        let mediaElem = mastodonFeedCreateElement('div', media.type);
+        let mediaElem = mastodonFeedCreateElement('li', media.type);
         if('image' == media.type) {
           let mediaElemImgLink = mastodonFeedCreateElement('a');
           let imageUrl = media.url;
@@ -377,19 +389,22 @@ function init_scripts() {
           if('image' === options.images.link) {
             mediaElemImgLink.href = media.remote_url ?? media.url;
           }
-          if(null !== media.description) {
-            mediaElem.title = media.description;
-            mediaElem.alt = media.description;
-          }
-          if(options.images.preserveImageAspectRatio) {
-            let mediaElemImgImage = mastodonFeedCreateElement('img');
-            mediaElemImgImage.src = imageUrl;
-            mediaElemImgImage.loading = 'lazy';
-            mediaElemImgLink.appendChild(mediaElemImgImage);
+          let mediaElemImgImage = mastodonFeedCreateElement('img');
+          mediaElemImgImage.src = imageUrl;
+          mediaElemImgImage.loading = 'lazy';
+          if(null === media.description) {
+            mediaElemImgImage.alt = 'Image attachment of Mastodon post';
           }
           else {
-            mediaElemImgLink.style.backgroundImage = 'url("' + imageUrl + '")';
+            mediaElemImgImage.alt = media.description;
           }
+          if(!options.images.preserveImageAspectRatio) {
+            mediaElemImgLink.style.backgroundImage = 'url("' + imageUrl + '")';
+            mediaElemImgImage.style.width = '100%';
+            mediaElemImgImage.style.height = '100%';
+            mediaElemImgImage.style.opacity = 0;
+          }
+          mediaElemImgLink.appendChild(mediaElemImgImage);
           mediaElem.appendChild(mediaElemImgLink);
         }
         else if('gifv' == media.type) {
@@ -404,8 +419,10 @@ function init_scripts() {
           }
           mediaElemGifv.loop = true;
           mediaElemGifv.muted = 'muted';
-          if(null !== media.description) {
-            mediaElemGifv.title = media.description;
+          if(null === media.description) {
+            mediaElemGifv.alt = 'Video attachment of Mastodon post';
+          }
+          else {
             mediaElemGifv.alt = media.description;
           }
           mediaElemGifvLink.appendChild(mediaElemGifv);
@@ -424,7 +441,7 @@ function init_scripts() {
           //      currently only image and gifv support implemented
           mediaElem.innerHTML = 'Stripped ' + media.type + ' - only available on instance<br />';
           let permalinkElem = mastodonFeedCreateElement('span', 'permalink');
-          permalinkElem.appendChild(mastodonFeedCreateElementPermalink(status, options.text.viewOnInstance));
+          permalinkElem.appendChild(mastodonFeedCreateElementPermalink(status, options.text.viewOnInstance, 'Link to Mastodon post'));
           mediaElem.appendChild(permalinkElem);
         }
         mediaWrapperElem.appendChild(mediaElem);
@@ -441,6 +458,12 @@ function init_scripts() {
         if(null !== card.image) {
           let cardElemImageWrapper = mastodonFeedCreateElement('div', 'image');
           let cardElemImage = mastodonFeedCreateElement('img');
+          if(null === card.image_description) {
+            cardElemImage.alt = 'Preview image content card';
+          }
+          else {
+            cardElemImage.alt = card.image_description;
+          }
           cardElemImage.src = card.image;
           cardElemImage.loading = 'lazy';
           cardElemImageWrapper.appendChild(cardElemImage);
@@ -461,6 +484,7 @@ function init_scripts() {
         else {
           let cardElemLink = mastodonFeedCreateElement('a');
           cardElemLink.href = card.url;
+          cardElemLink.setAttribute('aria-label', 'Link embedded in Mastodon post');
           cardElemLink.appendChild(cardElemMeta);
           cardElem.appendChild(cardElemLink);
         }
@@ -478,7 +502,7 @@ function init_scripts() {
         createdInfo.innerHTML += new Date(status.created_at).toLocaleString(options.localization.date.locale, options.localization.date.options);
       }
       else {
-        createdInfo.appendChild(mastodonFeedCreateElementPermalink(status, new Date(status.created_at).toLocaleString(options.localization.date.locale, options.localization.date.options)));
+        createdInfo.appendChild(mastodonFeedCreateElementPermalink(status, new Date(status.created_at).toLocaleString(options.localization.date.locale, options.localization.date.options), 'Link to Mastodon post'));
       }
       createdInfo.innerHTML += ' ' + options.text.permalinkPost;
       return createdInfo;
@@ -498,7 +522,7 @@ function init_scripts() {
           let isEdited = (null === status.edited_at ? true : false);
           let isReblog = (null === status.reblog ? false : true);
 
-          let statusElem = mastodonFeedCreateElement('div', 'status');
+          let statusElem = mastodonFeedCreateElement('li', 'status');
 
           // add account meta info
           if(!options.content.hideStatusMeta) {
@@ -549,6 +573,7 @@ function init_scripts() {
 
             let cwLinkElem = mastodonFeedCreateElement('a');
             cwLinkElem.href = '#';
+            cwLinkElem.setAttribute('aria-label', 'Show content despite warning');
             cwLinkElem.onclick = function() {
               this.parentElement.style = 'display: none;';
               this.parentElement.nextSibling.style = 'display: block;';
@@ -588,11 +613,12 @@ function init_scripts() {
           rootElem.appendChild(statusElem);
         }
       }
-      if('_self' != options.linkTarget) {
-        rootElem.querySelectorAll('a').forEach(function(e) {
+      rootElem.querySelectorAll('a').forEach(function(e) {
+        if('_self' != options.linkTarget) {
           e.target = options.linkTarget;
-        });
-      }
+        }
+        mediaElemGifvLink.setAttribute('aria-label', 'Link embedded in Mastodon post');
+      });
     }
 
     const mastodonFeedLoad = function(url, elementId, options) {
@@ -759,7 +785,7 @@ function display_feed($atts) {
       );
     });
   </script>
-  <div class="include-mastodon-feed<?php echo (true == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo esc_attr( $elemId ); ?>"><?php echo esc_html( $atts['text-loading'] ); ?></div>
+  <div class="include-mastodon-feed-wrapper"><ol class="include-mastodon-feed<?php echo (true == $atts['darkmode'] ? ' dark' : ''); ?>" id="<?php echo esc_attr( $elemId ); ?>"><li><?php echo esc_html( $atts['text-loading'] ); ?></li></ol></div>
 <?php
   return ob_get_clean();
 }
