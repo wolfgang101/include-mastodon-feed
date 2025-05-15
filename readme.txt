@@ -161,10 +161,10 @@ in collaboration with @oldrup@mastodon.green
 Happy [Accesssibility Day](https://accessibility.day)
 
 * accessibility (fix): image alt attributes - initial implementation was faulty
-* accessibility: added alt text to image / video attachments
+* accessibility: added alt text to image / gifv attachments
 * accessibility: added alt text to avatar images
-* accessibility: added descriptive aria-label to links
-* accessibility: added aria-label and alt text to preview cards
+* accessibility: added alt text to preview card media
+* accessibility: added descriptive aria-labels
 * accessibility: increased default text / background color contrast
 * accessibility: switched from DIV to semantic OL / LI structure
 

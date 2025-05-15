@@ -381,7 +381,6 @@ function init_scripts() {
         let mediaElem = mastodonFeedCreateElement('li', media.type);
         if('image' == media.type) {
           let mediaElemImgLink = mastodonFeedCreateElement('a');
-          mediaElemImgLink.setAttribute('aria-label', 'Link to Mastodon post');
           let imageUrl = media.url;
           if('full' !== options.images.size && null !== media.preview_url) {
             imageUrl = media.preview_url;
@@ -389,7 +388,6 @@ function init_scripts() {
           mediaElemImgLink.href = status.url;
           if('image' === options.images.link) {
             mediaElemImgLink.href = media.remote_url ?? media.url;
-            mediaElemImgLink.setAttribute('aria-label', 'Link to Mastodon post image');
           }
           let mediaElemImgImage = mastodonFeedCreateElement('img');
           mediaElemImgImage.src = imageUrl;
@@ -412,7 +410,6 @@ function init_scripts() {
         else if('gifv' == media.type) {
           let mediaElemGifvLink = mastodonFeedCreateElement('a');
           mediaElemGifvLink.href = status.url;
-          mediaElemGifvLink.setAttribute('aria-label', 'Link to Mastodon post');
           let mediaElemGifv = mastodonFeedCreateElement('video', 'requiresInteraction');
           if(null === media.remote_url) {
             mediaElemGifv.src = media.url;
