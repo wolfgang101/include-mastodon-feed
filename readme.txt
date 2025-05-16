@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.13
+Stable tag: 1.13.1
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -153,6 +153,9 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.13.1 =
+* fix: removed unnecessary, broken aria-label functionality
 
 = 1.13 =
 Special release for Global Accessibility Awareness Day
