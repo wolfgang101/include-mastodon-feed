@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.14.0
+	Version: 1.15.1
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -271,8 +271,19 @@ function init_styles() {
     .include-mastodon-feed .media > .image a img {
       width: 100%;
     }
-    .include-mastodon-feed .media > .gifv video {
+    .include-mastodon-feed .media > .gifv video,
+    .include-mastodon-feed .media > .video video {
+      width: 100%;
       max-width: 100%;
+    }
+    .include-mastodon-feed .media > .video .hint {
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+    .include-mastodon-feed .media > .video {
+      margin-top: -1rem;
+      text-align: center;
+      font-size: .9rem;
     }
 
     .include-mastodon-feed .card {
@@ -436,9 +447,45 @@ function init_scripts() {
             mediaElemGifv.currentTime = 0;
           });
         }
+        else if('video' == media.type) {
+          if(null == media.preview_url || null == media.remote_url) {
+            mediaElem.innerHTML = '<p class="hint">Error loading preview. <a href="' + status.url + '">Open on instance</a></p>';
+          }
+          else {
+            const mediaElemImgLink = mastodonFeedCreateElement('a');
+            const imageUrl = media.preview_url;
+            mediaElemImgLink.href = status.url;
+            const mediaElemImgImage = mastodonFeedCreateElement('img');
+            mediaElemImgImage.src = imageUrl;
+            mediaElemImgImage.loading = 'lazy';
+            if(null === media.description) {
+              mediaElemImgImage.alt = 'Video attachment of Mastodon post';
+            }
+            else {
+              mediaElemImgImage.alt = media.description;
+            }
+            mediaElemImgLink.addEventListener('click', (event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              const videoElem = mastodonFeedCreateElement('video');
+              videoElem.src = media.remote_url;
+              videoElem.controls = true;
+              videoElem.autoplay = true;
+              videoElem.muted = true;
+              videoElem.addEventListener('error', () => {
+                mediaElem.innerHTML = '<p class="hint">Error loading video. <a href="' + status.url + '">Open on instance</a></p>';
+              });
+              mediaElem.innerHTML = '';
+              mediaElem.appendChild(videoElem);
+            });
+            mediaElemImgLink.appendChild(mediaElemImgImage);
+            mediaElemImgLink.innerHTML += '<br />Click to play video';
+            mediaElem.appendChild(mediaElemImgLink);
+          }
+        }
         else {
           // TODO implement support for other media types
-          //      currently only image and gifv support implemented
+          //      currently only image, gifv, video support implemented
           mediaElem.innerHTML = 'Stripped ' + media.type + ' - only available on instance<br />';
           let permalinkElem = mastodonFeedCreateElement('span', 'permalink');
           permalinkElem.appendChild(mastodonFeedCreateElementPermalink(status, options.text.viewOnInstance, 'Link to Mastodon post'));
