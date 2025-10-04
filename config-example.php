@@ -53,6 +53,10 @@
     // tag name without leading #, case insensitive
     define('INCLUDE_MASTODON_FEED_TAGGED', 'tagname');
 
+    // exclude tagged statuses
+    // comma separated list of tags without leading #, case insensitive
+    define('INCLUDE_MASTODON_FEED_EXCLUDE_TAGS', 'tag1,tag2');
+
     // target for all links (e.g. new tab "_blank")
     define('INCLUDE_MASTODON_FEED_LINKTARGET', '_self');
 

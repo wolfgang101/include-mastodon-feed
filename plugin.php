@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.15.1
+	Version: 1.16.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -60,6 +60,10 @@ $constants = [
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_TAGGED',
+    'value' => false,
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_EXCLUDE_TAGS',
     'value' => false,
   ],
   [
@@ -285,6 +289,28 @@ function init_styles() {
       text-align: center;
       font-size: .9rem;
     }
+    .include-mastodon-feed .media > .audio {
+
+    }
+    .include-mastodon-feed .media > .audio audio {
+      width: 80%;
+    }
+    .include-mastodon-feed .media > .audio .has-preview {
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      padding-bottom: 1rem;
+    }
+    .include-mastodon-feed .media > .audio .has-preview audio {
+      margin: 7rem 0 1rem;
+    }
+    .include-mastodon-feed .media > .audio {
+      text-align: center;
+    }
+    .include-mastodon-feed .media > .audio .description {
+      margin-top: 1rem;
+      font-size: .9rem;
+    }
 
     .include-mastodon-feed .card {
       border-radius: var(--include-mastodon-feed-border-radius);
@@ -448,7 +474,7 @@ function init_scripts() {
           });
         }
         else if('video' == media.type) {
-          if(null == media.preview_url || null == media.remote_url) {
+          if(null == media.preview_url || (null == media.remote_url && null == media.url)) {
             mediaElem.innerHTML = '<p class="hint">Error loading preview. <a href="' + status.url + '">Open on instance</a></p>';
           }
           else {
@@ -468,7 +494,10 @@ function init_scripts() {
               event.stopPropagation();
               event.preventDefault();
               const videoElem = mastodonFeedCreateElement('video');
-              videoElem.src = media.remote_url;
+              videoElem.src = media.url;
+              if(null == media.url) {
+                videoElem.src = media.remote_url;
+              }
               videoElem.controls = true;
               videoElem.autoplay = true;
               videoElem.muted = true;
@@ -483,9 +512,35 @@ function init_scripts() {
             mediaElem.appendChild(mediaElemImgLink);
           }
         }
+        else if('audio' == media.type) {
+          if(null == media.url && null == media.remote_url) {
+            mediaElem.innerHTML = '<p class="hint">Error loading audio media. <a href="' + status.url + '">Open on instance</a></p>';
+          }
+          else {
+            const mediaElemAudioWrapper = mastodonFeedCreateElement('div');
+            if(null !== media.preview_url) {
+              mediaElemAudioWrapper.style.backgroundImage = 'url("' + media.preview_url + '")';
+              mediaElemAudioWrapper.classList.add('has-preview');
+            }
+            const audioElem = mastodonFeedCreateElement('audio');
+            audioElem.src = media.url;
+            if(null == media.url) {
+              audioElem.src = media.remote_url;
+            }
+            audioElem.controls = true;
+            audioElem.addEventListener('error', () => {
+              mediaElem.innerHTML = '<p class="hint">Error loading audio media. <a href="' + status.url + '">Open on instance</a></p>';
+            });
+            mediaElemAudioWrapper.appendChild(audioElem);
+            mediaElem.appendChild(mediaElemAudioWrapper);
+            if(null !== media.description) {
+              const descriptionElem = mastodonFeedCreateElement('p', 'description');
+              descriptionElem.innerHTML = media.description;
+              mediaElem.appendChild(descriptionElem);
+            }
+          }
+        }
         else {
-          // TODO implement support for other media types
-          //      currently only image, gifv, video support implemented
           mediaElem.innerHTML = 'Stripped ' + media.type + ' - only available on instance<br />';
           let permalinkElem = mastodonFeedCreateElement('span', 'permalink');
           permalinkElem.appendChild(mastodonFeedCreateElementPermalink(status, options.text.viewOnInstance, 'Link to Mastodon post'));
@@ -678,7 +733,7 @@ function init_scripts() {
       xhr.open('GET', url, true);
       xhr.responseType = 'json';
       xhr.onload = function() {
-        const statuses = xhr.response;
+        let statuses = xhr.response;
         const rootElem = document.getElementById(elementId);
         rootElem.innerHTML = '';
         <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
@@ -690,6 +745,26 @@ function init_scripts() {
           <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
             console.log("<?php echo __NAMESPACE__; ?>", 'response', xhr.response);
           <?php endif; ?>
+          if(options.excludeTags) {
+            const filteredStatuses = [];
+            const excludeTags = options.excludeTags.toLowerCase().split(',');
+            for (const status of statuses) {
+              if(status.tags && Array.isArray(status.tags)) {
+                let excludeStatus = false;
+                for (const tag of status.tags) {
+                  if(excludeTags.includes(tag.name)) {
+                    excludeStatus = true;
+                    break;
+                  }
+                }
+                if(!excludeStatus) {
+                  filteredStatuses.push(status);
+                }
+              }
+            }
+            statuses = filteredStatuses;
+            console.log('DEBUG', statuses.length);
+          }
           if(options.excludeConversationStarters && statuses.length > 0) {
             const filteredStatuses = [];
             for(let i = 0; i < statuses.length; i++) {
@@ -743,6 +818,7 @@ function display_feed($atts) {
           'imagesize' => INCLUDE_MASTODON_FEED_IMAGE_SIZE,
           'imagelink' => INCLUDE_MASTODON_FEED_IMAGE_LINK,
           'tagged' => INCLUDE_MASTODON_FEED_TAGGED,
+          'excludetags' => INCLUDE_MASTODON_FEED_EXCLUDE_TAGS,
           'linktarget' => INCLUDE_MASTODON_FEED_LINKTARGET,
           'showpreviewcards' => filter_var(esc_html(INCLUDE_MASTODON_FEED_SHOW_PREVIEWCARDS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'hidestatusmeta' => filter_var(esc_html(INCLUDE_MASTODON_FEED_HIDE_STATUS_META), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
@@ -809,6 +885,7 @@ function display_feed($atts) {
           linkTarget: "<?php echo esc_js(filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW )); ?>",
           showPreviewCards: <?php echo (filter_var( $atts['showpreviewcards'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           excludeConversationStarters: <?php echo (filter_var( $atts['excludeconversationstarters'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
+          excludeTags: "<?php echo esc_html( $atts['excludetags'] ); ?>",
           content: {
             hideStatusMeta: <?php echo (filter_var( $atts['hidestatusmeta'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
             hideDateTime: <?php echo (filter_var( $atts['hidedatetime'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>

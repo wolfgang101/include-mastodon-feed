@@ -42,6 +42,7 @@ Place the following shortcode right into the page. Either as shortcode block or 
 | imageSize           | "preview"                     | imageSize="full"          | Load small sized preview images or full size high quality images  |
 | imageLink           | "status"                      | imageLink="image"         | Link image to status or image                                     |
 | tagged              | false                         | tagged="tagname"          | Show only statuses that are tagged with given tag name (no #!)    |
+| excludeTags         | false                         | excludeTags="tag1,tag2"   | Exclude statuses that are tagged - posts containing any one of the given tags will be excluded (no #!)    |
 | linkTarget          | "_self"                       | linkTarget="_blank"       | Target for all links                                              |
 | showPreviewCards    | true                          | showPreviewCards="false"  | Show preview cards                                                |
 | hideStatusMeta      | false                         | hideStatusMeta="true"     | Hide status meta information (automatically also hides date and time) |
@@ -100,7 +101,6 @@ If you are familiar with Github you can clone the repository right into your Wor
 
 ### Todo
 
-* improve support for video and audio media attachment types
 * integrate i18n into translate.wordpress.org instead of text constants
 * re-build plugin as custom gutenberg block
 
