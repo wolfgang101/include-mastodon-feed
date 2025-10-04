@@ -63,6 +63,10 @@ $constants = [
     'value' => false,
   ],
   [
+    'key' => 'INCLUDE_MASTODON_FEED_EXCLUDE_TAGS',
+    'value' => false,
+  ],
+  [
     'key' => 'INCLUDE_MASTODON_FEED_LINKTARGET',
     'value' => '_self',
   ],
@@ -729,7 +733,7 @@ function init_scripts() {
       xhr.open('GET', url, true);
       xhr.responseType = 'json';
       xhr.onload = function() {
-        const statuses = xhr.response;
+        let statuses = xhr.response;
         const rootElem = document.getElementById(elementId);
         rootElem.innerHTML = '';
         <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
@@ -741,6 +745,26 @@ function init_scripts() {
           <?php if(true === INCLUDE_MASTODON_FEED_DEBUG) : ?>
             console.log("<?php echo __NAMESPACE__; ?>", 'response', xhr.response);
           <?php endif; ?>
+          if(options.excludeTags) {
+            const filteredStatuses = [];
+            const excludeTags = options.excludeTags.toLowerCase().split(',');
+            for (const status of statuses) {
+              if(status.tags && Array.isArray(status.tags)) {
+                let excludeStatus = false;
+                for (const tag of status.tags) {
+                  if(excludeTags.includes(tag.name)) {
+                    excludeStatus = true;
+                    break;
+                  }
+                }
+                if(!excludeStatus) {
+                  filteredStatuses.push(status);
+                }
+              }
+            }
+            statuses = filteredStatuses;
+            console.log('DEBUG', statuses.length);
+          }
           if(options.excludeConversationStarters && statuses.length > 0) {
             const filteredStatuses = [];
             for(let i = 0; i < statuses.length; i++) {
@@ -794,6 +818,7 @@ function display_feed($atts) {
           'imagesize' => INCLUDE_MASTODON_FEED_IMAGE_SIZE,
           'imagelink' => INCLUDE_MASTODON_FEED_IMAGE_LINK,
           'tagged' => INCLUDE_MASTODON_FEED_TAGGED,
+          'excludetags' => INCLUDE_MASTODON_FEED_EXCLUDE_TAGS,
           'linktarget' => INCLUDE_MASTODON_FEED_LINKTARGET,
           'showpreviewcards' => filter_var(esc_html(INCLUDE_MASTODON_FEED_SHOW_PREVIEWCARDS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'hidestatusmeta' => filter_var(esc_html(INCLUDE_MASTODON_FEED_HIDE_STATUS_META), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
@@ -860,6 +885,7 @@ function display_feed($atts) {
           linkTarget: "<?php echo esc_js(filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW )); ?>",
           showPreviewCards: <?php echo (filter_var( $atts['showpreviewcards'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
           excludeConversationStarters: <?php echo (filter_var( $atts['excludeconversationstarters'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
+          excludeTags: "<?php echo esc_html( $atts['excludetags'] ); ?>",
           content: {
             hideStatusMeta: <?php echo (filter_var( $atts['hidestatusmeta'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>,
             hideDateTime: <?php echo (filter_var( $atts['hidedatetime'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? "true" : "false"); ?>

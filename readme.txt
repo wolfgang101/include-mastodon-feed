@@ -68,6 +68,10 @@ Link image to status or image (Default: status, image)
 Show only statuses that are tagged with given tag name (Default: false)
 No leading #, case insensitive, e.g.: tagged="tagname"
 
+* **excludeTags**
+Exclude statuses that are tagged with any of the given tag names (Default: false)
+Comma separated list of tags, no leading #, case insensitive, e.g.: excludeTags="tag1,tag2"
+
 * **linkTarget**
 Target for all links e.g. new tab would be "_blank" (Default: _self)
 
@@ -156,6 +160,7 @@ Use the following URL to get your ID:
 = 1.16.0 =
 * fix: local instance video urls
 * feat: added audio media support
+* feat: added excludeTags shortcode attribute - Exclude statuses that are tagged, posts containing any one of the given tags (comma separated list) will be excluded. Note: can lead to empty status list as the filtering is handled client-side. Mastodon API does not support this parameter natively. (thank you @zambunny)
 
 = 1.15.1 =
 * fix: added line break
