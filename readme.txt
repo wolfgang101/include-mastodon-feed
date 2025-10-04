@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.15.1
+Stable tag: 1.16.0
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -144,7 +144,6 @@ Use the following URL to get your ID:
 
 
 = Known Issues / Todo =
-* impelement audio media attachments
 * integrate i18n into translate.wordpress.org instead of text constants
 * re-build plugin as custom gutenberg block
 
@@ -153,6 +152,10 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.16.0 =
+* fix: local instance video urls
+* feat: added audio media support
 
 = 1.15.1 =
 * fix: added line break
