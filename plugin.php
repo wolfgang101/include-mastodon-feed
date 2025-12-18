@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.16.0
+	Version: 1.17.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -16,6 +16,10 @@ namespace IncludeMastodonFeedPlugin;
 $constants = [
   [
     'key' => 'INCLUDE_MASTODON_FEED_DEBUG',
+    'value' => false,
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_CACHE',
     'value' => false,
   ],
   [
@@ -156,6 +160,106 @@ foreach($constants as $constant) {
   }
 }
 unset($constants);
+
+if(!defined('INCLUDE_MASTODON_CACHE_DURATION')) {
+  define('INCLUDE_MASTODON_CACHE_DURATION', 300);
+}
+
+add_action('rest_api_init', function () {
+    register_rest_route('include-mastodon-feed/v1', '/feed/', [
+        'methods'  => 'GET',
+        'callback' => __NAMESPACE__ . '\handle_feed_auth_request',
+        'args'     => [
+            'url' => [
+                'required'          => true,
+                'validate_callback' => function($param, $request, $key) {
+                    return wp_http_validate_url($param);
+                },
+                'sanitize_callback' => 'sanitize_url',
+            ],
+            'auth' => [
+                'required'          => false,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_string($param);
+                },
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+        ],
+    ]);
+});
+
+function handle_feed_auth_request(\WP_REST_Request $request) {
+    $auth = $request->get_param('auth');
+    $url = $request->get_param('url');
+
+    if (empty($url)) {
+        return new \WP_Error('invalid_request', '"url" missing.', ['status' => 400]);
+    }
+
+    $cacheKey = 'include_mastodon_feed_' . md5($url);
+    $options = [
+      'Content-Type: application/json',
+    ];
+    if(!empty($auth)) {
+      if(defined('INCLUDE_MASTODON_FEED_AUTH') && is_array(INCLUDE_MASTODON_FEED_AUTH) && isset(INCLUDE_MASTODON_FEED_AUTH[$auth])) {
+        $authToken = sanitize_text_field(INCLUDE_MASTODON_FEED_AUTH[$auth]);
+        $options[] = 'Authorization: Bearer ' . $authToken;
+        $cacheKey .=  '_' . md5($auth.$authToken);
+      }
+      else {
+        return new \WP_Error('invalid_request', 'Auth token for key not found: ' . $auth, ['status' => 403]);
+      }
+    }
+
+    $response = cache_get($cacheKey);
+    if(false === $response) {
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $options);
+      $rawResponse = curl_exec($ch);
+      $error = false;
+      if (curl_errno($ch)) {
+          $error = curl_error($ch);
+      }
+      curl_close($ch);
+
+      if(false !== $error) {
+        return new \WP_Error('curl_error', $error, ['status' => 500]);
+      }
+
+      try {
+        $response = json_decode($rawResponse);
+        cache_set($cacheKey, $response, INCLUDE_MASTODON_CACHE_DURATION);
+      }
+      catch(\Exception $e) {
+        return new \WP_Error('json_error', $e->getMessage(), ['status' => 500]);
+      }
+    }
+    return rest_ensure_response($response);
+}
+
+function cache_set($key, $data, $expiration = 300) {
+  if (wp_using_ext_object_cache()) {
+      wp_cache_set($key, $data, 'include_mastodon_feed', $expiration);
+  } else {
+      set_transient($key, $data, $expiration);
+  }
+}
+
+function cache_get($key) {
+  if (wp_using_ext_object_cache()) {
+      $data = wp_cache_get($key, 'include_mastodon_feed');
+      if ($data !== false) {
+          return $data;
+      }
+  }
+  $data = get_transient($key);
+  if ($data !== false) {
+      return $data;
+  }
+  return false;
+}
 
 function error($msg) {
   return '[include-mastodon-feed] ' . $msg;
@@ -808,6 +912,8 @@ function display_feed($atts) {
           'instance' => ( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE === false ? false : filter_var( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE, FILTER_UNSAFE_RAW ) ),
 					'account' => false,
           'tag' => false,
+          'cache' => filter_var(esc_html(INCLUDE_MASTODON_FEED_CACHE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+          'auth' => false,
           'limit' => INCLUDE_MASTODON_FEED_LIMIT,
           'excludeboosts' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
           'excludereplies' => filter_var(esc_html(INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
@@ -836,19 +942,50 @@ function display_feed($atts) {
       ), array_change_key_case($atts, CASE_LOWER)
   );
 
+  $atts['cache'] = filter_var( $atts['cache'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? true : false;
+
   if(false === filter_var($atts['instance'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
     return error('missing configuration: instance');
   }
-  if(false === filter_var($atts['account'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) && false === filter_var($atts['tag'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+  
+  $feedType = null;
+  if(false !== filter_var($atts['account'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+    $feedType = 'account';
+  }
+  else if(false !== filter_var($atts['tag'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+    $feedType = 'tag';
+  }
+
+  $isAuth = false;
+  if(false !== filter_var($atts['auth'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+    if(defined('INCLUDE_MASTODON_FEED_AUTH')) {
+      if(is_array(INCLUDE_MASTODON_FEED_AUTH) && isset(INCLUDE_MASTODON_FEED_AUTH[$atts['auth']])) {
+        $isAuth = true;
+        if (!function_exists('curl_init')) {
+          return 'webserver does not suppport PHP CURL - it is needed when using auth';
+        }
+      }
+      else {
+        return error('missing configuration: auth reference "' . sanitize_text_field($atts['auth']) . '"');
+      }
+    }
+    else {
+      return error('missing configuration: auth');
+    }
+  }
+
+  if(null === $feedType) {
     return error('missing configuration: account id or tag');
   }
 
-
-  if(false !== filter_var($atts['account'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+  if('account' === $feedType) {
     $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/accounts/'.$atts['account'].'/statuses';
   }
-  if(false !== filter_var($atts['tag'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+  else if('tag' === $feedType) {
     $apiUrl = 'https://'.urlencode($atts['instance']).'/api/v1/timelines/tag/'.urlencode($atts['tag']);
+  }
+  else {
+    return error('unsupported type: ' . sanitize_text_field($feedType));
   }
 
   $getParams = [];
@@ -873,13 +1010,25 @@ function display_feed($atts) {
   if(sizeof($getParams) > 0) {
     $apiUrl .= '?' . implode('&', $getParams);
   }
+  if(true === $isAuth) {
+    $apiUrl = get_rest_url() . 'include-mastodon-feed/v1/feed?auth=' . urlencode($atts['auth']) . '&url=' . urlencode($apiUrl);
+  }
+  else if(true === $atts['cache']) {
+    $apiUrl = get_rest_url() . 'include-mastodon-feed/v1/feed?url=' . urlencode($apiUrl);
+  }
+
+  $apiUrl = esc_url( $apiUrl, ['http', 'https'], 'apicall' );
+  if(empty($apiUrl)) {
+    return 'only http and https urls supported';
+  }
+
   $elemId = uniqid('include-mastodon-feed-');
   ob_start();
 ?>
   <script>
     window.addEventListener("load", () => {
       mastodonFeedLoad(
-        "<?php echo esc_url( $apiUrl, ['https'], 'apicall' ); ?>",
+        "<?php echo $apiUrl; ?>",
         "<?php echo filter_var( $elemId, FILTER_UNSAFE_RAW ); ?>",
         {
           linkTarget: "<?php echo esc_js(filter_var( $atts['linktarget'], FILTER_UNSAFE_RAW )); ?>",
