@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.16.0
+Stable tag: 1.17.0
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -36,6 +36,13 @@ The account ID (a long number - see FAQ on how to get it)
 
 * **tag**
 Use **tag** instead of **account** if you want to embed a tag feed instead of a personal feed
+
+* **cache**
+If wordpress should cache Mastodon server API calls (Default: false)
+Note: automatically enabled for feeds where auth is used
+
+* **auth**
+Auth key that should be used if Mastodon server API needs authentication
 
 * **limit**
 Maximum number of statuses (Default: 20)
@@ -146,6 +153,36 @@ Use the following URL to get your ID:
 `https://example.org/api/v2/search?q=username@example.org&resolve=false&limit=5`
 
 
+= How does caching work? =
+
+Server-side caching is disabled by default. When disabled every page load will trigger a new API request to your Mastodon instance for every single feed. This is how the public feeds API is intended and usually not a problem.
+
+If you have a high-traffic site and want to help out your Mastodon instance you can enable caching globally or per shortcode. When enabled the plugin will cache the feed for 5 minutes as a default.
+
+The plugin automatically uses any enabled cache plugin or the Wordpress internal transient cache (= Wordpress database). Only the statuses JSON response is cached - any media is still served from the Mastodon instance directly.
+
+Note: If you Mastodon instance needs API authentication server-side caching is automatically enabled for all feeds that use authentication. That way your auth token is not exposed to your website visitors.
+
+
+= API authentication =
+
+If your Mastodon server needs API authentication you can use the `auth` parameter.
+
+> NOTE
+> Do NOT add your API auth token directly to the plugin short code
+> 
+> To avoid exposing the auth token to website visitors you have to take extra steps to
+> set up authentication support
+> 
+> See the very end of [config-example.php](config-example.php) for an in-depth configuration example
+
+**Steps to set up API authentication:**
+
+1. Log into your Mastodon instance and go to Settings > Development (https://yourinstance.example.org/settings/applications)
+2. Create a new Application (any name, only check one single scope `read:statuses`)
+3. Add the `auth` mapping configuration to your `wp-config.php` (See very bottom of the included `config-example.php`)
+4. Add your custom `auth` reference to your shortcode
+
 
 = Known Issues / Todo =
 * integrate i18n into translate.wordpress.org instead of text constants
@@ -156,6 +193,10 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.17.0 =
+* feat: added server side caching (see included `config-example.php` for global CACHE and CACHE_DURATION settings1). `cache` can be set as short code param as well.
+* feat: added API authentication support
 
 = 1.16.0 =
 * fix: local instance video urls
