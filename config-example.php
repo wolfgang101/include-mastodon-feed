@@ -16,6 +16,14 @@
     // enable/discable JavaScript console debug output
     define('INCLUDE_MASTODON_FEED_DEBUG', false);
 
+    // enable feed caching (wordpress will cache the feed for 5 minutes)
+    // note: automatically enabled if auth is useed
+    define('INCLUDE_MASTODON_FEED_CACHE', false);
+
+    // cache duration if cache is enabled (in seconds)
+    // 5 * 60 = 300 (5 minutes)
+    define('INCLUDE_MASTODON_FEED_CACHE_DURATION', 300);
+
     // set a default instance
     // can still be overriden in shortcode
     // plugin will show a warning if no default is set and instance is omitted in shortcode
@@ -142,3 +150,27 @@
     // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
     // can be overridden in shortcode
     define('INCLUDE_MASTODON_FEED_DATE_OPTIONS', '{}');
+
+
+    /*
+     * API AUTH
+     * 
+     * INCLUD_MASTODON_FEED_AUTH 
+     * This constant is not defined by default.
+     * It has to be defined only if your Mastodon instance needs authentication for API calls.
+     * 
+     * your_key_name = Any string you like. The key is used in the shortcode instead of the auth token.
+     *                 that way there is no risk of exposing the auth token to website visitors
+     * 
+     * auth_token_value = The actual auth token from your Mastodon app. Can be created in your
+     *                    Mastodon instance > Settings > Development.
+     *                    https://yourinstance.example.org/settings/applications
+     * 
+     *                    Create a new application with scope "read:statuses" only.
+     * 
+     *                    Once the application is created you'll see "Client key", "Client secret",
+     *                    and "Your access token". "Your access token" is what we want.
+     */
+    define('INCLUDE_MASTODON_FEED_AUTH', [
+      'your_key_name' => 'auth_token_value',
+    ]);
