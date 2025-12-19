@@ -174,7 +174,7 @@ If your Mastodon server needs API authentication you can use the `auth` paramete
 > To avoid exposing the auth token to website visitors you have to take extra steps to
 > set up authentication support
 > 
-> See the very end of [config-example.php](config-example.php) for an in-depth configuration example
+> See the very end of [config-example.php](https://github.com/wolfgang101/include-mastodon-feed/blob/master/config-example.php#L158) for an in-depth configuration example
 
 **Steps to set up API authentication:**
 
