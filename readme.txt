@@ -3,16 +3,18 @@ Contributors: wolfgang101
 Donate link: https://www.buymeacoffee.com/w101
 Tags: mastodon, status, feed
 Requires at least: 6.0
-Tested up to: 6.5
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.9.4
-License: Expat License
+Stable tag: 1.17.0
+License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
 Plugin that provides a shortcode to easily integrate mastodon feeds into wordpress pages.
 
 == Description ==
 Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
+
+Account and post images are lazy loaded if preserveImageAspectRatio is set to true (default: false).
 
 The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
 
@@ -26,14 +28,21 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
 `[include-mastodon-feed instance="YOUR-INSTANCE" account="YOUR-ACCOUNT-ID"]`
 
 = Shortcode attributes =
+* **instance** (required)
+Domain name of the instance without https:// (e.g. example.org)
+
 * **account** (required)
 The account ID (a long number - see FAQ on how to get it)
 
 * **tag**
 Use **tag** instead of **account** if you want to embed a tag feed instead of a personal feed
 
-* **instance** (required)
-Domain name of the instance without https:// (e.g. example.org)
+* **cache**
+If wordpress should cache Mastodon server API calls (Default: false)
+Note: automatically enabled for feeds where auth is used
+
+* **auth**
+Auth key that should be used if Mastodon server API needs authentication
 
 * **limit**
 Maximum number of statuses (Default: 20)
@@ -56,9 +65,19 @@ Show only statuses containing media (Default: false)
 * **preserveImageAspectRatio**
 Preserve image aspect ratio (Default: false)
 
+* **imageSize**
+Load small sized preview images or full size high quality images (Default: preview, full)
+
+* **imageLink**
+Link image to status or image (Default: status, image)
+
 * **tagged**
 Show only statuses that are tagged with given tag name (Default: false)
 No leading #, case insensitive, e.g.: tagged="tagname"
+
+* **excludeTags**
+Exclude statuses that are tagged with any of the given tag names (Default: false)
+Comma separated list of tags, no leading #, case insensitive, e.g.: excludeTags="tag1,tag2"
 
 * **linkTarget**
 Target for all links e.g. new tab would be "_blank" (Default: _self)
@@ -102,12 +121,10 @@ Text indicating edited posts (Default: (edited))
 * **date-locale**
 Locale for date string, used in toLocaleString() (Default: en-US)
 
-* **date-options**
-Format options directly fed into toLocaleString() (Default: {})
 
 = Additional customizations =
 
-You can define several plugin constants to set custom default options that will be applied site-wide.
+You can define several plugin constants to set custom default options that will be applied site-wide (e.g. date options can only be set as php constant to mitigate an XSS vulnerability).
 
 1. Open your `wp-config.php` file
 2. Search for the line `/* Add any custom values between this line and the "stop editing" line. */`
@@ -119,21 +136,55 @@ See the included `config-example.php` file for a full list of supported settings
 == Frequently Asked Questions ==
 
 = How do I find my account ID? =
+Please feel free to use [this handy lookup tool](https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin/)
+
+To look your ID up manually there are several ways.
+
 As an instance admin you can easily read your user ID in the admin backend.
 
 As regular user you can try an API v2 search to find your ID.
 
 **API v2 notes:**
-* You might have to be logged in to get any results
 * Change `example.org` to your instance
 * Replace `username` with your handle.
 
 Use the following URL to get your ID:
 
-`https://example.org/api/v2/search?q=username@example.org&resolve=true&limit=5`
+`https://example.org/api/v2/search?q=username@example.org&resolve=false&limit=5`
+
+
+= How does caching work? =
+
+Server-side caching is disabled by default. When disabled every page load will trigger a new API request to your Mastodon instance for every single feed. This is how the public feeds API is intended and usually not a problem.
+
+If you have a high-traffic site and want to help out your Mastodon instance you can enable caching globally or per shortcode. When enabled the plugin will cache the feed for 5 minutes as a default.
+
+The plugin automatically uses any enabled cache plugin or the Wordpress internal transient cache (= Wordpress database). Only the statuses JSON response is cached - any media is still served from the Mastodon instance directly.
+
+Note: If you Mastodon instance needs API authentication server-side caching is automatically enabled for all feeds that use authentication. That way your auth token is not exposed to your website visitors.
+
+
+= API authentication =
+
+If your Mastodon server needs API authentication you can use the `auth` parameter.
+
+> NOTE
+> Do NOT add your API auth token directly to the plugin short code
+> 
+> To avoid exposing the auth token to website visitors you have to take extra steps to
+> set up authentication support
+> 
+> See the very end of [config-example.php](https://github.com/wolfgang101/include-mastodon-feed/blob/master/config-example.php#L158) for an in-depth configuration example
+
+**Steps to set up API authentication:**
+
+1. Log into your Mastodon instance and go to Settings > Development (https://yourinstance.example.org/settings/applications)
+2. Create a new Application (any name, only check one single scope `read:statuses`)
+3. Add the `auth` mapping configuration to your `wp-config.php` (See very bottom of the included `config-example.php`)
+4. Add your custom `auth` reference to your shortcode
+
 
 = Known Issues / Todo =
-* improve support for video and audio media attachment types
 * integrate i18n into translate.wordpress.org instead of text constants
 * re-build plugin as custom gutenberg block
 
@@ -142,6 +193,76 @@ Use the following URL to get your ID:
 * No screenshots
 
 == Changelog ==
+
+= 1.17.0 =
+* feat: added server side caching (see included `config-example.php` for global CACHE and CACHE_DURATION settings1). `cache` can be set as short code param as well.
+* feat: added API authentication support
+
+= 1.16.0 =
+* fix: local instance video urls
+* feat: added audio media support
+* feat: added excludeTags shortcode attribute - Exclude statuses that are tagged, posts containing any one of the given tags (comma separated list) will be excluded. Note: can lead to empty status list as the filtering is handled client-side. Mastodon API does not support this parameter natively. (thank you @zambunny)
+
+= 1.15.1 =
+* fix: added line break
+
+= 1.15.0 =
+* feat: now supports video attachments
+
+= 1.14.0 =
+* accessibility: add HTML lang attribute for even better screen reader support (thank you @oldrup@mastodon.green)
+
+= 1.13.1 =
+* fix: removed unnecessary, broken aria-label functionality
+
+= 1.13 =
+Special release for Global Accessibility Awareness Day
+in collaboration with @oldrup@mastodon.green
+
+Happy [Accesssibility Day](https://accessibility.day)
+
+* accessibility (fix): image alt attributes - initial implementation was faulty
+* accessibility: added alt text to image / gifv attachments
+* accessibility: added alt text to avatar images
+* accessibility: added alt text to preview card media
+* accessibility: added descriptive aria-labels
+* accessibility: increased default text / background color contrast
+* accessibility: switched from DIV to semantic OL / LI structure
+
+= 1.12 =
+* accessibility: added image alt attribute (thank you @oldrup@mastodon.green)
+
+= 1.11 =
+* now favoring preview_url (smaler size) instead of remote_url (full size) for image previews (thank you @oldrup@mastodon.green)
+
+= 1.10 =
+* added image lazy loading for account and post images - post image lazy loading only works with preserveImageAspectRatio set to true (thank you @oldrup@mastodon.green)
+
+= 1.9.11 =
+* fixed typo (thank you @hjek)
+* cleaned up code after 1.9.10 release
+
+= 1.9.10 =
+* fixed XSS vulnerability: removed support for date-options as shortcode attribute completely - to mitigate an XSS vulnerability where authenticated attackers with contributor permission could insert malicious JavaScript (still can be set as constant in PHP code)
+
+= 1.9.9 =
+* fixed esc_url context that previously broke the URL for the Mastodon API JS ajax request (thank you @beach@illo.social)
+
+= 1.9.8 =
+* fix broken date-locale and date-options parameters (thank you @crusy@chaos.social)
+* improved string excaping for text parameters and added url escaping
+* removed unnecessary output buffering
+* fix license SPDX Identifier
+
+= 1.9.7 =
+* fix option to either display smaller image media attachment previews (default) or large image versions (thank you @beach@illo.social)
+
+= 1.9.6 =
+* fixed XSS vulnerability where authenticated attackers with contributor permissions could insert malicious JavaScript
+
+= 1.9.5 =
+* added option to either display smaller image media attachment previews (default) or large image versions (thank you @beach@illo.social)
+* added option to point image media attachment links to either status (default) or image
 
 = 1.9.4 =
 * added option to hide status meta information and date/time (thank you @PaulKingtiger@dice.camp)

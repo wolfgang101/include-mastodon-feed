@@ -16,10 +16,18 @@
     // enable/discable JavaScript console debug output
     define('INCLUDE_MASTODON_FEED_DEBUG', false);
 
+    // enable feed caching (wordpress will cache the feed for 5 minutes)
+    // note: automatically enabled if auth is useed
+    define('INCLUDE_MASTODON_FEED_CACHE', false);
+
+    // cache duration if cache is enabled (in seconds)
+    // 5 * 60 = 300 (5 minutes)
+    define('INCLUDE_MASTODON_FEED_CACHE_DURATION', 300);
+
     // set a default instance
     // can still be overriden in shortcode
     // plugin will show a warning if no default is set and instance is omitted in shortcode
-    //define('INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE', 'example.org');
+    define('INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE', 'example.org');
 
     // Maximum number of statuses
     define('INCLUDE_MASTODON_FEED_LIMIT', 20);
@@ -43,9 +51,19 @@
     // can be overridden in shortcode
     define('INCLUDE_MASTODON_FEED_PRESERVE_IMAGE_ASPECT_RATIO', true);
 
+    // load small sized preview images or full size high quality images
+    define( 'INCLUDE_MASTODON_FEED_IMAGE_SIZE', 'preview' );
+
+    // link image to status or image
+    define( 'INCLUDE_MASTODON_FEED_IMAGE_LINK', 'status' );
+
     // only tagged statuses
     // tag name without leading #, case insensitive
     define('INCLUDE_MASTODON_FEED_TAGGED', 'tagname');
+
+    // exclude tagged statuses
+    // comma separated list of tags without leading #, case insensitive
+    define('INCLUDE_MASTODON_FEED_EXCLUDE_TAGS', 'tag1,tag2');
 
     // target for all links (e.g. new tab "_blank")
     define('INCLUDE_MASTODON_FEED_LINKTARGET', '_self');
@@ -79,10 +97,10 @@
     define('INCLUDE_MASTODON_FEED_STYLE_BORDER_RADIUS', '0.25rem',);
 
     // hide status meta information (automatically also hides date and time)
-    define('INCLUDE_MASTODON_FEED_HIDE_STATUS_META', true)
+    define('INCLUDE_MASTODON_FEED_HIDE_STATUS_META', true);
 
     // hide date and time from status meta information
-    define('INCLUDE_MASTODON_FEED_HIDE_DATETIME', true)
+    define('INCLUDE_MASTODON_FEED_HIDE_DATETIME', true);
 
 
 
@@ -132,3 +150,27 @@
     // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
     // can be overridden in shortcode
     define('INCLUDE_MASTODON_FEED_DATE_OPTIONS', '{}');
+
+
+    /*
+     * API AUTH
+     * 
+     * INCLUD_MASTODON_FEED_AUTH 
+     * This constant is not defined by default.
+     * It has to be defined only if your Mastodon instance needs authentication for API calls.
+     * 
+     * your_key_name = Any string you like. The key is used in the shortcode instead of the auth token.
+     *                 that way there is no risk of exposing the auth token to website visitors
+     * 
+     * auth_token_value = The actual auth token from your Mastodon app. Can be created in your
+     *                    Mastodon instance > Settings > Development.
+     *                    https://yourinstance.example.org/settings/applications
+     * 
+     *                    Create a new application with scope "read:statuses" only.
+     * 
+     *                    Once the application is created you'll see "Client key", "Client secret",
+     *                    and "Your access token". "Your access token" is what we want.
+     */
+    define('INCLUDE_MASTODON_FEED_AUTH', [
+      'your_key_name' => 'auth_token_value',
+    ]);
