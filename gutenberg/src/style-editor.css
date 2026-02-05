@@ -1,0 +1,21 @@
+.editor-block {
+  cursor: pointer;
+  padding: 3rem 1rem;
+  background: 
+      repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 10px,
+          rgba(255, 255, 255, .1) 10px,
+          rgba(255, 255, 255, .1) 20px
+      ),
+      linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, .1),
+          rgba(0, 0, 0, .3)
+      );
+}
+
+.editor-block .text-center {
+    text-align: center;
+}
