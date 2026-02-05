@@ -4,15 +4,15 @@ Donate link: https://www.buymeacoffee.com/w101
 Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.9
-Requires PHP: 7.4
-Stable tag: 1.17.0
+Requires PHP: 8.2
+Stable tag: 2.0.0
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
-Plugin that provides a shortcode to easily integrate mastodon feeds into wordpress pages.
+Plugin that provides a Gutenberg block and shortcode to easily integrate mastodon feeds into wordpress pages.
 
 == Description ==
-Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
+Plugin that provides a Gutenberg block and an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
 
 Account and post images are lazy loaded if preserveImageAspectRatio is set to true (default: false).
 
@@ -22,7 +22,7 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
 
 1. Upload the "include-mastodon-feed"  directory to the "/wp-content/plugins/" directory.
 1. Activate the plugin through the "Plugins" menu in WordPress.
-1. Insert shortcode into any page.
+1. Insert the "Mastodon Feed" block in Gutenberg editor or the "[include-mastodon-feed]" shortcode into any page.
 
 = Shortcode example =
 `[include-mastodon-feed instance="YOUR-INSTANCE" account="YOUR-ACCOUNT-ID"]`
@@ -193,6 +193,11 @@ If your Mastodon server needs API authentication you can use the `auth` paramete
 * No screenshots
 
 == Changelog ==
+
+= 2.0.0 =
+* feat: introducing the "Mastodon Feed" Gutenberg block - backwards compatible... shortcode will always be supported too
+* feat: increased required PHP version to 8.2 since there are no security updates for any version 8.1 or less
+* fix: INCLUDE_MASTODON_FEED_CACHE_DURATION constant name
 
 = 1.17.0 =
 * feat: added server side caching (see included `config-example.php` for global CACHE and CACHE_DURATION settings1). `cache` can be set as short code param as well.

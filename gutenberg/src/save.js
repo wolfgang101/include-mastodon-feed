@@ -15,10 +15,11 @@ import { useBlockProps } from '@wordpress/block-editor';
  *
  * @return {WPElement} Element to render.
  */
-export default function save( { attributes }) {
+export default function save( { attributes } ) {
 	return (
 		<section { ...useBlockProps.save() }>
-			[include-mastodon-feed instance={ attributes.instance } account={ attributes.account } limit={ attributes.limit }]
+			{ /* This block uses server-side rendering via render_callback */ }
+			{ /* The actual content will be rendered by the display_feed function */ }
 		</section>
 	);
 }

@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 1.17.0
+	Version: 2.0.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -21,6 +21,10 @@ $constants = [
   [
     'key' => 'INCLUDE_MASTODON_FEED_CACHE',
     'value' => false,
+  ],
+  [
+    'key' => 'INCLUDE_MASTODON_FEED_CACHE_DURATION',
+    'value' => 300,
   ],
   [
     'key' => 'INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE',
@@ -161,10 +165,6 @@ foreach($constants as $constant) {
 }
 unset($constants);
 
-if(!defined('INCLUDE_MASTODON_CACHE_DURATION')) {
-  define('INCLUDE_MASTODON_CACHE_DURATION', 300);
-}
-
 add_action('rest_api_init', function () {
     register_rest_route('include-mastodon-feed/v1', '/feed/', [
         'methods'  => 'GET',
@@ -230,7 +230,7 @@ function handle_feed_auth_request(\WP_REST_Request $request) {
 
       try {
         $response = json_decode($rawResponse);
-        cache_set($cacheKey, $response, INCLUDE_MASTODON_CACHE_DURATION);
+        cache_set($cacheKey, $response, INCLUDE_MASTODON_FEED_CACHE_DURATION);
       }
       catch(\Exception $e) {
         return new \WP_Error('json_error', $e->getMessage(), ['status' => 500]);
@@ -261,7 +261,34 @@ function cache_get($key) {
   return false;
 }
 
-add_action( 'init', __NAMESPACE__ . '\register_gutenberg_block' );
+function error($msg) {
+  return '<strong>include-mastodon-feed: </strong> ' . $msg;
+}
+
+
+function gutenberg_block_render_callback($attributes) {
+  // Convert camelCase attribute names to snake_case for compatibility with display_feed
+  $atts = [
+    'instance' => $attributes['instance'] ?? '',
+    'account' => $attributes['account'] ?? '',
+    'limit' => $attributes['limit'] ?? INCLUDE_MASTODON_FEED_LIMIT,
+    'excludeboosts' => $attributes['excludeBoosts'] ?? INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS,
+    'excludereplies' => $attributes['excludeReplies'] ?? INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES,
+    'excludeconversationstarters' => $attributes['excludeConversationStarters'] ?? INCLUDE_MASTODON_FEED_EXCLUDE_CONVERSATIONSTARTERS,
+    'onlypinned' => $attributes['onlyPinned'] ?? INCLUDE_MASTODON_FEED_ONLY_PINNED,
+    'onlymedia' => $attributes['onlyMedia'] ?? INCLUDE_MASTODON_FEED_ONLY_MEDIA,
+    'showpreviewcards' => $attributes['showPreviewCards'] ?? INCLUDE_MASTODON_FEED_SHOW_PREVIEWCARDS,
+    'hidestatusmeta' => $attributes['hideStatusMeta'] ?? INCLUDE_MASTODON_FEED_HIDE_STATUS_META,
+    'hidedatetime' => $attributes['hideDateTime'] ?? INCLUDE_MASTODON_FEED_HIDE_DATETIME,
+    'darkmode' => $attributes['darkmode'] ?? INCLUDE_MASTODON_FEED_DARKMODE,
+    'preserveimageaspectratio' => $attributes['preserveImageAspectRatio'] ?? INCLUDE_MASTODON_FEED_PRESERVE_IMAGE_ASPECT_RATIO,
+    'imagesize' => $attributes['imageSize'] ?? INCLUDE_MASTODON_FEED_IMAGE_SIZE,
+    'imagelink' => $attributes['imageLink'] ?? INCLUDE_MASTODON_FEED_IMAGE_LINK,
+  ];
+  
+  return display_feed($atts);
+}
+
 function register_gutenberg_block() {
 
   register_block_type( __DIR__ .'/gutenberg/build', [
@@ -276,14 +303,50 @@ function register_gutenberg_block() {
       ],
       'limit' => [
         'type'    => 'integer',
-      ]
+      ],
+      'excludeBoosts' => [
+        'type' => 'boolean',
+      ],
+      'excludeReplies' => [
+        'type' => 'boolean',
+      ],
+      'excludeConversationStarters' => [
+        'type' => 'boolean',
+      ],
+      'onlyPinned' => [
+        'type' => 'boolean',
+      ],
+      'onlyMedia' => [
+        'type' => 'boolean',
+      ],
+      'showPreviewCards' => [
+        'type' => 'boolean',
+      ],
+      'hideStatusMeta' => [
+        'type' => 'boolean',
+      ],
+      'hideDateTime' => [
+        'type' => 'boolean',
+      ],
+      'darkmode' => [
+        'type' => 'boolean',
+      ],
+      'preserveImageAspectRatio' => [
+        'type' => 'boolean',
+      ],
+      'imageSize' => [
+        'type' => 'string',
+      ],
+      'imageLink' => [
+        'type' => 'string',
+      ],
     ],
-    'render_callback' => __NAMESPACE__ . '\display_feed'
+    'render_callback' => __NAMESPACE__ . '\gutenberg_block_render_callback'
   ] );
 
 }
+add_action( 'init', __NAMESPACE__ . '\register_gutenberg_block' );
 
-add_action( 'current_screen', __NAMESPACE__ . '\register_gutenberg_block_admin', 999 );
 function register_gutenberg_block_admin() {
 
   if(is_admin()) {
@@ -297,12 +360,9 @@ function register_gutenberg_block_admin() {
   }
 
 }
+add_action( 'current_screen', __NAMESPACE__ . '\register_gutenberg_block_admin', 999 );
 
-function error($msg) {
-  return '[include-mastodon-feed] ' . $msg;
-}
 
-add_action('wp_head', __NAMESPACE__ . '\init_styles', 7);
 function init_styles() {
 ?>
   <style>
@@ -500,8 +560,8 @@ function init_styles() {
   </style>
 <?php
 }
+add_action('wp_head', __NAMESPACE__ . '\init_styles', 7);
 
-add_action('wp_footer', __NAMESPACE__ . '\init_scripts');
 function init_scripts() {
 ?>
   <script>
@@ -869,11 +929,7 @@ function init_scripts() {
       });
     }
 
-    const mastodonFeedLoad = function(url, element, options) {
-      const rootElem = ( 'object' === typeof element ? element : document.getElementById(element) );
-      if( 'object' === typeof element ) {
-        rootElem.innerHTML = 'Loading preview...';
-      }
+    const mastodonFeedLoad = function(url, elementId, options) {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
       xhr.responseType = 'json';
@@ -908,7 +964,6 @@ function init_scripts() {
               }
             }
             statuses = filteredStatuses;
-            console.log('DEBUG', statuses.length);
           }
           if(options.excludeConversationStarters && statuses.length > 0) {
             const filteredStatuses = [];
@@ -942,14 +997,12 @@ function init_scripts() {
       };
       xhr.send();
     }
-    window.mastodonFeedLoad = mastodonFeedLoad;
   </script>
 <?php
 }
+add_action('wp_footer', __NAMESPACE__ . '\init_scripts');
 
-add_shortcode('include-mastodon-feed', __NAMESPACE__ . '\display_feed');
 function display_feed($atts) {
-
   $atts = shortcode_atts(
       array(
           'instance' => ( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE === false ? false : filter_var( INCLUDE_MASTODON_FEED_DEFAULT_INSTANCE, FILTER_UNSAFE_RAW ) ),
@@ -982,13 +1035,13 @@ function display_feed($atts) {
           'text-edited' => INCLUDE_MASTODON_FEED_TEXT_EDITED,
           'date-locale' => INCLUDE_MASTODON_FEED_DATE_LOCALE,
           'darkmode' => filter_var(esc_html(INCLUDE_MASTODON_FEED_DARKMODE), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
-      ), ( is_array($atts) ? array_change_key_case($atts, CASE_LOWER) : [] )
+      ), array_change_key_case($atts, CASE_LOWER)
   );
 
   $atts['cache'] = filter_var( $atts['cache'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? true : false;
 
   if(false === filter_var($atts['instance'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-    return error('missing configuration: instance');
+    return error('missing configuration (instance)');
   }
   
   $feedType = null;
@@ -1009,16 +1062,16 @@ function display_feed($atts) {
         }
       }
       else {
-        return error('missing configuration: auth reference "' . sanitize_text_field($atts['auth']) . '"');
+        return error('missing configuration (auth reference "' . sanitize_text_field($atts['auth']) . '")');
       }
     }
     else {
-      return error('missing configuration: auth');
+      return error('missing configuration (auth)');
     }
   }
 
   if(null === $feedType) {
-    return error('missing configuration: account id or tag');
+    return error('missing configuration (account id or tag)');
   }
 
   if('account' === $feedType) {
@@ -1110,3 +1163,4 @@ function display_feed($atts) {
 <?php
   return ob_get_clean();
 }
+add_shortcode('include-mastodon-feed', __NAMESPACE__ . '\display_feed');

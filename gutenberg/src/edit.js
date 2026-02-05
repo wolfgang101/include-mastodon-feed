@@ -13,9 +13,14 @@ import metadata from './block.json';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor';
-import { PanelBody, TextControl, SelectControl } from '@wordpress/components';
-import { cog as IconAppearance } from '@wordpress/icons';
+import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import {
+	PanelBody,
+	PanelRow,
+	TextControl,
+	SelectControl,
+	CheckboxControl,
+} from '@wordpress/components';
 import { getBlockType } from '@wordpress/blocks';
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -34,110 +39,142 @@ import './style-editor.css';
  * @return {WPElement} Element to render.
  */
 export default function Edit( { attributes, setAttributes } ) {
-
 	const blockData = getBlockType( metadata.name );
 
 	const validateSettings = () => {
-		// TODO: implement proper validation
-		if( blockData.attributes.instance.default !== attributes.instance
-			&& blockData.attributes.account.default !== attributes.account  
+		if (
+			blockData.attributes.instance.default !== attributes.instance &&
+			blockData.attributes.account.default !== attributes.account
 		) {
-				return true;
+			return true;
 		}
 		return false;
-	}
-		
+	};
+
 	const onChangeInstance = ( instance ) => {
-		// TODO: validate if correct instance
-		setAttributes( { 'instance': instance });
-	}
+		setAttributes( { instance: instance } );
+	};
 
 	const onChangeAccount = ( account ) => {
-		// TODO: validate if is int
-		setAttributes( { 'account': account } );
-	}
-
-	const loadFeed = (apiUrl, event) => {
-		event.preventDefault();
-		if(attributes.instance && attributes.account) {
-			console.log('loading feed', apiUrl);
-			const options = {
-				linkTarget: "",
-				showPreviewCards: true,
-				excludeConversationStarters: false,
-				text: {
-					boosted: "boosted",
-					noStatuses: "no statuses",
-					viewOnInstance: "view on instance",
-					showContent: "show content",
-					permalinkPre: "",
-					permalinkPost: "",
-					edited: "edited",
-				},
-				localization: {
-					date: {
-						locale: "en-US",
-						options: {},
-					}
-				}
-			};
-			window.mastodonFeedLoad(apiUrl, event.currentTarget, options);
-		}
-	}
-
-	const apiUrl = 'https://' + (attributes.instance) + '/api/v1/accounts/' + attributes.account + '/statuses';
-	attributes.darkmode = true;
+		setAttributes( { account: account } );
+	};
 
 	return (
 		<div { ...useBlockProps() }>
-			{
-				validateSettings() ||
+			{ validateSettings() || (
+				<div className="editor-block">
+					<p className="text-center">
+						<strong>
+							{ __( 'Mastodon Feed', 'include-mastodon-feed' ) }
+						</strong>
+						<br />
+						<small>
+							{ __(
+								'Please set instance and account id',
+								'include-mastodon-feed'
+							) }
+						</small>
+					</p>
+				</div>
+			) }
+			{ validateSettings() && (
+				<div
+					className={
+						'include-mastodon-feed' +
+						( attributes.darkmode && true === attributes.darkmode
+							? ' dark'
+							: '' )
+					}
+				>
 					<div className="editor-block">
 						<p className="text-center">
-							<strong>{ __("Mastodon Feed") }</strong><br />
-							<small>{ __("Please set instance and account id") }</small>
+							<strong>
+								{ __(
+									'Mastodon Feed',
+									'include-mastodon-feed'
+								) }
+							</strong>
+							<br />
+							<small>
+								{ sprintf(
+									'Account ID %1$s on instance %2$s',
+									attributes.account,
+									attributes.instance
+								) }
+							</small>
 						</p>
 					</div>
-			}
-			{
-				// TODO: rebuild render function
-				validateSettings() &&
-					<div onClick={ (e) => loadFeed(apiUrl, e) } className={ 'include-mastodon-feed' + (attributes.darkmode ? ' dark' : '') }>
-						<div className="editor-block">
-							<p className="text-center">
-								<strong>{ __("Mastodon Feed") }</strong><br />
-								<small>{ sprintf("Account ID %1$s on instance %2$s", attributes.account, attributes.instance) }</small>
-							</p>
-							<div className="text-center">
-								Click to preview
-							</div>
-						</div>
-					</div>
-			}
+				</div>
+			) }
 			<InspectorControls key="setting">
-				<PanelBody title={ __("Source") }>
-					<TextControl 
-						label={ __("Instance") }
-						key="instance" 
+				<PanelBody title={ __( 'Source', 'include-mastodon-feed' ) }>
+					<TextControl
+						label={ __( 'Instance', 'include-mastodon-feed' ) }
+						key="instance"
 						onChange={ onChangeInstance }
 						value={ attributes.instance }
 						placeholder="e.g. mastodon.social"
 					/>
-					<TextControl 
-						label={ __("Account ID") }
-						key="account" 
+					<TextControl
+						label={ __( 'Account ID', 'include-mastodon-feed' ) }
+						key="account"
 						onChange={ onChangeAccount }
 						value={ attributes.account }
 					/>
-					<div>
-						<a href="https://wordpress.org/plugins/include-mastodon-feed/#how%20do%20i%20find%20my%20account%20id%3F" target="_blank" rel="noreferrer"><small>{ __("How to find your account ID?") }</small></a>
-					</div><br />
+					<PanelRow>
+						<div>
+							<a
+								href="https://wordpress.org/plugins/include-mastodon-feed/#how%20do%20i%20find%20my%20account%20id%3F"
+								target="_blank"
+								rel="noreferrer"
+							>
+								{ __(
+									'How to find your account ID?',
+									'include-mastodon-feed'
+								) }
+							</a>
+						</div>
+					</PanelRow>
+					<PanelRow>
+						<div>
+							{ __(
+								'Use the following sections for additional settings.',
+								'include-mastodon-feed'
+							) }
+						</div>
+					</PanelRow>
 				</PanelBody>
-				<PanelBody title={ __("Appearance") } icon={ IconAppearance } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Post filters', 'include-mastodon-feed' ) }
+					initialOpen={ false }
+				>
 					<SelectControl
-						label={ __("Limit") }
-						key="limit" 
+						label={ __(
+							'Number of posts',
+							'include-mastodon-feed'
+						) }
+						key="limit"
 						options={ [
+							{ label: '40', value: 40 },
+							{ label: '39', value: 39 },
+							{ label: '38', value: 38 },
+							{ label: '37', value: 37 },
+							{ label: '36', value: 36 },
+							{ label: '35', value: 35 },
+							{ label: '34', value: 34 },
+							{ label: '33', value: 33 },
+							{ label: '32', value: 32 },
+							{ label: '31', value: 31 },
+							{ label: '30', value: 30 },
+							{ label: '29', value: 29 },
+							{ label: '28', value: 28 },
+							{ label: '27', value: 27 },
+							{ label: '26', value: 26 },
+							{ label: '25', value: 25 },
+							{ label: '24', value: 24 },
+							{ label: '23', value: 23 },
+							{ label: '22', value: 22 },
+							{ label: '21', value: 21 },
 							{ label: '20', value: 20 },
 							{ label: '19', value: 19 },
 							{ label: '18', value: 18 },
@@ -160,9 +197,195 @@ export default function Edit( { attributes, setAttributes } ) {
 							{ label: '1', value: 1 },
 						] }
 						value={ attributes.limit }
-						onChange={ (value) => setAttributes( { 'limit': value } ) }
-						__nextHasNoMarginBottom
+						onChange={ ( value ) =>
+							setAttributes( { limit: value } )
+						}
 					/>
+
+					<CheckboxControl
+						label={ __(
+							'Exclude boosts',
+							'include-mastodon-feed'
+						) }
+						checked={ attributes.excludeBoosts }
+						onChange={ ( value ) =>
+							setAttributes( { excludeBoosts: value } )
+						}
+					/>
+
+					<CheckboxControl
+						label={ __(
+							'Exclude replies',
+							'include-mastodon-feed'
+						) }
+						checked={ attributes.excludeReplies }
+						onChange={ ( value ) =>
+							setAttributes( { excludeReplies: value } )
+						}
+					/>
+
+					<CheckboxControl
+						label={ __(
+							'Exclude conversation starters',
+							'include-mastodon-feed'
+						) }
+						checked={ attributes.excludeConversationStarters }
+						onChange={ ( value ) =>
+							setAttributes( {
+								excludeConversationStarters: value,
+							} )
+						}
+					/>
+
+					<CheckboxControl
+						label={ __( 'Only pinned', 'include-mastodon-feed' ) }
+						checked={ attributes.onlyPinned }
+						onChange={ ( value ) =>
+							setAttributes( { onlyPinned: value } )
+						}
+					/>
+
+					<CheckboxControl
+						label={ __( 'Only media', 'include-mastodon-feed' ) }
+						checked={ attributes.onlyMedia }
+						onChange={ ( value ) =>
+							setAttributes( { onlyMedia: value } )
+						}
+					/>
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Appearance', 'include-mastodon-feed' ) }
+					initialOpen={ false }
+				>
+					<CheckboxControl
+						label={ __(
+							'Show preview cards',
+							'include-mastodon-feed'
+						) }
+						checked={ attributes.showPreviewCards }
+						onChange={ ( value ) =>
+							setAttributes( { showPreviewCards: value } )
+						}
+					/>
+
+					<CheckboxControl
+						label={ __(
+							'Hide status meta',
+							'include-mastodon-feed'
+						) }
+						checked={ attributes.hideStatusMeta }
+						onChange={ ( value ) =>
+							setAttributes( { hideStatusMeta: value } )
+						}
+					/>
+
+					<CheckboxControl
+						label={ __(
+							'Hide date and time',
+							'include-mastodon-feed'
+						) }
+						checked={ attributes.hideDateTime }
+						onChange={ ( value ) =>
+							setAttributes( { hideDateTime: value } )
+						}
+					/>
+
+					<CheckboxControl
+						label={ __( 'Dark mode', 'include-mastodon-feed' ) }
+						checked={ attributes.darkmode }
+						onChange={ ( value ) =>
+							setAttributes( { darkmode: value } )
+						}
+					/>
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Media', 'include-mastodon-feed' ) }
+					initialOpen={ false }
+				>
+					<CheckboxControl
+						label={ __(
+							'Preserve image aspect ratio',
+							'include-mastodon-feed'
+						) }
+						checked={ attributes.preserveImageAspectRatio }
+						onChange={ ( value ) =>
+							setAttributes( { preserveImageAspectRatio: value } )
+						}
+					/>
+
+					<SelectControl
+						label={ __( 'Image size', 'include-mastodon-feed' ) }
+						key="imageSize"
+						options={ [
+							{ label: 'preview', value: 'preview' },
+							{ label: 'full', value: 'full' },
+						] }
+						value={ attributes.imageSize }
+						onChange={ ( value ) =>
+							setAttributes( { imageSize: value } )
+						}
+					/>
+
+					<SelectControl
+						label={ __( 'Image link', 'include-mastodon-feed' ) }
+						key="imageLink"
+						options={ [
+							{ label: 'status', value: 'status' },
+							{ label: 'image', value: 'image' },
+						] }
+						value={ attributes.imageLink }
+						onChange={ ( value ) =>
+							setAttributes( { imageLink: value } )
+						}
+					/>
+				</PanelBody>
+				<PanelBody
+					title={ __( 'More', 'include-mastodon-feed' ) }
+					initialOpen={ false }
+				>
+					<PanelRow>
+						<div>
+							{ __(
+								'More settings available with the ',
+								'include-mastodon-feed'
+							) }
+							<code>[include-mastodon-feed]</code>
+							{ __( ' shortcode and PHP constants.' ) }
+						</div>
+					</PanelRow>
+					<PanelRow>
+						<div>
+							Additional settings and customization:
+							<br />
+							- Tag feeds
+							<br />
+							- Tag filtering
+							<br />
+							- Labels
+							<br />
+							- Date / time locales
+							<br />
+							- Link target
+							<br />
+							- Caching
+							<br />- API authentication
+						</div>
+					</PanelRow>
+					<PanelRow>
+						<div>
+							{ __( 'See the ', 'include-mastodon-feed' ) }
+							<a
+								href="https://wordpress.org/plugins/include-mastodon-feed/#installation"
+								target="_blank"
+								rel="noreferrer"
+							>
+								{ __( 'plugin page', 'include-mastodon-feed' ) }
+							</a>
+							{ __( ' for details.', 'include-mastodon-feed' ) }
+						</div>
+					</PanelRow>
 				</PanelBody>
 			</InspectorControls>
 		</div>
