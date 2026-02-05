@@ -1,6 +1,6 @@
 # Include Mastodon Feed Wordpress Plugin
 
-Plugin that provides an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
+Plugin that provides a Gutenberg block and an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
 
 Account and post images are lazy loaded if preserveImageAspectRatio is set to true (default: false).
 
@@ -22,7 +22,7 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
   * [How does caching work?](#how-does-caching-work)
   * [API authentication](#api-authentication)
 
-## Usage
+## Shortcode usage
 
 Place the following shortcode right into the page. Either as shortcode block or just copy and paste right within a text block:
 
