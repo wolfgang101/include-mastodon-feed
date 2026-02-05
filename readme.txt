@@ -185,8 +185,8 @@ If your Mastodon server needs API authentication you can use the `auth` paramete
 
 
 = Known Issues / Todo =
+* extend Gutenberg block capabilities (support more settings, enable backend preview)
 * integrate i18n into translate.wordpress.org instead of text constants
-* re-build plugin as custom gutenberg block
 
 == Screenshots ==
 
