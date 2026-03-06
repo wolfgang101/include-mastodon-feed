@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 2.0.1
+	Version: 2.1.0
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -272,7 +272,9 @@ function gutenberg_block_render_callback($attributes) {
   $atts = [
     'instance' => $attributes['instance'] ?? '',
     'account' => $attributes['account'] ?? '',
+    'tag' => $attributes['tag'] ?? '',
     'limit' => $attributes['limit'] ?? INCLUDE_MASTODON_FEED_LIMIT,
+    'tagged' => $attributes['tagged'] ?? INCLUDE_MASTODON_FEED_TAGGED,
     'excludeboosts' => $attributes['excludeBoosts'] ?? INCLUDE_MASTODON_FEED_EXCLUDE_BOOSTS,
     'excludereplies' => $attributes['excludeReplies'] ?? INCLUDE_MASTODON_FEED_EXCLUDE_REPLIES,
     'excludeconversationstarters' => $attributes['excludeConversationStarters'] ?? INCLUDE_MASTODON_FEED_EXCLUDE_CONVERSATIONSTARTERS,
@@ -296,14 +298,23 @@ function register_gutenberg_block() {
     'name' => 'include-mastodon-feed/gutenberg-block',
     'api_version' => 3,
     'attributes'      => [
+      'gutenbergType'    => [
+        'type'      => 'string',
+      ],
       'instance'    => [
         'type'      => 'string',
       ],
       'account' => [
         'type'      => 'string',
       ],
+      'tag' => [
+        'type'      => 'string',
+      ],
       'limit' => [
         'type'    => 'integer',
+      ],
+      'tagged' => [
+        'type'      => 'string',
       ],
       'excludeBoosts' => [
         'type' => 'boolean',
@@ -1072,7 +1083,7 @@ function display_feed($atts) {
   }
 
   if(null === $feedType) {
-    return error('missing configuration (account id or tag)');
+    return error($feedType . 'missing configuration (account id or tag)');
   }
 
   if('account' === $feedType) {

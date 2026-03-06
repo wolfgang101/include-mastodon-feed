@@ -14,12 +14,16 @@ import metadata from './block.json';
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { useState } from '@wordpress/element';
 import {
 	PanelBody,
 	PanelRow,
 	TextControl,
 	SelectControl,
 	CheckboxControl,
+  __experimentalSpacer as Spacer,
+  Button,
+  Modal
 } from '@wordpress/components';
 import { getBlockType } from '@wordpress/blocks';
 /**
@@ -43,8 +47,16 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const validateSettings = () => {
 		if (
-			blockData.attributes.instance.default !== attributes.instance &&
-			blockData.attributes.account.default !== attributes.account
+      // type is selected
+      blockData.attributes.gutenbergType.default !== attributes.gutenbergType &&
+      // instance is selected
+      blockData.attributes.instance.default !== attributes.instance &&
+      (
+        // using account
+        blockData.attributes.account.default !== attributes.account ||
+        // using tag
+        blockData.attributes.tag.default !== attributes.tag
+      )
 		) {
 			return true;
 		}
@@ -59,6 +71,75 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( { account: account } );
 	};
 
+  const onChangeTag = ( tag ) => {
+    setAttributes( { tag: tag } );
+  };
+
+  const onChangeTagged = ( tagged ) => {
+    setAttributes( { tagged: tagged } );
+  };
+
+  const onChangeGutenbergType = (type) => {
+    if(null === type) {
+      if(attributes.instance && attributes.account && !confirm(__('This will clear instance & account. Continue?', 'include-mastodon-feed'))) {
+        return;
+      }
+      else if(attributes.instance && attributes.tag && !confirm(__('This will clear instance & tag. Continue?', 'include-mastodon-feed'))) {
+        return;
+      }
+      setAttributes( { gutenbergType: '', instance: '', account: '', tag: '' } );
+    }
+    else if (['account', 'tag'].includes(type)) {
+      setAttributes( { gutenbergType: type, instance: '', account: '', tag: '' } );
+    }
+  }
+
+  // account id lookup
+  const [isAccountLookupOpen, setIsAccountLookupOpen] = useState(false);
+  const openAccountLookupModal = () => setIsAccountLookupOpen(true);
+  const closeAccountLookupModal = () => setIsAccountLookupOpen(false);
+  const [lookupAccountHandle, setLookupAccountHandle] = useState('');
+  const lookupAccountId = (handle) => {
+    if (handle.startsWith('@')) {
+        handle = handle.substring(1);
+    }
+    handle = handle.trim().split('@');
+    if(handle.length !== 2) {
+      alert('Please enter a correct Mastodon username');
+    }
+    else {
+      const url = 'https://' + handle[1] + '/api/v2/search?q=' + handle[0] + '@' + handle[1] + '&resolve=false&limit=1';
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          const data = JSON.parse(xhr.responseText);
+          if(data.accounts && data.accounts.length == 1) {
+            setAttributes({ instance: handle[1] });
+            setAttributes({ account: data.accounts[0].id });
+            closeAccountLookupModal();
+            setLookupAccountHandle('');
+            alert( __( 'Found your account ID. Don\'t forget to save the changes!', 'include-mastodon-feed' ) );
+            return;
+          }
+          alert( __( 'Sorry, something went wrong', 'include-mastodon-feed' ) );
+        } else {
+          console.error('Request failed. Status:', xhr.status);
+          try {
+            const data = JSON.parse(xhr.responseText);
+            if(data.error) {
+              alert(data.error);
+              return;
+            }
+          }
+          catch (e) {}
+          console.error('Request failed. Status:', xhr.status);
+        }
+      };
+      xhr.send();				
+    }
+  }
+
 	return (
 		<div { ...useBlockProps() }>
 			{ validateSettings() || (
@@ -70,7 +151,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						<br />
 						<small>
 							{ __(
-								'Please set instance and account id',
+								'Please select account or tag',
 								'include-mastodon-feed'
 							) }
 						</small>
@@ -95,46 +176,125 @@ export default function Edit( { attributes, setAttributes } ) {
 								) }
 							</strong>
 							<br />
-							<small>
-								{ sprintf(
-									'Account ID %1$s on instance %2$s',
-									attributes.account,
-									attributes.instance
-								) }
-							</small>
+							{blockData.attributes.account.default !== attributes.account && (
+                <small>
+                  { sprintf(
+                    'Account ID %1$s on instance %2$s',
+                    attributes.account,
+                    attributes.instance
+                  ) }
+                </small>
+              )}
+              {blockData.attributes.tag.default !== attributes.tag && (
+                <small>
+                  { sprintf(
+                    'Tag #%1$s on instance %2$s',
+                    attributes.tag,
+                    attributes.instance
+                  ) }
+                </small>
+              )}
 						</p>
 					</div>
 				</div>
 			) }
 			<InspectorControls key="setting">
 				<PanelBody title={ __( 'Source', 'include-mastodon-feed' ) }>
-					<TextControl
-						label={ __( 'Instance', 'include-mastodon-feed' ) }
-						key="instance"
-						onChange={ onChangeInstance }
-						value={ attributes.instance }
-						placeholder="e.g. mastodon.social"
-					/>
-					<TextControl
-						label={ __( 'Account ID', 'include-mastodon-feed' ) }
-						key="account"
-						onChange={ onChangeAccount }
-						value={ attributes.account }
-					/>
-					<PanelRow>
-						<div>
-							<a
-								href="https://wordpress.org/plugins/include-mastodon-feed/#how%20do%20i%20find%20my%20account%20id%3F"
-								target="_blank"
-								rel="noreferrer"
-							>
-								{ __(
-									'How to find your account ID?',
-									'include-mastodon-feed'
-								) }
-							</a>
-						</div>
-					</PanelRow>
+          {!['account', 'tag'].includes(attributes.gutenbergType) && (
+            <>
+              <PanelRow>
+                <Button variant="primary" onClick={() => onChangeGutenbergType('account')}>
+                    Account
+                </Button>
+                <div>or</div>
+                <Button variant="primary" onClick={() => onChangeGutenbergType('tag')}>
+                    Tag
+                </Button>
+              </PanelRow>
+              <PanelRow>
+                <Spacer />
+              </PanelRow>
+            </>
+          )}
+          {blockData.attributes.gutenbergType.default !== attributes.gutenbergType && (
+            <TextControl
+              label={ __( 'Instance', 'include-mastodon-feed' ) }
+              key="instance"
+              onChange={ onChangeInstance }
+              value={ attributes.instance }
+              placeholder="e.g. mastodon.social"
+            />
+          )}
+          {'account' === attributes.gutenbergType && (
+            <>
+              <TextControl
+                label={ __( 'Account ID', 'include-mastodon-feed' ) }
+                key="account"
+                onChange={ onChangeAccount }
+                value={ attributes.account }
+              />
+              <PanelRow>
+                <Button variant="primary" onClick={openAccountLookupModal}>
+                    Find my account ID
+                </Button>
+                <Button onClick={() => onChangeGutenbergType(null)}>
+                  Change source
+                </Button>
+                {isAccountLookupOpen && (
+                    <Modal
+                        title="Account ID lookup tool"
+                        onRequestClose={closeAccountLookupModal}
+                    >
+                        <TextControl
+                          label={ __( 'Your Mastodon account', 'include-mastodon-feed' ) }
+                          value={lookupAccountHandle}
+                          onChange={(value) => setLookupAccountHandle(value)}
+                          key="gutenbergLookupValue"
+                          help={__('e.g. @w101@mastodon.social', 'include-mastodon-feed')}
+                          autoFocus
+                        />
+                        <Button variant="primary" onClick={() => lookupAccountId(lookupAccountHandle)}>
+                            Find
+                        </Button>
+                    </Modal>
+                )}
+              </PanelRow>
+              <PanelRow>
+                <div>
+                  <a
+                    href="https://wordpress.org/plugins/include-mastodon-feed/#how%20do%20i%20find%20my%20account%20id%3F"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    { __(
+                      'More info on how finding your account ID works',
+                      'include-mastodon-feed'
+                    ) }
+                  </a>
+                </div>
+              </PanelRow>
+            </>
+          )}
+          {'tag' === attributes.gutenbergType && (
+            <>
+              <PanelRow>
+                <TextControl
+                  label={ __( 'Tag', 'include-mastodon-feed' ) }
+                  key="tag"
+                  onChange={ onChangeTag }
+                  value={ attributes.tag }
+                  placeholder="e.g. bloomscrolling"
+                  help={__('Enter tag without leading # symbol.', 'include-mastodon-feed')}
+                />
+              </PanelRow>
+              <PanelRow>
+                <div></div>
+                <Button onClick={() => onChangeGutenbergType(null)}>
+                  Change source
+                </Button>
+              </PanelRow>
+            </>
+          )}
 					<PanelRow>
 						<div>
 							{ __(
@@ -202,48 +362,60 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 					/>
 
-					<CheckboxControl
-						label={ __(
-							'Exclude boosts',
-							'include-mastodon-feed'
-						) }
-						checked={ attributes.excludeBoosts }
-						onChange={ ( value ) =>
-							setAttributes( { excludeBoosts: value } )
-						}
-					/>
+          {'account' === attributes.gutenbergType && (
+            <>
+              <TextControl
+                label={ __( 'Tagged', 'include-mastodon-feed' ) }
+                key="tagged"
+                onChange={ onChangeTagged }
+                value={ attributes.tagged }
+                help={__('Show only statuses that are tagged with given tag name. No leading #, case insensitive', 'include-mastodon-feed')}
+              />
 
-					<CheckboxControl
-						label={ __(
-							'Exclude replies',
-							'include-mastodon-feed'
-						) }
-						checked={ attributes.excludeReplies }
-						onChange={ ( value ) =>
-							setAttributes( { excludeReplies: value } )
-						}
-					/>
+              <CheckboxControl
+                label={ __(
+                  'Exclude boosts',
+                  'include-mastodon-feed'
+                ) }
+                checked={ attributes.excludeBoosts }
+                onChange={ ( value ) =>
+                  setAttributes( { excludeBoosts: value } )
+                }
+              />
 
-					<CheckboxControl
-						label={ __(
-							'Exclude conversation starters',
-							'include-mastodon-feed'
-						) }
-						checked={ attributes.excludeConversationStarters }
-						onChange={ ( value ) =>
-							setAttributes( {
-								excludeConversationStarters: value,
-							} )
-						}
-					/>
+              <CheckboxControl
+                label={ __(
+                  'Exclude replies',
+                  'include-mastodon-feed'
+                ) }
+                checked={ attributes.excludeReplies }
+                onChange={ ( value ) =>
+                  setAttributes( { excludeReplies: value } )
+                }
+              />
 
-					<CheckboxControl
-						label={ __( 'Only pinned', 'include-mastodon-feed' ) }
-						checked={ attributes.onlyPinned }
-						onChange={ ( value ) =>
-							setAttributes( { onlyPinned: value } )
-						}
-					/>
+              <CheckboxControl
+                label={ __(
+                  'Exclude conversation starters',
+                  'include-mastodon-feed'
+                ) }
+                checked={ attributes.excludeConversationStarters }
+                onChange={ ( value ) =>
+                  setAttributes( {
+                    excludeConversationStarters: value,
+                  } )
+                }
+              />
+
+              <CheckboxControl
+                label={ __( 'Only pinned', 'include-mastodon-feed' ) }
+                checked={ attributes.onlyPinned }
+                onChange={ ( value ) =>
+                  setAttributes( { onlyPinned: value } )
+                }
+              />
+            </>
+          )}
 
 					<CheckboxControl
 						label={ __( 'Only media', 'include-mastodon-feed' ) }
@@ -348,29 +520,25 @@ export default function Edit( { attributes, setAttributes } ) {
 					<PanelRow>
 						<div>
 							{ __(
-								'More settings available with the ',
+								'More advanced settings available with the ',
 								'include-mastodon-feed'
 							) }
 							<code>[include-mastodon-feed]</code>
-							{ __( ' shortcode and PHP constants.' ) }
+							{ __( ' shortcode and PHP constants.', 'include-mastodon-feed' ) }
 						</div>
 					</PanelRow>
 					<PanelRow>
 						<div>
-							Additional settings and customization:
+							{ __('Additional settings and customization:', 'include-mastodon-feed') }
 							<br />
-							- Tag feeds
+							- { __('Labels', 'include-mastodon-feed') }
 							<br />
-							- Tag filtering
+							- { __('Date / time locales', 'include-mastodon-feed') }
 							<br />
-							- Labels
+							- { __('Link target', 'include-mastodon-feed') }
 							<br />
-							- Date / time locales
-							<br />
-							- Link target
-							<br />
-							- Caching
-							<br />- API authentication
+							- { __('Caching', 'include-mastodon-feed') }
+							<br />- { __('API authentication', 'include-mastodon-feed') }
 						</div>
 					</PanelRow>
 					<PanelRow>

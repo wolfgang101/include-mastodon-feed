@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.2
-Stable tag: 2.0.1
+Stable tag: 2.1.0
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -193,6 +193,9 @@ If your Mastodon server needs API authentication you can use the `auth` paramete
 * No screenshots
 
 == Changelog ==
+
+= 2.1.0 =
+* feat: Gutenberg block now includes an account ID lookup tool, supports tag timelines and the post tag filter
 
 = 2.0.1 =
 * fix: added missing permission_callback to register_rest_route to avoid PHP Notice (thank you @h4r1m4u)

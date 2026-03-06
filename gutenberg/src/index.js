@@ -32,6 +32,10 @@ registerBlockType( metadata.name, {
 		),
 	},
 	attributes: {
+    gutenbergType: {
+      type: 'string',
+      default: '',
+    },
 		instance: {
 			type: 'string',
 			default: '',
@@ -40,11 +44,19 @@ registerBlockType( metadata.name, {
 			type: 'string',
 			default: '',
 		},
+    tag: {
+      type: 'string',
+      default: '',
+    },
 		limit: {
 			type: 'integer',
 			default: 20,
 		},
 
+    tagged: {
+      type: 'string',
+      default: '',
+    },
 		excludeBoosts: {
 			type: 'boolean',
 			default: false,
