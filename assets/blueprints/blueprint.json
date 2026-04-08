@@ -1,0 +1,34 @@
+{
+    "landingPage": "\/?p=5",
+    "preferredVersions": {
+        "php": "8.0",
+        "wp": "latest"
+    },
+    "phpExtensionBundles": [
+        "kitchen-sink"
+    ],
+    "features": {
+        "networking": true
+    },
+    "steps": [
+        {
+            "step": "installPlugin",
+            "pluginZipFile": {
+                "resource": "url",
+                "url": "https:\/\/downloads.wordpress.org\/plugin\/include-mastodon-feed.2.1.0.zip"
+            },
+            "options": {
+                "activate": true
+            }
+        },
+        {
+            "step": "login",
+            "username": "admin",
+            "password": "password"
+        },
+        {
+            "step": "runPHP",
+            "code": "<?php\ninclude 'wordpress/wp-load.php';\nwp_insert_post(array(\n'import_id' => 5,\n'post_title' => 'Include Mastodon Feed Demo',\n'post_content' => '<!-- wp:shortcode -->\n[include-mastodon-feed account=\"110352301082185429\" instance=\"ohai.social\" darkmode=true excludeReplies=true showPreviewCards=false]\n<!-- /wp:shortcode -->',\n'post_status' => 'publish',\n'post_author' => 1\n));"
+        }
+    ]
+}
