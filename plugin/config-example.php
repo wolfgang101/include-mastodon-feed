@@ -17,7 +17,7 @@
     define('INCLUDE_MASTODON_FEED_DEBUG', false);
 
     // enable feed caching (wordpress will cache the feed for 5 minutes)
-    // note: automatically enabled if auth is useed
+    // note: automatically enabled if auth is used
     define('INCLUDE_MASTODON_FEED_CACHE', false);
 
     // cache duration if cache is enabled (in seconds)

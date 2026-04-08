@@ -3,7 +3,7 @@ Contributors: wolfgang101
 Donate link: https://www.buymeacoffee.com/w101
 Tags: mastodon, status, feed
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 8.2
 Stable tag: 2.1.0
 License: MIT
