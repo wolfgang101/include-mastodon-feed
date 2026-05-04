@@ -1,0 +1,251 @@
+/***
+* IMF Columns; Image focused column styling for Include Mastodon Feed shortcode.
+* 1.1.1: Added support for video and limited long hashtags
+* Adjust the following settings to fit you theme.
+***/
+
+.imf-columns {
+    --imf-column-width: 24ch;
+    --imf-column-count: 5;
+    --imf-column-gap: 2rem;
+    --imf-clipper-max-height: min(80vh, 60rem);
+    --imf-inner-rotation: 7deg;
+    --imf-status-padding: .75rem;
+    --imf-status-font-size: var(--wp--preset--font-size--small, 0.8rem);
+    --imf-status-color: #404040;
+    --imf-status-avatar-height: 1.5rem;
+    --imf-status-box-shadow: 0.6rem 0.8rem 1rem #0003;
+    --imf-status-media-hover: contrast(90%) brightness(120%) saturate(80%);
+    --include-mastodon-feed-border-radius: 1.5rem;
+    --include-mastodon-feed-bg-light: #fafafa;
+    --include-mastodon-feed-accent-color: #563acc;
+}
+
+/***
+* How to use: In block editor, create 2-3 nested groups with imf classes and shortcode:
+* 1: Create container group with class imf-columns, this can have background
+* 2:  Optional: create clipping group with class imf-clipper; recommended width: 90vw
+* 3:   Create inner group with class imf-inner; recommended width: 1440-1920px
+* 4:      In that, create heading (optional) and insert Include Mastodon Feed shortcode
+***/
+
+
+/** Include Mastodon Feed **/
+
+/* Use CSS Columns for the mastodon feed */
+.imf-columns .include-mastodon-feed {
+    column-width: var(--imf-column-width);
+    column-count: var(--imf-column-count);
+    column-gap: var(--imf-column-gap);
+    margin: 0 0 var(--imf-column-gap);
+}
+
+
+/** Status Cards **/
+
+/* Display as INLINE-grid (safari-fix) for reordering of content and avoid column-breaking ⭐ */
+.imf-columns .include-mastodon-feed .status {
+    display: inline-grid;
+    break-inside: avoid-column;
+    margin: calc(var(--imf-column-gap)/2) 0;
+    border: .5px solid #fff7;
+    /* antialiasing*/
+    padding: var(--imf-status-padding, 1rem);
+    color: var(--imf-status-color);
+    font-size: var(--imf-status-font-size);
+    overflow-wrap: break-word;
+    box-shadow: var(--imf-status-box-shadow, unset);
+}
+
+
+/* Hide statuses with videos or content warnings or unknown content */
+.imf-columns .include-mastodon-feed .status:has(.audio, .gifv, .contentWarning, .unknown) {
+    display: none;
+}
+
+
+/** Status Card > Content **/
+
+/* Display as flex for reordering media and collapse ALL content (text nodes without html markup) ⭐ */
+.imf-columns .include-mastodon-feed .status .content {
+    display: flex;
+    flex-wrap: wrap;
+    visibility: collapse;
+    line-height: 0;
+}
+
+/* Un-collapse proper marked up content (paragraphs, images, links) to make them visible again ⭐ */
+.imf-columns .include-mastodon-feed .status .content * {
+    visibility: visible;
+    line-height: 1.33;
+}
+
+/* In the status, show hashtags and mentions links, but hide other arbitrary links */
+.imf-columns .include-mastodon-feed .status .content p a:not(.hashtag, .mention) {
+    display: none;
+}
+
+
+/** Status Card > Content > Media **/
+
+/* Pull media up to be displayed first on the status ️ (Note; tabindex order will mess up) */
+.imf-columns .include-mastodon-feed .status .content .media {
+    order: -1;
+    margin: 0 0 .5em 0;
+    flex-grow: 1;
+}
+
+/* And round the corners */
+.imf-columns .include-mastodon-feed .status .content .media :where(a, img, video) {
+    border-radius: calc(var(--include-mastodon-feed-border-radius) / 1.5);
+	width: 100%;
+}
+
+/* Use custom image hover filter */
+.imf-columns .include-mastodon-feed .status .content .media a:hover {
+    filter: var(--imf-status-media-hover);
+}
+
+/* Unset some video related rules */
+.imf-columns .include-mastodon-feed .status .content .media .video {
+    margin-top: unset;
+    font-size: var(--imf-status-font-size);
+}
+
+/* Hotfix: Remove extra whitespace below some image links */
+.imf-columns .include-mastodon-feed .status .content .media .image a {
+    aspect-ratio: unset;
+}
+
+
+/** Status Card > Content > Text & Tags **/
+
+/* Paragraphs; show only the first one ⭐ */
+.imf-columns .include-mastodon-feed .status .content p:not(:first-of-type) {
+    display: none;
+}
+
+/* If status last paragraph has hashtags, then limit first paragraph to 2 lines only ⭐ */
+.imf-columns .include-mastodon-feed .status .content p:first-of-type:has(~p:last-of-type>a.hashtag) {
+    --imf-status-line-clamp: 2;
+}
+
+/* Paragraphs; show only the first 2-3 lines ⭐ */
+.imf-columns .include-mastodon-feed .status .content p:first-of-type {
+	display: -webkit-box;
+    -webkit-line-clamp: var(--imf-status-line-clamp, 3);
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Paragraphs; Remove the margins, keeping this card tight */
+.imf-columns .include-mastodon-feed .status .content p {
+    margin: unset;
+}
+
+/* Breaks and blockquotes looks weird on cards, hide them! */
+.imf-columns .include-mastodon-feed .status .content :is(br, blockquote) {
+    display: none;
+}
+
+
+/** Hashtags **/
+
+/* Make exception to 1 paragraph, but show the last paragraph too if it has hashtags, ... */
+.imf-columns .include-mastodon-feed .status .content p:not(:first-of-type):last-of-type:has(.hashtag) {
+    display: inline-block;
+}
+
+/* Display maximum 3 hashtags, hide the rest ⭐ */
+.imf-columns .include-mastodon-feed .status .content .hashtag:not(:nth-of-type(-n + 3)) {
+    display: none;
+}
+
+/* Hashtags; make sure they don't exceed #TheWithOfTheColumnsYouManiacs */
+.imf-columns .include-mastodon-feed .status .content .hashtag span {
+	display: inline-block;
+	max-width: calc(var(--imf-column-width) - 6ch);
+}
+
+
+/** Status Cards > Account Info **/
+
+/* Order account info below the content */
+.imf-columns .include-mastodon-feed .account {
+    order: 2;
+    margin-top: 0.5em;
+    font-size: var(--imf-status-font-size);
+    line-height: 1;
+}
+
+/* Tweak account avatar and name spacing*/
+.imf-columns .include-mastodon-feed .account,
+.imf-columns .include-mastodon-feed .account a {
+    display: flex;
+    align-items: flex-end;
+    gap: .4em;
+}
+
+/* Make avatar a little larger */
+.imf-columns .include-mastodon-feed .account .avatar {
+    height: var(--imf-status-avatar-height, 1.5rem);
+}
+
+
+/** OPTIONAL; Clipper and rotated Inner container */
+
+/* Inner Container; rotate on laptops and larger */
+@media screen and (min-width: 1440px) {
+
+    /* Right align headings and text so it fits nicely when inner is rotated */
+    .imf-columns:has(.imf-clipper) .imf-inner .wp-block-heading {
+        text-align: right;
+    }
+
+    /* Rotate inner container */
+    .imf-columns:has(.imf-clipper) .imf-inner {
+        transform-origin: 46% 21%;
+        rotate: var(--imf-inner-rotation);
+    }
+
+    /* Clip overflow that occurs when rotating inner container */
+    .imf-columns .imf-clipper {
+        height: var(--imf-clipper-max-height);
+        max-height: var(--imf-clipper-max-height);
+        overflow: clip;
+    }
+
+    /* Remove inner padding for that tight tilted section */
+    .imf-columns:has(.imf-clipper) {
+        padding: 0;
+    }
+}
+
+/** OPTIONAL; Limit number of statuses on phones to 6 to avoid excessive scrolling */
+
+@media (max-width: 768px) {
+    .imf-columns .include-mastodon-feed .status:not(:nth-of-type(-n + 6)) {
+        display: none;
+    }
+}
+
+
+/* OPTIONAL; Fade in inner section to reduce layout shifts and because it looks nice. */
+
+/* Fade in the entire inner container in .8 seconds (adjust to your site) */
+.imf-columns .imf-inner {
+    animation: fadeIn 0.8s linear forwards;
+}
+
+/* 0 opacity (invisible) for half the time, then fade to full opacity */
+@keyframes fadeIn {
+
+    0%,
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
