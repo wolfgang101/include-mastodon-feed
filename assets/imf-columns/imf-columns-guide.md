@@ -1,6 +1,6 @@
 ## A bit of CSS makes a pretty column layout
 
-*Optional styling of Mastodon feeds by @oldrup. For the full blog post with sample feeds visit https://oldrup.dk/en/include-mastodon-feed/
+*Optional styling of Mastodon feeds by @oldrup. For the full blog post with sample feeds visit https://oldrup.dk/en/include-mastodon-feed/*
 
 As the HTML output provided by the Include Mastodon Feed plugin has good semantics, meaningful class names, and useful custom properties, let’s hit that inspect button, and see what we can do with pure CSS. 
 ## How to build the block structure and the shortcode attributes or Mastodon block settings
@@ -13,7 +13,7 @@ To enable the column layout, add two *nested* group blocks (three if you fancy t
 4. Add **heading** and insert **Include Mastodon Feed shortcode** or Block
 ### Sample container group structure
 
-![[imf-columns-outline.png]]
+![](imf-columns-outline.png)
 
 ### Or just import the included block pattern
 The file `group-imf-columns-full-width.json` contains a sample pattern you can add in the WordPress dashboard in **Appearance > Design > Patterns > Add Pattern > Import Pattern from JSON**
@@ -46,4 +46,4 @@ The  CSS provides the three classes `.imf-columns`, `.imf-clipper` and `.imf-inn
 
 That's it! The styling is quite opinionated out of the box, but most settings can be adjusted using the --imf properties at the top. There are some optional CSS rules at the bottom that adjust number of statuses on mobile, and that fades in statuses to reduce layout shift. 
 
-@oldrup may 2026
+*@oldrup may 2026*
