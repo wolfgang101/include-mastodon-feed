@@ -1,4 +1,4 @@
-## A bit of CSS makes a pretty column layout
+# A bit of CSS makes a pretty column layout
 
 *Optional styling of Mastodon feeds by @oldrup. For the full blog post with sample feeds visit https://oldrup.dk/en/include-mastodon-feed/*
 
@@ -16,7 +16,7 @@ To enable the column layout, add two *nested* group blocks (three if you fancy t
 ![](imf-columns-outline.png)
 
 ### Or just import the included block pattern
-The file `group-imf-columns-full-width.json` contains a sample pattern you can add in the WordPress dashboard in **Appearance > Design > Patterns > Add Pattern > Import Pattern from JSON**
+The file [group-imf-columns-full-width.json](/assets/imf-columns/group-imf-columns-full-width.jsongroup-imf-columns-full-width.json) contains a sample pattern you can add in the WordPress dashboard in **Appearance > Design > Patterns > Add Pattern > Import Pattern from JSON**
 
 You should then be able to find the **Group imf-columns (full width)** pattern in the block inserter which can be used as a starting point for your own layout.
 ### What attributes to use in the shortcode?
@@ -45,5 +45,3 @@ The  CSS provides the three classes `.imf-columns`, `.imf-clipper` and `.imf-inn
 - The _plugin_ custom properties are prefixed `--include-mastodon-feed`
 
 That's it! The styling is quite opinionated out of the box, but most settings can be adjusted using the --imf properties at the top. There are some optional CSS rules at the bottom that adjust number of statuses on mobile, and that fades in statuses to reduce layout shift. 
-
-*@oldrup may 2026*
