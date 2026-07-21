@@ -132,6 +132,15 @@ You can define several plugin constants to set custom default options that will 
 
 See the included `config-example.php` file for a full list of supported settings.
 
+= Pretty column layout example =
+
+Check out the awesome Columns Guide by @oldrupp using Wordpress native Gutenberg blocks (pattern json file included) and some custom css magic:
+
+* **Official Columns Guide**
+https://github.com/wolfgang101/include-mastodon-feed/blob/main/assets/imf-columns/imf-columns-guide.md
+
+* **Detailed how-to instructions and visual examples**
+https://oldrup.dk/en/include-mastodon-feed/
 
 == Frequently Asked Questions ==
 
