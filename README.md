@@ -75,7 +75,7 @@ You can define several plugin constants to set custom default options that will 
 2. Search for the line `/* Add any custom values between this line and the "stop editing" line. */`
 3. Define the options you want to override between this line and `/* That's all, stop editing! Happy publishing. */`
 
-See [config-example.php](config-example.php) for a full list of supported settings.
+See [config-example.php](plugin/config-example.php) for a full list of supported settings.
 
 ### Pretty column layout example
 
@@ -136,7 +136,7 @@ Use the following URL to get your ID:
 
 ### Can I modify the plugin?
 
-The plugin is released unter the [Expat License](LICENSE) which is very permissive. Knock youself out!
+The plugin is released unter the [Expat License](plugin/LICENSE) which is very permissive. Knock youself out!
 
 ### How does caching work?
 
@@ -158,11 +158,11 @@ If your Mastodon server needs API authentication you can use the `auth` paramete
 > To avoid exposing the auth token to website visitors you have to take extra steps to
 > set up authentication support.
 > 
-> See the very end of [config-example.php](config-example.php) for an in-depth configuration example.
+> See the very end of [config-example.php](plugin/config-example.php) for an in-depth configuration example.
 
 **Steps to set up API authentication:**
 
 1. Log into your Mastodon instance and go to Settings > Development (https://yourinstance.example.org/settings/applications)
 2. Create a new Application (any name, only check one single scope `read:statuses`)
-3. Add the `auth` mapping configuration to your `wp-config.php` (See very bottom of [config-example.php](config-example.php))
+3. Add the `auth` mapping configuration to your `wp-config.php` (See very bottom of [config-example.php](plugin/config-example.php))
 4. Add your custom `auth` reference to your shortcode
