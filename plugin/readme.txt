@@ -196,6 +196,7 @@ If your Mastodon server needs API authentication you can use the `auth` paramete
 
 = 2.1.1 =
 * feat: load css & jss only on pages that actually have a feed
+* fix: when Gutenberg block was used as pattern it did not persist "limit" correctly
 
 = 2.1.0 =
 * feat: Gutenberg block now includes an account ID lookup tool, supports tag timelines and the post tag filter
