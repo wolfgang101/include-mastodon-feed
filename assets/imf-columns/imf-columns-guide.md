@@ -36,7 +36,7 @@ The appropriate attributes for the Include Mastodon Feed shortcode, depends on y
 
 ## How to add the imf-columns stylesheet
 
-With the block structure and shortcode in place, all we need to enable the column layout, is to add the stylesheet to the website. Use any preferred custom CSS plugin or your theme’s ability to add custom CSS, and include the file `imf-columns.css`
+With the block structure and shortcode in place, all we need to enable the column layout, is to add the stylesheet to the website. Use any preferred custom CSS plugin or your theme’s ability to add custom CSS, and include the file [imf-columns.css](/assets/imf-columns/imf-columns.css)
 
 The  CSS provides the three classes `.imf-columns`, `.imf-clipper` and `.imf-inner` as well as a set of CSS custom properties to tweak the design of the posts.
 
