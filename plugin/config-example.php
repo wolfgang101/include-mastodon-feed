@@ -155,7 +155,7 @@
     /*
      * API AUTH
      * 
-     * INCLUD_MASTODON_FEED_AUTH 
+     * INCLUDE_MASTODON_FEED_AUTH 
      * This constant is not defined by default.
      * It has to be defined only if your Mastodon instance needs authentication for API calls.
      * 

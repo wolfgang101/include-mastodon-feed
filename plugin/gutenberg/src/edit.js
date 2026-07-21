@@ -358,7 +358,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						] }
 						value={ attributes.limit }
 						onChange={ ( value ) =>
-							setAttributes( { limit: value } )
+							setAttributes( { limit: parseInt( value, 10 ) } )
 						}
 					/>
 

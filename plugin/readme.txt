@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.2
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -193,6 +193,10 @@ If your Mastodon server needs API authentication you can use the `auth` paramete
 * No screenshots
 
 == Changelog ==
+
+= 2.1.1 =
+* feat: load css & jss only on pages that actually have a feed
+* fix: when Gutenberg block was used as pattern it did not persist "limit" correctly
 
 = 2.1.0 =
 * feat: Gutenberg block now includes an account ID lookup tool, supports tag timelines and the post tag filter
