@@ -16,7 +16,7 @@ To enable the column layout, add two *nested* group blocks (three if you fancy t
 ![](imf-columns-outline.png)
 
 ### Or just import the included block pattern
-The file [group-imf-columns-full-width.json](/assets/imf-columns/group-imf-columns-full-width.jsongroup-imf-columns-full-width.json) contains a sample pattern you can add in the WordPress dashboard in **Appearance > Design > Patterns > Add Pattern > Import Pattern from JSON**
+The file [group-imf-columns-full-width.json](/assets/imf-columns/group-imf-columns-full-width.json) contains a sample pattern you can add in the WordPress dashboard in **Appearance > Design > Patterns > Add Pattern > Import Pattern from JSON**
 
 You should then be able to find the **Group imf-columns (full width)** pattern in the block inserter which can be used as a starting point for your own layout.
 ### What attributes to use in the shortcode?
@@ -36,7 +36,7 @@ The appropriate attributes for the Include Mastodon Feed shortcode, depends on y
 
 ## How to add the imf-columns stylesheet
 
-With the block structure and shortcode in place, all we need to enable the column layout, is to add the stylesheet to the website. Use any preferred custom CSS plugin or your theme’s ability to add custom CSS, and include the file `imf-columns.css`
+With the block structure and shortcode in place, all we need to enable the column layout, is to add the stylesheet to the website. Use any preferred custom CSS plugin or your theme’s ability to add custom CSS, and include the file [imf-columns.css](/assets/imf-columns/imf-columns.css)
 
 The  CSS provides the three classes `.imf-columns`, `.imf-clipper` and `.imf-inner` as well as a set of CSS custom properties to tweak the design of the posts.
 

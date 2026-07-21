@@ -11,6 +11,7 @@ The plugin is written in PHP and generates native JavaScript to fetch and render
 * [Usage](#usage)
   * [Supported shortcode attributes](#supported-shortcode-attributes)
   * [Additional customization](#additional-customizations)
+  * [Pretty column layout example](#pretty-column-layout-example)
 * [Installation](#installation)
   * [Installation via ZIP file](#installation-via-zip-file)
   * [Installation via git checkout](#installation-via-git-checkout)
@@ -74,6 +75,10 @@ You can define several plugin constants to set custom default options that will 
 
 See [config-example.php](config-example.php) for a full list of supported settings.
 
+### Pretty column layout example
+
+Check out the awesome [Colums Guide](assets/imf-columns/imf-columns-guide.md) by @oldrupp using Wordpress native Gutenberg blocks (pattern json file included) and some custom css magic.
+
 ## Installation
 
 The plugin is available through the official Wordpress plugin directory https://wordpress.org/plugins/include-mastodon-feed/
@@ -108,7 +113,6 @@ If you are familiar with Github you can clone the repository right into your Wor
 ### Todo
 
 * integrate i18n into translate.wordpress.org instead of text constants
-* re-build plugin as custom gutenberg block
 
 ## FAQ
 
