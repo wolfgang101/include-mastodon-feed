@@ -77,6 +77,8 @@ See [config-example.php](config-example.php) for a full list of supported settin
 
 ### Pretty column layout example
 
+![](assets/banner-772x250.png)
+
 Check out the awesome [Colums Guide](assets/imf-columns/imf-columns-guide.md) by @oldrupp using Wordpress native Gutenberg blocks (pattern json file included) and some custom css magic.
 
 ## Installation
