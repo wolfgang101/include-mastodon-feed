@@ -1,5 +1,7 @@
 # Include Mastodon Feed Wordpress Plugin
 
+![](assets/banner-772x250.png)
+
 Plugin that provides a Gutenberg block and an `[include-mastodon-feed]` shortcode to easily integrate mastodon feeds into wordpress pages. Supports personal and tag feeds.
 
 Account and post images are lazy loaded if preserveImageAspectRatio is set to true (default: false).
@@ -76,8 +78,6 @@ You can define several plugin constants to set custom default options that will 
 See [config-example.php](config-example.php) for a full list of supported settings.
 
 ### Pretty column layout example
-
-![](assets/banner-772x250.png)
 
 Check out the awesome [Colums Guide](assets/imf-columns/imf-columns-guide.md) by @oldrupp using Wordpress native Gutenberg blocks (pattern json file included) and some custom css magic.
 
