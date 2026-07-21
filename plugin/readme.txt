@@ -134,13 +134,11 @@ See the included `config-example.php` file for a full list of supported settings
 
 = Pretty column layout example =
 
-Check out the awesome Columns Guide by @oldrupp using Wordpress native Gutenberg blocks (pattern json file included) and some custom css magic:
+Check out the awesome [Columns Guide](https://github.com/wolfgang101/include-mastodon-feed/blob/main/assets/imf-columns/imf-columns-guide.md) by [@oldrupp](https://oldrup.dk/en/include-mastodon-feed/) using Wordpress native Gutenberg blocks (pattern json file included) and some custom css magic:
 
-* **Official Columns Guide**
-https://github.com/wolfgang101/include-mastodon-feed/blob/main/assets/imf-columns/imf-columns-guide.md
+* [Official Columns Guide](https://github.com/wolfgang101/include-mastodon-feed/blob/main/assets/imf-columns/imf-columns-guide.md)
 
-* **Detailed how-to instructions and visual examples**
-https://oldrup.dk/en/include-mastodon-feed/
+* [Detailed how-to instructions and visual examples](https://oldrup.dk/en/include-mastodon-feed/)
 
 == Frequently Asked Questions ==
 
@@ -204,7 +202,7 @@ If your Mastodon server needs API authentication you can use the `auth` paramete
 == Changelog ==
 
 = 2.1.1 =
-* feat: load css & jss only on pages that actually have a feed
+* feat: load css & js only on pages that actually have a feed
 * fix: when Gutenberg block was used as pattern it did not persist "limit" correctly
 
 = 2.1.0 =
