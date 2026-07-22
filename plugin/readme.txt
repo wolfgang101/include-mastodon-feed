@@ -5,7 +5,7 @@ Tags: mastodon, status, feed
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.2
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:Expat
 
@@ -17,6 +17,8 @@ Plugin that provides a Gutenberg block and an `[include-mastodon-feed]` shortcod
 Account and post images are lazy loaded if preserveImageAspectRatio is set to true (default: false).
 
 The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
+
+Styling works out-of-the-box. For a nice custom column layout check out the awesome [Columns Guide](https://github.com/wolfgang101/include-mastodon-feed/blob/main/assets/imf-columns/imf-columns-guide.md) by [@oldrupp](https://oldrup.dk/en/include-mastodon-feed/) - using Wordpress native Gutenberg blocks (pattern json file included) and some css magic.
 
 == Installation ==
 
@@ -200,6 +202,9 @@ If your Mastodon server needs API authentication you can use the `auth` paramete
 * No screenshots
 
 == Changelog ==
+
+= 2.1.2 =
+* fix: load css before most themes load css to not override custom css styling (priority 5 in Wordpress queue)
 
 = 2.1.1 =
 * feat: load css & js only on pages that actually have a feed
