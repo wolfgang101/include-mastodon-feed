@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 2.1.1
+	Version: 2.1.2
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -394,7 +394,33 @@ function register_assets() {
     wp_add_inline_script('include-mastodon-feed', 'window.includeMastodonFeedDebug = true;', 'before');
   }
 }
-add_action('wp_enqueue_scripts', __NAMESPACE__ . '\register_assets');
+// register early (priority 1) so the handle exists before we conditionally enqueue below
+add_action('wp_enqueue_scripts', __NAMESPACE__ . '\register_assets', 1);
+
+// Best-effort detection: does the main queried post contain our shortcode or block?
+// Runs before the theme enqueues its styles, so when a feed is present we can enqueue
+// the stylesheet into the <head> ahead of the theme/child-theme CSS. That lets theme
+// rules override ours through normal cascade order, without needing !important.
+// This can't catch every placement (widgets, archive loops, page builders, FSE
+// templates, do_shortcode() in a theme file); those fall back to the render-time
+// enqueue in display_feed() and simply load in the footer as before.
+function feed_in_queried_content() {
+  $queried = get_queried_object();
+  if(!($queried instanceof \WP_Post)) {
+    return false;
+  }
+  return has_shortcode($queried->post_content, 'include-mastodon-feed')
+    || has_block('include-mastodon-feed/gutenberg-block', $queried->post_content);
+}
+
+function maybe_enqueue_assets() {
+  if(feed_in_queried_content()) {
+    wp_enqueue_style('include-mastodon-feed');
+    wp_enqueue_script('include-mastodon-feed');
+  }
+}
+// priority 5: after register_assets (1), before a typical theme's enqueue (10)
+add_action('wp_enqueue_scripts', __NAMESPACE__ . '\maybe_enqueue_assets', 5);
 
 function display_feed($atts) {
   $atts = shortcode_atts(
@@ -512,7 +538,10 @@ function display_feed($atts) {
     return 'only http and https urls supported';
   }
 
-  // load the global stylesheet and script only when a feed is actually output
+  // Fallback enqueue: guarantees the assets load wherever a feed is actually output,
+  // including placements maybe_enqueue_assets() can't detect ahead of <head> (widgets,
+  // archive loops, page builders, FSE templates). When the head enqueue already fired
+  // these dedupe to a no-op; otherwise the assets load in the footer as before.
   wp_enqueue_style('include-mastodon-feed');
   wp_enqueue_script('include-mastodon-feed');
 
