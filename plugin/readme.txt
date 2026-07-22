@@ -18,7 +18,7 @@ Account and post images are lazy loaded if preserveImageAspectRatio is set to tr
 
 The plugin is written in PHP and generates native JavaScript to fetch and render the mastodon feed. No special libraries needed.
 
-Styling works out-of-the-box. For a nice custom column layout check out the awesome [Columns Guide](https://github.com/wolfgang101/include-mastodon-feed/blob/main/assets/imf-columns/imf-columns-guide.md) by [@oldrupp](https://oldrup.dk/en/include-mastodon-feed/) - using Wordpress native Gutenberg blocks (pattern json file included) and some css magic.
+Styling works out-of-the-box. For a nice custom column layout check out the awesome [Columns Guide](https://github.com/wolfgang101/include-mastodon-feed/blob/main/assets/imf-columns/imf-columns-guide.md) by [@oldrup](https://oldrup.dk/en/include-mastodon-feed/) - using Wordpress native Gutenberg blocks (pattern json file included) and some css magic.
 
 == Installation ==
 
@@ -136,7 +136,7 @@ See the included `config-example.php` file for a full list of supported settings
 
 = Pretty column layout example =
 
-Check out the awesome [Columns Guide](https://github.com/wolfgang101/include-mastodon-feed/blob/main/assets/imf-columns/imf-columns-guide.md) by [@oldrupp](https://oldrup.dk/en/include-mastodon-feed/) using Wordpress native Gutenberg blocks (pattern json file included) and some custom css magic:
+Check out the awesome [Columns Guide](https://github.com/wolfgang101/include-mastodon-feed/blob/main/assets/imf-columns/imf-columns-guide.md) by [@oldrup](https://oldrup.dk/en/include-mastodon-feed/) using Wordpress native Gutenberg blocks (pattern json file included) and some custom css magic:
 
 * [Official Columns Guide](https://github.com/wolfgang101/include-mastodon-feed/blob/main/assets/imf-columns/imf-columns-guide.md)
 

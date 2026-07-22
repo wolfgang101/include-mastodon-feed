@@ -79,7 +79,7 @@ See [config-example.php](plugin/config-example.php) for a full list of supported
 
 ### Pretty column layout example
 
-Check out the awesome [Columns Guide](assets/imf-columns/imf-columns-guide.md) by @oldrupp using Wordpress native Gutenberg blocks (pattern json file included) and some custom css magic.
+Check out the awesome [Columns Guide](assets/imf-columns/imf-columns-guide.md) by @oldrup using Wordpress native Gutenberg blocks (pattern json file included) and some custom css magic.
 
 ## Installation
 
