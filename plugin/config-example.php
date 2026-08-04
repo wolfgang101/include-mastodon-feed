@@ -71,6 +71,12 @@
     // show / hide preview cards
     define('INCLUDE_MASTODON_FEED_SHOW_PREVIEWCARDS', true);
 
+    // user agent sent with authenticated API calls
+    // only relevant when auth is used, unauthenticated feeds are fetched by the browser
+    // defaults to "IncludeMastodonFeed/<version> (+https://your-site.example.org)"
+    // some instances reject requests that send no user agent at all
+    define('INCLUDE_MASTODON_FEED_USER_AGENT', 'IncludeMastodonFeed (+https://your-site.example.org)');
+
     /*
      *  DEFAULT STYLES
      */

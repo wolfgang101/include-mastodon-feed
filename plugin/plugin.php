@@ -3,7 +3,7 @@
   Plugin Name: Include Mastodon Feed
 	Plugin URI: https://wolfgang.lol/code/include-mastodon-feed-wordpress-plugin
 	Description: Plugin providing [include-mastodon-feed] shortcode
-	Version: 2.1.2
+	Version: 2.1.3
 	Author: wolfgang.lol
 	Author URI: https://wolfgang.lol
   License: MIT
@@ -189,6 +189,20 @@ add_action('rest_api_init', function () {
     ]);
 });
 
+function get_user_agent() {
+  $userAgent = '';
+  if(defined('INCLUDE_MASTODON_FEED_USER_AGENT')) {
+    // protect against header injection
+    $userAgent = sanitize_text_field(INCLUDE_MASTODON_FEED_USER_AGENT);
+  }
+  // fall back to the default if the constant is unset or sanitizes to nothing
+  if('' === $userAgent) {
+    $pluginData = get_file_data(__FILE__, ['Version' => 'Version']);
+    $userAgent = 'IncludeMastodonFeed/' . $pluginData['Version'] . ' (+' . home_url() . ')';
+  }
+  return $userAgent;
+}
+
 function handle_feed_auth_request(\WP_REST_Request $request) {
     $auth = $request->get_param('auth');
     $url = $request->get_param('url');
@@ -200,6 +214,7 @@ function handle_feed_auth_request(\WP_REST_Request $request) {
     $cacheKey = 'include_mastodon_feed_' . md5($url);
     $options = [
       'Content-Type: application/json',
+      'User-Agent: ' . get_user_agent(),
     ];
     if(!empty($auth)) {
       if(defined('INCLUDE_MASTODON_FEED_AUTH') && is_array(INCLUDE_MASTODON_FEED_AUTH) && isset(INCLUDE_MASTODON_FEED_AUTH[$auth])) {
