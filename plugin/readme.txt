@@ -203,6 +203,9 @@ If your Mastodon server needs API authentication you can use the `auth` paramete
 
 == Changelog ==
 
+= 2.1.3 =
+* feat: add User-Agent header when going through PHP (auth only) - which enables GoToSocial compatibility (thank you @chris@hallo.ween.de)
+
 = 2.1.2 =
 * fix: load css before most themes load css to not override custom css styling (priority 5 in Wordpress queue)
 
